@@ -1,18 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { FiKey, FiLink, FiMail, FiArrowRight } from 'react-icons/fi';
+import { FiCamera, FiCrosshair, FiLink, FiMaximize, FiKey, FiShield, FiArrowRight } from 'react-icons/fi';
 import Card from '../common/Card';
 import { ROUTES } from '../../constants/routes';
 
 const ACTIONS = [
-  { icon: FiKey, title: 'Analyze a Password', description: 'Check strength & entropy', path: ROUTES.PASSWORD_ANALYZER, color: 'text-accent bg-accent/10 border-accent/20' },
-  { icon: FiLink, title: 'Check a URL', description: 'Scan for reputation risk', path: ROUTES.URL_CHECKER, color: 'text-primary bg-primary/10 border-primary/20' },
-  { icon: FiMail, title: 'Scan an Email', description: 'Detect phishing signals', path: ROUTES.PHISHING_DETECTOR, color: 'text-warning bg-warning/10 border-warning/20' },
+  { icon: FiCamera, title: 'Screenshot Phishing Analyzer', description: 'Analyze screenshots for threats', path: ROUTES.SCREENSHOT_ANALYZER, color: 'text-primary bg-primary/10 border-primary/20' },
+  { icon: FiCrosshair, title: 'Phishing Simulator', description: 'Practice threat detection', path: ROUTES.PHISHING_SIMULATOR, color: 'text-accent bg-accent/10 border-accent/20' },
+  { icon: FiLink, title: 'Smart URL Scanner', description: 'Scan links for reputation risk', path: ROUTES.URL_SCANNER, color: 'text-warning bg-warning/10 border-warning/20' },
+  { icon: FiMaximize, title: 'QR Security Scanner', description: 'Analyze QR code destinations', path: ROUTES.QR_SCANNER, color: 'text-primary bg-primary/10 border-primary/20' },
+  { icon: FiKey, title: 'Password Security Lab', description: 'Check strength & entropy', path: ROUTES.PASSWORD_LAB, color: 'text-accent bg-accent/10 border-accent/20' },
+  { icon: FiShield, title: 'Security Command Center', description: 'Monitor overall risk', path: ROUTES.SECURITY_CENTER, color: 'text-warning bg-warning/10 border-warning/20' },
 ];
 
 export default function QuickActions() {
   const navigate = useNavigate();
   return (
-    <div className="grid sm:grid-cols-3 gap-4">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {ACTIONS.map((action) => (
         <Card
           key={action.title}

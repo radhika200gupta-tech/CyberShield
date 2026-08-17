@@ -33,10 +33,9 @@ export const SIDEBAR_LINKS = [
 ];
 
 export const COMING_SOON_LINKS = [
-  { label: 'AI Threat Intelligence', icon: 'cpu' },
-  { label: 'Malware Analysis', icon: 'activity' },
-  { label: 'Security Reports', icon: 'fileText' },
-  { label: 'Breach Monitoring', icon: 'eye' },
-  { label: 'Advanced Email Analysis', icon: 'mail' },
-  { label: 'Network Security Monitor', icon: 'server' },
+  { label: 'Visual Phishing Detection', icon: 'eye' },
+  { label: 'Live Cyber Threat Map', icon: 'map' },
+  { label: 'AI Security Copilot', icon: 'cpu' },
+  { label: 'Real-Time Threat Intelligence', icon: 'zap' },
+  { label: 'Webcam Security Lab', icon: 'camera' },
 ];

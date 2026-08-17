@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-3">
           <ThemeToggle />
           <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Log In</Button>
-          <Button variant="primary" size="sm" onClick={() => navigate(ROUTES.SIGNUP)}>Get Started</Button>
+          <Button variant="primary" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Get Started</Button>
         </div>
 
         <button
@@ -74,7 +74,7 @@ export default function Navbar() {
               ))}
               <div className="flex items-center gap-3 pt-4">
                 <Button variant="outline" size="sm" fullWidth onClick={() => navigate(ROUTES.LOGIN)}>Log In</Button>
-                <Button variant="primary" size="sm" fullWidth onClick={() => navigate(ROUTES.SIGNUP)}>Get Started</Button>
+                <Button variant="primary" size="sm" fullWidth onClick={() => navigate(ROUTES.LOGIN)}>Get Started</Button>
               </div>
             </div>
           </motion.div>

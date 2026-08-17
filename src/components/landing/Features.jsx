@@ -1,18 +1,17 @@
 import { motion } from 'framer-motion';
-import { FiShield, FiKey, FiLink, FiMail, FiActivity, FiCpu } from 'react-icons/fi';
+import { FiCamera, FiCrosshair, FiLink, FiMaximize, FiKey, FiShield, FiArrowRight } from 'react-icons/fi';
 import Card from '../common/Card';
 import { features } from '../../data/mockLanding';
 
-const ICONS = { shield: FiShield, key: FiKey, link: FiLink, mail: FiMail, activity: FiActivity, cpu: FiCpu };
+const ICONS = { camera: FiCamera, crosshair: FiCrosshair, link: FiLink, maximize: FiMaximize, key: FiKey, shield: FiShield };
 
 export default function Features() {
   return (
     <section id="features" className="py-24 sm:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Features"
-          title="Everything you need to spot a threat first"
-          description="Six focused tools that cover the surfaces attackers actually use — links, credentials, and inboxes."
+          title="Core Capabilities"
+          description="Six focused tools covering the surfaces attackers actually use — links, credentials, and visual data."
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-14">
@@ -26,12 +25,15 @@ export default function Features() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
               >
-                <Card hoverable className="h-full">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4">
+                <Card hoverable className="h-full flex flex-col group cursor-pointer">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 transition-colors group-hover:bg-primary/20">
                     <Icon className="text-accent" size={18} />
                   </div>
                   <h3 className="font-display font-semibold text-text-primary mb-1.5">{feature.title}</h3>
-                  <p className="text-sm text-text-secondary leading-relaxed">{feature.description}</p>
+                  <p className="text-sm text-text-secondary leading-relaxed flex-1">{feature.description}</p>
+                  <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-accent opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0">
+                    Explore feature <FiArrowRight size={14} />
+                  </div>
                 </Card>
               </motion.div>
             );

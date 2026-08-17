@@ -48,7 +48,6 @@ export default function Footer() {
 
         <div className="border-t border-border mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-text-muted">© 2026 CyberShield AI. All rights reserved.</p>
-          <p className="text-xs text-text-muted font-mono">Built for placement showcase — Phase 1 / Frontend</p>
         </div>
       </div>
     </footer>

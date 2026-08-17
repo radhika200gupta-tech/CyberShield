@@ -1,33 +1,33 @@
 export const features = [
   {
-    icon: 'shield',
-    title: 'Real-Time Threat Detection',
-    description: 'AI models flag phishing pages, credential theft attempts, and malicious redirects before they reach you.',
+    icon: 'camera',
+    title: 'Screenshot Phishing Analyzer',
+    description: 'Analyze screenshots for suspicious phishing signals.',
   },
   {
-    icon: 'key',
-    title: 'Password Intelligence',
-    description: 'Entropy-based strength scoring with breach exposure checks and actionable rewrite suggestions.',
+    icon: 'crosshair',
+    title: 'Phishing Simulator',
+    description: 'Practice identifying common phishing attempts.',
   },
   {
     icon: 'link',
-    title: 'URL Reputation Engine',
-    description: 'Cross-references domain age, SSL posture, and blacklist status in a single reputation score.',
+    title: 'Smart URL Scanner',
+    description: 'Check URLs for suspicious security patterns.',
   },
   {
-    icon: 'mail',
-    title: 'Phishing Email Analysis',
-    description: 'Parses subject lines and body text for urgency cues, spoofed domains, and suspicious links.',
+    icon: 'maximize',
+    title: 'QR Security Scanner',
+    description: 'Scan QR codes and analyze their destination.',
   },
   {
-    icon: 'activity',
-    title: 'Security Analytics',
-    description: 'A living dashboard of your exposure over time — trends, risk distribution, and scan velocity.',
+    icon: 'key',
+    title: 'Password Security Lab',
+    description: 'Evaluate password strength and security.',
   },
   {
-    icon: 'cpu',
-    title: 'AI-Powered Recommendations',
-    description: 'Context-aware guidance that prioritizes the fixes that reduce your risk the most, first.',
+    icon: 'shield',
+    title: 'Security Command Center',
+    description: 'Monitor security activity and overall risk.',
   },
 ];
 
@@ -98,4 +98,12 @@ export const faqs = [
     question: 'What happens after Phase 2 and 3 rollout?',
     answer: 'The platform gains persistent accounts, live threat-intel APIs, and continuously learning AI models.',
   },
+];
+
+export const comingSoon = [
+  { title: 'Visual Threat Intelligence', icon: 'eye' },
+  { title: 'Live Cyber Threat Map', icon: 'map' },
+  { title: 'AI Security Copilot', icon: 'cpu' },
+  { title: 'Real-Time Threat Intelligence', icon: 'zap' },
+  { title: 'Webcam Security Lab', icon: 'camera' },
 ];

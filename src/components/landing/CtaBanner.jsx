@@ -25,7 +25,7 @@ export default function CtaBanner() {
               No setup, no credit card. See exactly what CyberShield AI would have caught.
             </p>
             <div className="mt-8">
-              <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.SIGNUP)}>
+              <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.LOGIN)}>
                 Get Started Free
               </Button>
             </div>

@@ -51,7 +51,6 @@ export default function AuthLayout({ title, subtitle, children }) {
           </ul>
         </div>
 
-        <p className="relative text-xs text-text-muted font-mono">Phase 1 — Frontend Preview</p>
       </div>
     </div>
   );

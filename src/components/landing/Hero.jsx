@@ -49,23 +49,12 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-3 mt-9"
           >
-            <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.SIGNUP)}>
+            <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.LOGIN)}>
               Start Free Scan
             </Button>
             <Button variant="outline" size="lg" icon={FiPlay} onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
               See How It Works
             </Button>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.45 }}
-            className="flex items-center gap-6 mt-10 text-xs text-text-muted"
-          >
-            <span>No credit card required</span>
-            <span className="w-1 h-1 rounded-full bg-text-muted" />
-            <span>Free tier forever</span>
           </motion.div>
         </div>
 

@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   FiGrid, FiKey, FiLink, FiMail, FiShield, FiClock,
   FiUser, FiSettings, FiLogOut, FiX, FiCamera, FiCrosshair,
-  FiMaximize, FiCpu, FiActivity, FiFileText, FiEye, FiServer
+  FiMaximize, FiCpu, FiActivity, FiFileText, FiEye, FiServer, FiMap, FiZap
 } from 'react-icons/fi';
 import Logo from '../common/Logo';
 import { SIDEBAR_LINKS, COMING_SOON_LINKS, ROUTES } from '../../constants/routes';
@@ -12,7 +12,8 @@ import { classNames } from '../../utils/formatters';
 const ICONS = { 
   grid: FiGrid, key: FiKey, link: FiLink, mail: FiMail, shield: FiShield, history: FiClock,
   camera: FiCamera, crosshair: FiCrosshair, maximize: FiMaximize,
-  cpu: FiCpu, activity: FiActivity, fileText: FiFileText, eye: FiEye, server: FiServer
+  cpu: FiCpu, activity: FiActivity, fileText: FiFileText, eye: FiEye, server: FiServer,
+  map: FiMap, zap: FiZap
 };
 
 export default function Sidebar({ isOpen, onClose }) {

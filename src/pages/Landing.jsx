@@ -6,6 +6,7 @@ import Stats from '../components/landing/Stats';
 import HowItWorks from '../components/landing/HowItWorks';
 import Testimonials from '../components/landing/Testimonials';
 import Faq from '../components/landing/Faq';
+import ComingSoon from '../components/landing/ComingSoon';
 import CtaBanner from '../components/landing/CtaBanner';
 
 export default function Landing() {
@@ -19,6 +20,7 @@ export default function Landing() {
         <HowItWorks />
         <Testimonials />
         <Faq />
+        <ComingSoon />
         <CtaBanner />
       </main>
       <Footer />
