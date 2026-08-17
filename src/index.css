@@ -21,6 +21,9 @@
   --color-text-primary: #E7EAF3;
   --color-text-secondary: #8B93A7;
   --color-text-muted: #5A6377;
+  
+  /* Shadows */
+  --shadow-color: rgba(0, 0, 0, 0.5);
 
   /* Fonts */
   --font-display: "Space Grotesk", "Inter", sans-serif;
@@ -46,15 +49,16 @@
 
 /* Light mode overrides — toggled via .light class on <html> */
 .light {
-  --color-bg: #F7F8FA;
+  --color-bg: #F8FAFC;
   --color-bg-elevated: #FFFFFF;
   --color-surface: #FFFFFF;
-  --color-surface-hover: #F1F3F7;
-  --color-border: #E4E7ED;
-  --color-border-hover: #D3D8E2;
-  --color-text-primary: #10141F;
-  --color-text-secondary: #4B5468;
-  --color-text-muted: #8B93A7;
+  --color-surface-hover: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-border-hover: #CBD5E1;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748B;
+  --shadow-color: rgba(15, 23, 42, 0.08);
 }
 
 @layer base {
