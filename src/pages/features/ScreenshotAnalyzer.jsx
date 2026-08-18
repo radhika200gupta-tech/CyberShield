@@ -119,7 +119,7 @@ export default function ScreenshotAnalyzer() {
       }
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
-      
+
       // Reset analysis states when a new file is uploaded
       setIsAnalyzing(false);
       setOcrProgress(null);
@@ -149,7 +149,7 @@ export default function ScreenshotAnalyzer() {
 
   const handleAnalyze = async () => {
     if (!selectedFile || isAnalyzing) return;
-    
+
     setIsAnalyzing(true);
     setOcrProgress('Initializing OCR engine...');
     setError(null);
@@ -161,17 +161,17 @@ export default function ScreenshotAnalyzer() {
       const result = await Tesseract.recognize(
         selectedFile,
         'eng',
-        { 
+        {
           logger: m => {
             if (m.status === 'recognizing text') {
               setOcrProgress(`Analyzing... ${Math.round(m.progress * 100)}%`);
             } else {
               setOcrProgress(m.status);
             }
-          } 
+          }
         }
       );
-      
+
       const text = result.data.text.trim();
       setExtractedText(text);
       setAnalysisResults(analyzeTextForPhishing(text));
@@ -216,15 +216,15 @@ export default function ScreenshotAnalyzer() {
               </Button>
             </div>
           ) : (
-            <div 
+            <div
               className="p-8 sm:p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-xl bg-surface hover:bg-surface-hover hover:border-primary/50 transition-colors cursor-pointer group min-h-[400px]"
               onClick={() => fileInputRef.current?.click()}
             >
-              <input 
-                type="file" 
-                className="hidden" 
-                ref={fileInputRef} 
-                accept="image/png, image/jpeg" 
+              <input
+                type="file"
+                className="hidden"
+                ref={fileInputRef}
+                accept="image/png, image/jpeg"
                 onChange={handleFileChange}
               />
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -276,10 +276,10 @@ export default function ScreenshotAnalyzer() {
                 <div className="w-24 h-24 rounded-full bg-surface border-4 border-border flex items-center justify-center mb-4 relative">
                   <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="8" className="text-border opacity-50" />
-                    <circle 
-                      cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="8" 
-                      strokeDasharray={`${(analysisResults.score / 100) * 289} 289`} 
-                      className={getRiskLevel(analysisResults.score).color} 
+                    <circle
+                      cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="8"
+                      strokeDasharray={`${(analysisResults.score / 100) * 289} 289`}
+                      className={getRiskLevel(analysisResults.score).color}
                     />
                   </svg>
                   <span className={`text-2xl font-display font-bold ${getRiskLevel(analysisResults.score).color}`}>
@@ -305,8 +305,8 @@ export default function ScreenshotAnalyzer() {
                   {previewUrl ? 'Ready to Analyze' : 'Waiting for Screenshot'}
                 </h3>
                 <p className="text-sm text-text-secondary max-w-xs">
-                  {previewUrl 
-                    ? 'Click below to begin extracting text and detecting threats.' 
+                  {previewUrl
+                    ? 'Click below to begin extracting text and detecting threats.'
                     : 'Upload a screenshot to begin security analysis.'}
                 </p>
                 {previewUrl && (
@@ -348,11 +348,10 @@ export default function ScreenshotAnalyzer() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === i
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === i
                     ? 'border-accent text-accent'
                     : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border'
-                }`}
+                  }`}
               >
                 {tab}
               </button>
