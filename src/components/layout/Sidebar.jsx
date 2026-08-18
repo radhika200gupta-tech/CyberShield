@@ -81,15 +81,31 @@ export default function Sidebar({ isOpen, onClose }) {
               {COMING_SOON_LINKS.map((link) => {
                 const Icon = ICONS[link.icon];
                 return (
-                  <div
-                    key={link.label}
-                    className="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted opacity-70 cursor-not-allowed"
+                  <NavLink
+                    key={link.path}
+                    to={link.path}
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      classNames(
+                        'flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
+                        isActive
+                          ? 'text-accent bg-accent/10'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover'
+                      )
+                    }
                   >
-                    <div className="flex items-center gap-3">
-                      <Icon size={17} />
-                      <span className="truncate">{link.label}</span>
-                    </div>
-                  </div>
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-r" />
+                        )}
+                        <div className="flex items-center gap-3">
+                          <Icon size={17} />
+                          <span className="truncate">{link.label}</span>
+                        </div>
+                      </>
+                    )}
+                  </NavLink>
                 );
               })}
             </nav>

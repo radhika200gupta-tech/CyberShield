@@ -33,9 +33,9 @@ export const SIDEBAR_LINKS = [
 ];
 
 export const COMING_SOON_LINKS = [
-  { label: 'Visual Phishing Detection', icon: 'eye' },
-  { label: 'Live Cyber Threat Map', icon: 'map' },
-  { label: 'AI Security Copilot', icon: 'cpu' },
-  { label: 'Real-Time Threat Intelligence', icon: 'zap' },
-  { label: 'Webcam Security Lab', icon: 'camera' },
+  { label: 'Visual Phishing Detection', icon: 'eye', path: '/app/coming-soon/visual-phishing' },
+  { label: 'Live Cyber Threat Map', icon: 'map', path: '/app/coming-soon/threat-map' },
+  { label: 'AI Security Copilot', icon: 'cpu', path: '/app/coming-soon/ai-copilot' },
+  { label: 'Real-Time Threat Intelligence', icon: 'zap', path: '/app/coming-soon/threat-intel' },
+  { label: 'Webcam Security Lab', icon: 'camera', path: '/app/coming-soon/webcam-security' },
 ];

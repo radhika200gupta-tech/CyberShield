@@ -39,8 +39,25 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const updateUser = (data) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...data };
+    
+    if (data.name) {
+      const names = data.name.trim().split(/\s+/);
+      let initials = names[0].charAt(0).toUpperCase();
+      if (names.length > 1) {
+        initials += names[names.length - 1].charAt(0).toUpperCase();
+      }
+      updatedUser.avatarInitials = initials;
+    }
+    
+    localStorage.setItem('cybershield-user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

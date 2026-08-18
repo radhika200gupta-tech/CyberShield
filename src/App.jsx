@@ -6,6 +6,8 @@ import { ToastProvider } from './context/ToastContext';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 
 // Feature placeholders
 import ScreenshotAnalyzer from './pages/features/ScreenshotAnalyzer';
@@ -14,6 +16,8 @@ import UrlScanner from './pages/features/UrlScanner';
 import QrScanner from './pages/features/QrScanner';
 import PasswordLab from './pages/features/PasswordLab';
 import SecurityCenter from './pages/features/SecurityCenter';
+
+import ComingSoonFeature from './pages/features/ComingSoonFeature';
 
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import DashboardLayout from './components/layout/DashboardLayout';
@@ -41,10 +45,10 @@ function App() {
                   <Route path={ROUTES.QR_SCANNER} element={<QrScanner />} />
                   <Route path={ROUTES.PASSWORD_LAB} element={<PasswordLab />} />
                   <Route path={ROUTES.SECURITY_CENTER} element={<SecurityCenter />} />
+                  <Route path="/app/coming-soon/*" element={<ComingSoonFeature />} />
                   
-                  {/* Redirect unimplemented internal routes to Dashboard for now */}
-                  <Route path={ROUTES.PROFILE} element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-                  <Route path={ROUTES.SETTINGS} element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+                  <Route path={ROUTES.PROFILE} element={<Profile />} />
+                  <Route path={ROUTES.SETTINGS} element={<Settings />} />
                 </Route>
               </Route>
 
