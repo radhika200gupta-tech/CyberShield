@@ -9,7 +9,7 @@
   --color-warning: #F59E0B;
   --color-success: #22C55E;
 
-  /* Surfaces — dark mode primary */
+  /* Surfaces */
   --color-bg: #05070D;
   --color-bg-elevated: #0A0E17;
   --color-surface: #10141F;
@@ -21,7 +21,7 @@
   --color-text-primary: #E7EAF3;
   --color-text-secondary: #8B93A7;
   --color-text-muted: #5A6377;
-  
+
   /* Shadows */
   --shadow-color: rgba(0, 0, 0, 0.5);
 
@@ -35,19 +35,40 @@
 
   --animate-scan: scan 2.2s linear infinite;
   --animate-pulse-ring: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-dash: dash 1.2s linear infinite;
 
   @keyframes scan {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
   }
+
   @keyframes pulse-ring {
-    0% { transform: scale(0.9); opacity: 0.6; }
-    70% { transform: scale(1.4); opacity: 0; }
-    100% { transform: scale(1.4); opacity: 0; }
+    0% {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+    70% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -16;
+    }
   }
 }
 
-/* Light mode overrides — toggled via .light class on <html> */
+/* Light mode */
 .light {
   --color-bg: #F8FAFC;
   --color-bg-elevated: #FFFFFF;
@@ -86,13 +107,16 @@
     width: 10px;
     height: 10px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--color-bg);
   }
+
   ::-webkit-scrollbar-thumb {
     background: var(--color-border);
     border-radius: 999px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-border-hover);
   }
@@ -103,7 +127,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -120,7 +146,11 @@
   }
 
   .text-gradient {
-    background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+    background: linear-gradient(
+      90deg,
+      var(--color-accent),
+      var(--color-primary)
+    );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -128,9 +158,67 @@
 
   .grid-fade {
     background-image:
-      linear-gradient(color-mix(in srgb, var(--color-border) 60%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in srgb, var(--color-border) 60%, transparent) 1px, transparent 1px);
+      linear-gradient(
+        color-mix(in srgb, var(--color-border) 60%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-border) 60%, transparent) 1px,
+        transparent 1px
+      );
     background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 40%, transparent 100%);
+    mask-image: radial-gradient(
+      ellipse 60% 50% at 50% 0%,
+      black 40%,
+      transparent 100%
+    );
+  }
+
+  /* Web Security investigation stages */
+  .stage {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    bottom: -32px;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-accent) 40%, transparent),
+      var(--color-border) 60%
+    );
+  }
+
+  .stage:last-child::before {
+    display: none;
+  }
+
+  .stage::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--color-bg);
+    border: 2px solid var(--color-accent);
+  }
+
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-border) 15%,
+      var(--color-border) 85%,
+      transparent
+    );
   }
 }
