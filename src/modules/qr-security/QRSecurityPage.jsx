@@ -1,14 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
-import { FiShield } from 'react-icons/fi';
-import URLScanner from './components/URLScanner';
-import AppNav from './components/AppNav';
-import QRSecurityPage from './modules/qr-security/QRSecurityPage';
-import FakeWebsiteChallenge from './modules/fake-website-challenge/FakeWebsiteChallenge';
+import { FiCrosshair } from 'react-icons/fi';
+import AppNav from '../../components/AppNav';
+import QRScanner from './components/QRScanner';
+import './qrSecurity.css';
 
-function UrlScannerPage() {
+export default function QRSecurityPage() {
   return (
-    <div className="min-h-screen bg-bg relative overflow-x-hidden">
-      {/* subtle background grid, matching the reference design language */}
+    <div className="qr-security min-h-screen bg-bg relative overflow-x-hidden">
       <div className="absolute inset-0 grid-fade pointer-events-none" />
 
       <AppNav />
@@ -16,19 +13,21 @@ function UrlScannerPage() {
       <main className="relative max-w-3xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-14 sm:pb-20">
         <div className="flex flex-col items-center text-center mb-10">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 border border-accent/25 mb-4">
-            <FiShield className="text-accent" size={22} />
+            <FiCrosshair className="text-accent" size={22} />
           </div>
 
           <p className="text-[11px] uppercase tracking-[0.24em] text-text-muted mb-2">
-            CyberShield · Link Safety Scanner
+            CyberShield · QR Security Investigation
           </p>
 
           <h1 className="font-display font-bold text-2xl sm:text-3xl text-text-primary tracking-tight">
-            Is This Link <span className="text-gradient">Safe?</span>
+            QR <span className="text-gradient">Security</span>
           </h1>
 
+          <p className="mt-2 text-sm sm:text-base text-text-secondary font-medium">Scan before you trust.</p>
+
           <p className="mt-3 text-sm sm:text-base text-text-secondary max-w-md mx-auto">
-            Paste any link to check its safety, structure, and potential risks in seconds — client-side and private.
+            Analyze what is hidden behind a QR code before opening or interacting with it.
           </p>
 
           <span className="mt-5 inline-flex items-center gap-2 text-[11px] font-mono text-text-muted">
@@ -36,26 +35,16 @@ function UrlScannerPage() {
               <span className="absolute inline-flex h-full w-full rounded-full bg-accent animate-pulse-ring" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent" />
             </span>
-            READY TO SCAN
+            SCANNER READY
           </span>
         </div>
 
-        <URLScanner />
+        <QRScanner />
 
         <p className="mt-10 text-center text-xs text-text-muted">
-          Instant analysis · Rule-based detection · Private & client-side only
+          Heuristic Analysis · Rule-Based Detection · Client-side only
         </p>
       </main>
     </div>
-  );
-}
-
-export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<UrlScannerPage />} />
-      <Route path="/qr-scanner" element={<QRSecurityPage />} />
-      <Route path="/challenge" element={<FakeWebsiteChallenge />} />
-    </Routes>
   );
 }
