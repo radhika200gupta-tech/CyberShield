@@ -1,14 +1,32 @@
-import { FiCrosshair } from 'react-icons/fi';
-import AppNav from '../../components/AppNav';
+import { useState } from 'react';
+import { FiCrosshair, FiMenu } from 'react-icons/fi';
+import Sidebar from '../../components/layout/Sidebar';
 import QRScanner from './components/QRScanner';
 import './qrSecurity.css';
 
 export default function QRSecurityPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="qr-security min-h-screen bg-bg relative overflow-x-hidden">
       <div className="absolute inset-0 grid-fade pointer-events-none" />
 
-      <AppNav />
+      <div className="absolute top-5 left-4 sm:top-6 sm:left-6 z-20">
+        <button 
+          className="text-text-secondary hover:text-text-primary transition-colors" 
+          onClick={() => setSidebarOpen(true)} 
+          aria-label="Open sidebar"
+        >
+          <FiMenu size={20} />
+        </button>
+      </div>
+
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-black/60 z-40 hidden lg:block" onClick={() => setSidebarOpen(false)} />
+          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        </div>
+      )}
 
       <main className="relative max-w-3xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-14 sm:pb-20">
         <div className="flex flex-col items-center text-center mb-10">

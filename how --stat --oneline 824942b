@@ -1,0 +1,25 @@
+* [33mee9d6e4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m Fix routing and dashboard web security navigation
+*   [33mbd8c8ae[m Merge phishing analyzer with security command center
+[32m|[m[33m\[m  
+* [33m|[m [33m824942b[m[33m ([m[1;31morigin/feature/security-command-center[m[33m, [m[1;32mfeature/security-command-center[m[33m)[m Add actual security page implementations
+* [33m|[m [33m58ca02d[m Add security command center and password security pages
+[33m|[m [33m|[m *   [33m4c2b1c7[m[33m ([m[1;35mrefs/stash[m[33m)[m On feature/phishing-analyzer: WIP phishing analyzer before security command center
+[33m|[m [33m|[m[33m/[m[35m|[m[36m\[m  
+[33m|[m [33m|[m [35m|[m * [33m9c9312b[m untracked files on feature/phishing-analyzer: cf82df7 Merge web security features into phishing branch
+[33m|[m [33m|[m * [33mb26b609[m index on feature/phishing-analyzer: cf82df7 Merge web security features into phishing branch
+[33m|[m [33m|[m[33m/[m  
+[33m|[m *   [33mcf82df7[m[33m ([m[1;32mfeature/phishing-analyzer[m[33m)[m Merge web security features into phishing branch
+[33m|[m [1;31m|[m[1;32m\[m  
+[33m|[m [1;31m|[m * [33mae95f51[m[33m ([m[1;31morigin/feature/web-security[m[33m, [m[1;32mfeature/web-security[m[33m)[m Add web security features and fix styling
+[33m|[m [1;31m|[m[33m/[m  
+[33m|[m[33m/[m[1;31m|[m   
+[33m|[m * [33mf95884c[m[33m ([m[1;31morigin/feature/phishing-analyzer[m[33m)[m BACKUP: before team integration
+[33m|[m * [33m7a9b620[m Save current CyberShield work
+[33m|[m * [33mad12e86[m Save current phishing and profile settings work
+[33m|[m * [33med26a59[m Update shared UI and phishing features
+[33m|[m * [33m0669de0[m Refine CyberShield frontend UI
+[33m|[m * [33m27d43e2[m Establish CyberShield frontend foundation
+[33m|[m * [33m8bd736c[m Create shared UI and phishing analyzer structure
+[33m|[m * [33m2cacd5e[m Add CyberShield core dependencies
+[33m|[m[33m/[m  
+* [33meef9a4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Initial CyberShield React setup

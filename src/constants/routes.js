@@ -6,6 +6,7 @@ export const ROUTES = {
   DASHBOARD: '/app/dashboard',
   SCREENSHOT_ANALYZER: '/app/screenshot-analyzer',
   PHISHING_SIMULATOR: '/app/phishing-simulator',
+  PHISHING_CHALLENGE: '/app/phishing-challenge',
   URL_SCANNER: '/web-security/url-scanner',
   QR_SCANNER: '/web-security/qr-scanner',
   PASSWORD_LAB: '/app/password-lab',
@@ -30,6 +31,7 @@ export const SIDEBAR_LINKS = [
   { label: 'Phishing Simulator', path: ROUTES.PHISHING_SIMULATOR, icon: 'crosshair' },
   { label: 'Smart URL Scanner', path: ROUTES.URL_SCANNER, icon: 'link' },
   { label: 'QR Security Scanner', path: ROUTES.QR_SCANNER, icon: 'maximize' },
+  { label: 'Phishing Challenge', path: ROUTES.PHISHING_CHALLENGE, icon: 'activity' },
   { label: 'Password Security Lab', path: ROUTES.PASSWORD_LAB, icon: 'key' },
   { label: 'Security Command Center', path: ROUTES.SECURITY_CENTER, icon: 'shield' },
 ];

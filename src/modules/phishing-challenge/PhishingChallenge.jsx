@@ -1,15 +1,16 @@
-// FakeWebsiteChallenge.jsx
-// Main container component for the "Fake vs Real Website Challenge".
+// PhishingChallenge.jsx
+// Main container component for the "Phishing Challenge".
 // Holds all game state (current question, score, timer status, user choice, game over).
 
 import { useState } from "react";
+
 import WebsiteCard from "./WebsiteCard";
 import ChallengeTimer from "./ChallengeTimer";
 import ResultsScreen from "./ResultsScreen";
 import { challenges } from "./challengeData";
-import "./FakeWebsiteChallenge.css";
+import "./PhishingChallenge.css";
 
-export default function FakeWebsiteChallenge() {
+export default function PhishingChallenge() {
   // Stores the index number of the active challenge (0 to 4) so we know which question to show.
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -95,7 +96,7 @@ export default function FakeWebsiteChallenge() {
       {/* Background visual grid pattern */}
       <div className="absolute inset-0 grid-fade pointer-events-none" />
 
-      {/* Main navigation bar (removed) */}
+
 
       <main className="challenge-main-container">
         {/* If the game is finished, show the ResultsScreen */}
@@ -120,7 +121,7 @@ export default function FakeWebsiteChallenge() {
               </p>
 
               <h1 className="hero-title">
-                Fake vs Real <span className="text-gradient">Website Challenge</span>
+                Phishing <span className="text-gradient">Challenge</span>
               </h1>
 
               <p className="hero-description">

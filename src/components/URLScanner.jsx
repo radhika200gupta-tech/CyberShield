@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { FiMenu } from 'react-icons/fi';
+import Sidebar from './layout/Sidebar';
 import ScanInput from './ScanInput';
 import ScanProgress from './ScanProgress';
 import SecurityResult from './SecurityResult';
@@ -28,6 +30,7 @@ export default function URLScanner() {
   const [result, setResult] = useState(null);
   const [parseError, setParseError] = useState('');
   const [history, setHistory] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Load past scans from localStorage once on mount. Refreshing the
   // page never breaks the app — if storage is empty/unavailable this
@@ -81,7 +84,24 @@ export default function URLScanner() {
   }, []);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 relative pt-12 sm:pt-14">
+      <div className="absolute top-5 left-4 sm:top-6 sm:left-6 z-20">
+        <button 
+          className="text-text-secondary hover:text-text-primary transition-colors" 
+          onClick={() => setSidebarOpen(true)} 
+          aria-label="Open sidebar"
+        >
+          <FiMenu size={20} />
+        </button>
+      </div>
+
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-black/60 z-40 hidden lg:block" onClick={() => setSidebarOpen(false)} />
+          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        </div>
+      )}
+
       <div>
         {phase === PHASES.IDLE && (
           <>

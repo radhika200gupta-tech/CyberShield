@@ -12,6 +12,7 @@ import Settings from './pages/Settings';
 // Feature pages
 import ScreenshotAnalyzer from './pages/features/ScreenshotAnalyzer';
 import PhishingSimulator from './pages/features/PhishingSimulator';
+import PhishingChallenge from './modules/phishing-challenge/PhishingChallenge';
 import UrlScanner from './pages/features/UrlScanner';
 import QrScanner from './pages/features/QrScanner';
 import PasswordLab from './pages/features/PasswordLab';
@@ -57,6 +58,10 @@ function App() {
                   <Route
                     path={ROUTES.PHISHING_SIMULATOR}
                     element={<PhishingSimulator />}
+                  />
+                  <Route
+                    path={ROUTES.PHISHING_CHALLENGE}
+                    element={<PhishingChallenge />}
                   />
                   <Route
                     path={ROUTES.URL_SCANNER}
