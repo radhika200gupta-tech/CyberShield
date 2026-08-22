@@ -18,3 +18,4 @@ export default function QrScanner() {
     </div>
   );
 }
+

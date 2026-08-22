@@ -15,12 +15,14 @@ export const ROUTES = {
   NOT_FOUND: '*',
 };
 
+
 export const NAV_LINKS = [
   { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how-it-works' },
   { label: 'Testimonials', href: '#testimonials' },
   { label: 'FAQ', href: '#faq' },
 ];
+
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
@@ -32,6 +34,10 @@ export const SIDEBAR_LINKS = [
   { label: 'Security Command Center', path: ROUTES.SECURITY_CENTER, icon: 'shield' },
 ];
 
+
+
+
+
 export const COMING_SOON_LINKS = [
   { label: 'Visual Phishing Detection', icon: 'eye', path: '/app/coming-soon/visual-phishing' },
   { label: 'Live Cyber Threat Map', icon: 'map', path: '/app/coming-soon/threat-map' },
@@ -39,3 +45,4 @@ export const COMING_SOON_LINKS = [
   { label: 'Real-Time Threat Intelligence', icon: 'zap', path: '/app/coming-soon/threat-intel' },
   { label: 'Webcam Security Lab', icon: 'camera', path: '/app/coming-soon/webcam-security' },
 ];
+

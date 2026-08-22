@@ -1,38 +1,40 @@
 import { motion } from 'framer-motion';
-import Card from '../common/Card';
 import { classNames } from '../../utils/formatters';
 
 const COLOR_MAP = {
-  primary: 'bg-primary/10 text-primary border-primary/20',
-  accent: 'bg-accent/10 text-accent border-accent/20',
-  success: 'bg-success/10 text-success border-success/20',
-  warning: 'bg-warning/10 text-warning border-warning/20',
-  danger: 'bg-danger/10 text-danger border-danger/20',
+  primary: 'text-primary border-primary/20',
+  accent: 'text-accent border-accent/20',
+  success: 'text-success border-success/20',
+  warning: 'text-warning border-warning/20',
+  danger: 'text-danger border-danger/20',
 };
 
 export default function StatCard({ icon: Icon, label, value, suffix = '', trend, color = 'primary' }) {
   return (
-    <Card hoverable>
+    <div className="bg-bg-elevated/50 border border-border/50 rounded-xl p-5 hover:bg-bg-elevated transition-colors group relative overflow-hidden">
+      {/* Subtle top edge glow based on color */}
+      <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-${color} to-transparent opacity-20 group-hover:opacity-50 transition-opacity`} />
+      
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-text-secondary">{label}</p>
+          <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">{label}</p>
           <motion.p
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display font-semibold text-2xl sm:text-3xl text-text-primary mt-2"
+            className="font-mono font-semibold text-2xl sm:text-3xl text-text-primary mt-2 tracking-tight"
           >
-            {value}{suffix}
+            {value}<span className="text-text-muted text-xl">{suffix}</span>
           </motion.p>
           {trend && (
-            <p className={classNames('text-xs mt-2 font-medium', trend.positive ? 'text-success' : 'text-danger')}>
-              {trend.positive ? '↑' : '↓'} {trend.label}
+            <p className={classNames('text-[10px] mt-2 font-mono uppercase tracking-widest', trend.positive ? 'text-success' : 'text-danger')}>
+              {trend.positive ? '▲' : '▼'} {trend.label}
             </p>
           )}
         </div>
-        <div className={classNames('w-10 h-10 rounded-lg flex items-center justify-center border shrink-0', COLOR_MAP[color])}>
-          <Icon size={18} />
+        <div className={classNames('w-8 h-8 rounded flex items-center justify-center shrink-0 bg-surface/50 border', COLOR_MAP[color])}>
+          <Icon size={14} />
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
