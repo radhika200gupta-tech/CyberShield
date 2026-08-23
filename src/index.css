@@ -70,16 +70,39 @@
 
 /* Light mode */
 .light {
-  --color-bg: #F8FAFC;
-  --color-bg-elevated: #FFFFFF;
-  --color-surface: #FFFFFF;
-  --color-surface-hover: #F1F5F9;
-  --color-border: #E2E8F0;
-  --color-border-hover: #CBD5E1;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748B;
-  --shadow-color: rgba(15, 23, 42, 0.08);
+  --color-bg: #F8FAFC; /* slate-50 */
+  --color-bg-elevated: #FFFFFF; /* white */
+  --color-surface: #F1F5F9; /* slate-100 */
+  --color-surface-hover: #E2E8F0; /* slate-200 */
+  --color-border: #CBD5E1; /* slate-300 */
+  --color-border-hover: #94A3B8; /* slate-400 */
+  --color-text-primary: #0F172A; /* slate-900 */
+  --color-text-secondary: #475569; /* slate-600 */
+  --color-text-muted: #64748B; /* slate-500 */
+  --shadow-color: rgba(15, 23, 42, 0.08); /* slightly stronger shadow */
+}
+
+/* Force opaque surfaces and borders in light mode for clear hierarchy */
+.light .bg-bg-elevated\/20,
+.light .bg-bg-elevated\/30,
+.light .bg-bg-elevated\/40,
+.light .bg-bg-elevated\/50,
+.light .bg-bg-elevated\/80,
+.light .bg-bg-elevated\/90,
+.light .bg-bg-elevated\/95 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+.light .bg-surface\/30,
+.light .bg-surface\/40,
+.light .bg-surface\/50,
+.light .bg-surface\/80 {
+  background-color: var(--color-surface) !important;
+}
+
+.light .border-border\/30,
+.light .border-border\/50 {
+  border-color: var(--color-border) !important;
 }
 
 @layer base {
@@ -173,6 +196,20 @@
       black 40%,
       transparent 100%
     );
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(
+        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 44px 44px;
   }
 
   /* Web Security investigation stages */

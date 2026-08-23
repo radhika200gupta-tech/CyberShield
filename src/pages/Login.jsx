@@ -40,7 +40,7 @@ export default function Login() {
 
   return (
     <AuthLayout title="Welcome back" subtitle="Log in to view your live security dashboard.">
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
         <Input
           label="Email"
           type="email"
@@ -52,37 +52,40 @@ export default function Login() {
           error={errors.email}
           autoComplete="email"
         />
-        <Input
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          name="password"
-          icon={FiLock}
-          placeholder="••••••••"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          error={errors.password}
-          autoComplete="current-password"
-          endAdornment={
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="text-text-muted hover:text-text-primary transition-colors"
-            >
-              {showPassword ? <FiEyeOff size={17} /> : <FiEye size={17} />}
-            </button>
-          }
-        />
-
-        <div className="flex justify-end">
-          <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs text-accent hover:underline">
-            Forgot password?
-          </Link>
+        <div className="space-y-2">
+          <Input
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            icon={FiLock}
+            placeholder="••••••••"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            error={errors.password}
+            autoComplete="current-password"
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="text-text-muted hover:text-text-primary transition-colors"
+              >
+                {showPassword ? <FiEyeOff size={17} /> : <FiEye size={17} />}
+              </button>
+            }
+          />
+          <div className="flex justify-end pt-1">
+            <Link to={ROUTES.FORGOT_PASSWORD} className="text-[13px] font-medium text-accent hover:text-accent/80 transition-colors">
+              Forgot password?
+            </Link>
+          </div>
         </div>
 
-        <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
-          Log In
-        </Button>
+        <div className="pt-4">
+          <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting} size="lg">
+            Log In
+          </Button>
+        </div>
       </form>
 
       <p className="text-sm text-text-secondary text-center mt-6">

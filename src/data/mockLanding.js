@@ -46,72 +46,56 @@ export const stats = [
   { label: 'Detection Accuracy', value: 99.2, suffix: '%' },
 ];
 
-export const howItWorks = [
+export const securityWorkflow = [
   {
     step: '01',
-    title: 'Connect a signal',
-    description: 'Paste a URL, an email, or a password — CyberShield accepts whatever you\u2019re unsure about.',
+    title: 'Detect',
+    description: 'Ingest signals from URLs, emails, and endpoints into the telemetry engine.',
   },
   {
     step: '02',
-    title: 'AI evaluates risk',
-    description: 'Our models score reputation, entropy, and intent in real time, cross-checked against threat data.',
+    title: 'Analyze',
+    description: 'Run deep inspections against global threat feeds and zero-day heuristics.',
   },
   {
     step: '03',
-    title: 'Act on a clear verdict',
-    description: 'Get a risk level and specific next steps — not just a red or green light.',
-  },
-];
-
-export const testimonials = [
-  {
-    name: 'Priya Sharma',
-    role: 'IT Security Lead, Finlytics',
-    quote: 'We caught a spoofed vendor invoice in the phishing detector that would have slipped past our filters.',
-    avatarInitials: 'PS',
+    title: 'Assess Risk',
+    description: 'Assign a deterministic risk score based on intent, entropy, and history.',
   },
   {
-    name: 'Daniel Cho',
-    role: 'Founder, Northloop',
-    quote: 'The password analyzer finally got our whole team off "Company2024!" — the entropy breakdown makes it click.',
-    avatarInitials: 'DC',
-  },
-  {
-    name: 'Meera Iyer',
-    role: 'Freelance Developer',
-    quote: 'I run every client link through the URL checker before I click. It has paid for itself twice over.',
-    avatarInitials: 'MI',
+    step: '04',
+    title: 'Protect',
+    description: 'Deliver an actionable verdict to block or safely interact with the asset.',
   },
 ];
 
 export const faqs = [
   {
-    question: 'Is CyberShield free to use?',
-    answer: 'A free tier covers core scanning. Pro unlocks unlimited scans, deeper analytics, and priority AI models.',
+    question: 'What does CyberShield analyze?',
+    answer: 'CyberShield analyzes URLs for deceptive routing, evaluates password entropy, and scans structural anomalies in QR codes and screenshots.',
   },
   {
-    question: 'Do you store the URLs, emails, or passwords I scan?',
-    answer: 'Scans are processed to generate your result and are not retained beyond your account\u2019s history log, which you control.',
+    question: 'How does phishing detection work?',
+    answer: 'Our engine uses computer vision to detect spoofed login screens, cross-referenced with domain age and SSL certificate reputation.',
   },
   {
-    question: 'How accurate is the phishing detector?',
-    answer: 'Our rule-based and AI-assisted models are benchmarked against known phishing datasets and continuously retrained.',
+    question: 'What is the Phishing Simulator?',
+    answer: 'It is a training environment where you can safely interact with defanged phishing templates to improve your detection skills.',
   },
   {
-    question: 'Can I use CyberShield for my whole team?',
-    answer: 'Team and Enterprise plans add shared dashboards, role-based access, and centralized reporting.',
+    question: 'Does CyberShield store my scanned information?',
+    answer: 'All scans are ephemeral. We do not persist raw passwords or sensitive email bodies beyond the immediate session analysis.',
   },
   {
-    question: 'What happens after Phase 2 and 3 rollout?',
-    answer: 'The platform gains persistent accounts, live threat-intel APIs, and continuously learning AI models.',
+    question: 'What does the security score mean?',
+    answer: 'The score is a weighted aggregate of threat intelligence signals. A low score indicates severe risk based on blacklists or structural deception.',
   },
 ];
 
 export const comingSoon = [
-  { title: 'Visual Threat Intelligence', icon: 'eye' },
-  { title: 'Live Cyber Threat Map', icon: 'map' },
-  { title: 'AI Security Copilot', icon: 'cpu' },
-  { title: 'Real-Time Threat Intelligence', icon: 'zap' },
-  { title: 'Webcam Security Lab', icon: 'camera' },
+  { title: 'Visual Threat Intelligence', icon: 'eye', description: 'Advanced computer vision models to detect deceptive visual elements.', path: '/app/coming-soon/visual-phishing' },
+  { title: 'Live Cyber Threat Map', icon: 'map', description: 'Global real-time visualization of intercepted attacks and origin points.', path: '/app/coming-soon/threat-map' },
+  { title: 'AI Security Copilot', icon: 'cpu', description: 'Conversational assistant for automated threat response and triage.', path: '/app/coming-soon/ai-copilot' },
+  { title: 'Real-Time Threat Intelligence', icon: 'zap', description: 'Live streaming feeds from global honeypots and threat databases.', path: '/app/coming-soon/threat-intel' },
+  { title: 'Webcam Security Lab', icon: 'camera', description: 'Deep analysis of webcam hijacking indicators and local privacy risks.', path: '/app/coming-soon/webcam-security' },
 ];

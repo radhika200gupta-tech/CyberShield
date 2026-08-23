@@ -8,9 +8,12 @@ export default function Hero() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative pt-36 pb-24 sm:pt-44 sm:pb-32 overflow-hidden">
-      <div className="absolute inset-0 grid-fade pointer-events-none" />
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
+    <section className="relative pt-36 pb-24 sm:pt-44 sm:pb-32 overflow-hidden bg-bg">
+      {/* Hero Background Grid */}
+      <div className="absolute inset-0 grid-bg pointer-events-none opacity-40 mix-blend-plus-lighter" />
+      
+      {/* Atmospheric Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-accent/10 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div>
@@ -18,10 +21,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 border border-border bg-surface rounded-full pl-1.5 pr-3.5 py-1.5 mb-6"
+            className="inline-flex items-center gap-2 border border-accent/20 bg-accent/5 rounded-full pl-1.5 pr-3.5 py-1.5 mb-6"
           >
-            <span className="bg-primary/20 text-accent text-[10px] font-semibold px-2 py-0.5 rounded-full">NEW</span>
-            <span className="text-xs text-text-secondary">AI-powered phishing detection is live</span>
+            <span className="bg-accent/20 text-accent text-[10px] font-mono tracking-wider font-semibold px-2 py-0.5 rounded-full">SYSTEM ALERT</span>
+            <span className="text-xs text-text-secondary tracking-wide">Real-time threat monitoring is active</span>
           </motion.div>
 
           <motion.h1
@@ -73,7 +76,7 @@ export default function Hero() {
 
 function ScanVisual() {
   return (
-    <div className="scan-visual relative rounded-card border border-border bg-surface glass p-6 shadow-2xl overflow-hidden">
+    <div className="scan-visual relative rounded-[20px] border border-border/50 bg-bg-elevated/80 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden backdrop-blur-xl">
       <style>{`
         .light .scan-visual {
           --color-warning: #D97706;
@@ -82,34 +85,47 @@ function ScanVisual() {
           --color-danger: #DC2626;
         }
       `}</style>
-      <div className="flex items-center justify-between mb-5">
+      
+      <div className="flex items-center justify-between mb-5 relative z-10 border-b border-border/50 pb-3">
         <div className="flex items-center gap-2">
           <FiShield className="text-accent" size={16} />
-          <span className="text-sm font-medium text-text-primary">Live scan</span>
+          <span className="text-sm font-semibold text-text-primary tracking-widest uppercase">Live Scan</span>
         </div>
-        <span className="flex items-center gap-1.5 text-xs text-success">
+        <span className="flex items-center gap-1.5 text-[10px] font-mono text-success uppercase tracking-[0.2em]">
           <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" /> Active
         </span>
       </div>
 
-      <div className="relative rounded-lg bg-bg-elevated border border-border p-4 font-mono text-xs text-text-secondary overflow-hidden">
-        <div className="absolute inset-x-0 h-16 bg-gradient-to-b from-accent/0 via-accent/10 to-accent/0 animate-scan" />
-        <p>&gt; scanning secure-paypal-verify.com</p>
-        <p className="text-warning">&gt; domain age: 3 days</p>
-        <p className="text-danger">&gt; blacklist match found</p>
-        <p className="text-text-primary">&gt; verdict: high risk</p>
+      <div className="relative rounded-[14px] bg-surface border border-border/40 p-5 font-mono text-xs text-text-secondary overflow-hidden shadow-inner flex flex-col gap-4">
+        <div className="absolute inset-x-0 h-32 bg-gradient-to-b from-accent/0 via-accent/5 to-accent/0 animate-scan pointer-events-none" />
+        
+        <div>
+          <span className="text-text-muted text-[10px] uppercase tracking-widest block mb-1">Scanning</span>
+          <span className="text-text-primary font-medium text-sm">secure-paypal-verify.com</span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+          <span className="text-text-muted uppercase tracking-wider">Domain Age</span>
+          <span className="text-warning">3 DAYS</span>
+          
+          <span className="text-text-muted uppercase tracking-wider">Threat Signal</span>
+          <span className="text-danger">BLACKLIST MATCH</span>
+          
+          <span className="text-text-muted uppercase tracking-wider">Verdict</span>
+          <span className="text-danger font-semibold bg-danger/10 px-2 py-0.5 rounded w-fit">HIGH RISK</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mt-5">
+      <div className="grid grid-cols-3 gap-3 mt-5 relative z-10">
         {[
           { icon: FiLock, label: 'Passwords', value: '76', color: 'text-success' },
           { icon: FiLink, label: 'URLs Safe', value: '269', color: 'text-accent' },
           { icon: FiShield, label: 'Score', value: '82', color: 'text-primary' },
         ].map((item) => (
-          <div key={item.label} className="rounded-lg border border-border bg-bg-elevated p-3 text-center">
-            <item.icon className={`mx-auto mb-1.5 ${item.color}`} size={16} />
+          <div key={item.label} className="rounded-[14px] border border-border/50 bg-surface/50 p-3 text-center">
+            <item.icon className={`mx-auto mb-2 ${item.color}`} size={16} />
             <p className="text-lg font-display font-semibold text-text-primary">{item.value}</p>
-            <p className="text-[10px] text-text-muted mt-0.5">{item.label}</p>
+            <p className="text-[9px] font-mono font-medium text-text-muted mt-1 uppercase tracking-widest">{item.label}</p>
           </div>
         ))}
       </div>

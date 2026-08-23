@@ -4,7 +4,6 @@ import Hero from '../components/landing/Hero';
 import Features from '../components/landing/Features';
 import Stats from '../components/landing/Stats';
 import HowItWorks from '../components/landing/HowItWorks';
-import Testimonials from '../components/landing/Testimonials';
 import Faq from '../components/landing/Faq';
 import ComingSoon from '../components/landing/ComingSoon';
 import CtaBanner from '../components/landing/CtaBanner';
@@ -18,9 +17,8 @@ export default function Landing() {
         <Stats />
         <Features />
         <HowItWorks />
-        <Testimonials />
-        <Faq />
         <ComingSoon />
+        <Faq />
         <CtaBanner />
       </main>
       <Footer />

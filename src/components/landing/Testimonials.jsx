@@ -22,7 +22,7 @@ export default function Testimonials() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <Card className="h-full flex flex-col">
+              <Card hoverable className="h-full flex flex-col hover:-translate-y-[3px]">
                 <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: 5 }).map((_, idx) => (
                     <FiStar key={idx} className="text-warning fill-warning" size={14} />
