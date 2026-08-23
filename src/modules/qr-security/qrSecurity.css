@@ -1,0 +1,21 @@
+/**
+ * qrSecurity.css
+ *
+ * Scoped to the QR Security module. The module otherwise reuses the
+ * shared design tokens and utility classes defined in src/index.css
+ * (colors, fonts, .stage, .hairline, .glass, animate-scan, etc.) so
+ * that it visually matches the rest of CyberShield. Only genuinely
+ * QR-specific helpers live here.
+ */
+
+.qr-security video {
+  /* Camera feeds are sometimes mirrored oddly on some devices;
+     keep it natural (non-mirrored) since this is a document/QR
+     scanner, not a selfie camera. */
+  transform: none;
+}
+
+.qr-security ::selection {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
