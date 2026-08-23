@@ -71,26 +71,27 @@
 
 /* Light mode */
 .light {
-  --color-primary: #7C3AED;
-  --color-primary-dim: #6D28D9;
-  --color-accent: #8B5CF6;
+  --color-primary: #8B5CF6;
+  --color-primary-dim: #7C3AED;
+  --color-accent: #A78BFA;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
   --color-success: #22C55E;
   --color-analytics: #8B5CF6;
-  --color-bg: #F7F6FB;
-  --color-bg-elevated: #FAF9FD;
+  --color-bg: #F7F5FF;
+  --color-bg-elevated: #F1EEFF;
   --color-surface: #FFFFFF;
-  --color-surface-hover: #F3F1F8;
-  --color-border: #E7E2F0;
+  --color-surface-hover: #F9F8FF;
+  --color-border: #E2D9F3;
   --color-border-hover: #D1C8DF;
-  --color-text-primary: #17131F;
-  --color-text-secondary: #6F687A;
+  --color-text-primary: #1A1525;
+  --color-text-secondary: #5D5470;
   --color-text-muted: #867F91;
-  --shadow-color: rgba(124, 58, 237, 0.08);
+  --shadow-color: rgba(139, 92, 246, 0.08);
 }
 
 /* Force opaque surfaces and borders in light mode for clear hierarchy */
+.light .bg-bg-elevated,
 .light .bg-bg-elevated\/20,
 .light .bg-bg-elevated\/30,
 .light .bg-bg-elevated\/40,
@@ -99,19 +100,33 @@
 .light .bg-bg-elevated\/90,
 .light .bg-bg-elevated\/95 {
   background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 8px var(--shadow-color) !important;
 }
 
+.light .bg-surface,
 .light .bg-surface\/30,
 .light .bg-surface\/40,
 .light .bg-surface\/50,
 .light .bg-surface\/80 {
   background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 16px var(--shadow-color) !important;
 }
 
 .light .border-border\/30,
-.light .border-border\/50 {
+.light .border-border\/50,
+.light .border-border\/70 {
   border-color: var(--color-border) !important;
 }
+
+/* Ensure Dashboard panels have proper depth in Light Mode */
+.light .rounded-card,
+.light .rounded-xl {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 6px 20px var(--shadow-color) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
 
 @layer base {
   * {

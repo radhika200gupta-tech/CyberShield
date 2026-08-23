@@ -132,8 +132,8 @@ class VisionService {
   }
 
   calculateRiskScore(motion, brightness, stability) {
-    // Base score is 100 (Safe)
-    let score = 100;
+    // Base score is 87 for mock purposes (not 100)
+    let score = 87;
     
     // High motion reduces score
     if (motion > 20) score -= (motion - 20) * 0.5;

@@ -4,14 +4,17 @@ import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts';
 import { FiShield, FiAlertTriangle } from 'react-icons/fi';
 
 export default function VisionAnalysisPanel({ telemetry, telemetryHistory }) {
-  const risk = telemetry?.riskScore ?? 100;
+  const isOffline = !telemetry;
+  const risk = telemetry?.riskScore ?? null;
   
-  let riskLevel = 'LOW';
-  let riskColor = 'text-success';
-  let riskBg = 'bg-success/10 border-success/30';
+  let riskLevel = isOffline ? 'N/A' : 'LOW';
+  let riskColor = isOffline ? 'text-text-muted' : 'text-success';
+  let riskBg = isOffline ? 'bg-bg-elevated/50 border-border/50' : 'bg-success/10 border-success/30';
   
-  if (risk < 80) { riskLevel = 'MEDIUM'; riskColor = 'text-warning'; riskBg = 'bg-warning/10 border-warning/30'; }
-  if (risk < 50) { riskLevel = 'HIGH'; riskColor = 'text-danger'; riskBg = 'bg-danger/10 border-danger/30'; }
+  if (!isOffline) {
+    if (risk < 80) { riskLevel = 'MEDIUM'; riskColor = 'text-warning'; riskBg = 'bg-warning/10 border-warning/30'; }
+    if (risk < 50) { riskLevel = 'HIGH'; riskColor = 'text-danger'; riskBg = 'bg-danger/10 border-danger/30'; }
+  }
 
   const renderBar = (label, value, colorClass) => {
     const fillBlocks = Math.round(value / 10);
@@ -51,7 +54,10 @@ export default function VisionAnalysisPanel({ telemetry, telemetryHistory }) {
           <span className={`text-2xl font-display font-bold ${riskColor}`}>{riskLevel}</span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-3xl font-display font-bold text-text-primary leading-none">{risk}<span className="text-sm text-text-muted">/100</span></span>
+          <span className="text-3xl font-display font-bold text-text-primary leading-none">
+            {isOffline ? '—' : risk}
+            <span className="text-sm text-text-muted">/100</span>
+          </span>
         </div>
       </div>
 
@@ -105,7 +111,8 @@ export default function VisionAnalysisPanel({ telemetry, telemetryHistory }) {
          <div className="mt-4 pt-4 border-t border-border">
            <span className="text-[9px] uppercase text-text-muted tracking-wider block mb-1">Assessment</span>
            <p className="text-[11px] text-text-secondary leading-relaxed">
-             {risk > 80 ? "Environmental conditions are currently stable. Continue monitoring." : 
+             {isOffline ? "Awaiting camera initialization to assess environmental conditions." :
+              risk > 80 ? "Environmental conditions are currently stable. Continue monitoring." : 
               risk > 50 ? "Moderate environmental shifts detected. Ensure camera is secure." : 
               "High visual disturbance. Verify environment immediately."}
            </p>

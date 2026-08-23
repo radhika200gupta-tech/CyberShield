@@ -198,7 +198,7 @@ export default function WebcamSecurityLabPreview() {
         </div>
 
         {/* RIGHT: Vision Analysis Panel */}
-        <div className="w-full lg:w-[380px] p-6 bg-[#050708]">
+        <div className="w-full lg:w-[380px] p-6 bg-surface/50">
            <VisionAnalysisPanel telemetry={telemetry} telemetryHistory={telemetryHistory} />
         </div>
       </div>

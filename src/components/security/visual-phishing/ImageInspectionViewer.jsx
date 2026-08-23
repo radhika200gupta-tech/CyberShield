@@ -18,7 +18,7 @@ export default function ImageInspectionViewer({ imageUrl, matchingWords, showOve
   }, [imageUrl]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full min-h-[400px] max-h-[600px] bg-[#050708] rounded-xl border border-border overflow-hidden flex items-center justify-center group">
+    <div ref={containerRef} className="relative w-full h-full min-h-[400px] max-h-[600px] bg-surface/50 rounded-xl border border-border overflow-hidden flex items-center justify-center group">
       
       {imageUrl && (
         <div className="relative inline-block max-w-full max-h-full">

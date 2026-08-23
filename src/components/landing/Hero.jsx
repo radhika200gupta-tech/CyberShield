@@ -82,7 +82,9 @@ function ScanVisual() {
       </div>
 
       <div className="relative rounded-[14px] bg-surface border border-border/40 p-5 font-mono text-xs text-text-secondary overflow-hidden shadow-inner flex flex-col gap-4">
-        <div className="absolute inset-x-0 h-32 bg-gradient-to-b from-primary/0 via-primary/5 to-primary/0 animate-scan pointer-events-none" />
+        <div className="absolute inset-x-0 h-32 bg-gradient-to-b from-transparent via-primary/15 to-transparent animate-scan pointer-events-none flex flex-col justify-center z-0">
+          <div className="w-full h-[1px] bg-primary shadow-[0_0_12px_2px_var(--color-primary)] opacity-70" />
+        </div>
         
         <div>
           <span className="text-text-muted text-[10px] uppercase tracking-widest block mb-1">Scanning</span>
