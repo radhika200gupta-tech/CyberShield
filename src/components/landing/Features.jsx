@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { FiCamera, FiCrosshair, FiLink, FiMaximize, FiKey, FiShield, FiArrowRight } from 'react-icons/fi';
 import Card from '../common/Card';
 import { features } from '../../data/mockLanding';
@@ -6,6 +7,8 @@ import { features } from '../../data/mockLanding';
 const ICONS = { camera: FiCamera, crosshair: FiCrosshair, link: FiLink, maximize: FiMaximize, key: FiKey, shield: FiShield };
 
 export default function Features() {
+  const navigate = useNavigate();
+
   return (
     <section id="features" className="py-24 sm:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +28,11 @@ export default function Features() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
               >
-                <Card hoverable className="h-full flex flex-col group cursor-pointer">
+                <Card 
+                  hoverable 
+                  className="h-full flex flex-col group cursor-pointer"
+                  onClick={() => feature.path && navigate(feature.path)}
+                >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 transition-colors group-hover:bg-primary/20">
                     <Icon className="text-accent" size={18} />
                   </div>

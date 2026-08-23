@@ -1,7 +1,7 @@
 export const mockUser = {
   id: 'usr_8271',
-  name: 'Arjun Mehta',
-  email: 'arjun.mehta@example.com',
+  name: 'User',
+  email: 'user@example.com',
   avatarInitials: 'AM',
   role: 'Security Analyst',
   plan: 'Pro',

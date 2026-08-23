@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import PageHeader from '../../components/common/PageHeader';
 import { 
   FiCheckCircle, FiAlertCircle, FiArrowRight, FiShield, FiMail, 
   FiEye, FiUser, FiLink, FiAlignLeft, FiX, FiActivity, FiTarget, 
@@ -171,20 +172,12 @@ export default function PhishingSimulator() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 animate-fade-in">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-2xl font-display font-semibold text-text-primary">
-              Phishing Training Lab
-            </h1>
-            <span className="px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-medium font-mono uppercase tracking-wider">
-              Interactive security awareness training
-            </span>
-          </div>
-          <p className="text-sm text-text-secondary">
-            Test your ability to identify phishing attempts through realistic security awareness scenarios.
-          </p>
-        </div>
+      <PageHeader
+        title="Phishing Simulation"
+        description="Test your ability to identify phishing attempts through realistic security awareness scenarios."
+        badge="Interactive security awareness training"
+        icon={<FiTarget />}
+      >
         <div className="h-6 flex items-center">
           {hasSaved && (
             <span className="text-xs font-medium text-success flex items-center gap-1.5 animate-fade-in">
@@ -192,7 +185,7 @@ export default function PhishingSimulator() {
             </span>
           )}
         </div>
-      </div>
+      </PageHeader>
 
       {/* Progress & Stats Row */}
       <Card className="p-5 bg-bg-elevated border-border animate-fade-in">
@@ -228,17 +221,20 @@ export default function PhishingSimulator() {
       </Card>
 
       {/* Main Content */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Simulation Box (Left, col-span-2) */}
-        <div className="lg:col-span-2 space-y-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={scenario.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.3 }}
-            >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={scenario.id}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 10 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {/* Top Two Columns (Email Viewer + Inspection Tools) */}
+          <div className="grid lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Simulation Box (Left, ~67%) */}
+            <div className="lg:col-span-8">
               <Card className="overflow-hidden border-border bg-bg-elevated shadow-sm">
                 <div className="px-5 py-3 border-b border-border flex items-center justify-between bg-surface">
                   <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
@@ -293,161 +289,193 @@ export default function PhishingSimulator() {
                   </div>
                 </div>
               </Card>
+            </div>
 
-              {/* Quiz / Feedback Section */}
-              <div className="mt-6">
-                {userAnswer === null ? (
-                  <Card className="p-6 border-border bg-bg-elevated shadow-sm">
-                    <h3 className="text-base font-medium text-text-primary mb-4 flex items-center gap-2">
-                      <FiShield className="text-accent" /> What is your security decision?
+            {/* Sidebar: Phishing Analysis (Right, ~33%) */}
+            <div className="lg:col-span-4">
+              <Card className="border-border bg-bg-elevated overflow-hidden">
+                
+                {/* SECTION 1: Inspection Tools */}
+                <div className="p-5 border-b border-border/50">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider flex items-center gap-2 mb-2">
+                      <FiEye className="text-accent" /> Inspection Tools
                     </h3>
-                    <div className="grid sm:grid-cols-3 gap-3">
-                      {['Report as suspicious', 'Ignore / delete', 'Proceed normally'].map(option => (
-                        <Button 
-                          key={option} 
-                          variant="outline" 
-                          className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-2 hover:bg-surface-hover hover:border-accent hover:text-accent transition-all text-sm font-medium" 
-                          onClick={() => handleAnswer(option)}
-                        >
-                          {option}
-                        </Button>
-                      ))}
-                    </div>
-                  </Card>
-                ) : (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <Card className={`overflow-hidden border-2 transition-colors ${isCorrect ? 'border-success/50 bg-success/5' : 'border-danger/50 bg-danger/5'}`}>
-                      <div className={`px-6 py-4 border-b ${isCorrect ? 'border-success/20 bg-success/10' : 'border-danger/20 bg-danger/10'} flex items-center gap-3`}>
-                        {isCorrect ? <FiCheckCircle size={20} className="text-success" /> : <FiAlertCircle size={20} className="text-danger" />}
-                        <h3 className={`text-lg font-semibold ${isCorrect ? 'text-success' : 'text-danger'}`}>
-                          {isCorrect ? 'Correct Decision' : 'Incorrect Decision'}
-                        </h3>
-                      </div>
-                      
-                      <div className="p-6 space-y-6">
-                        <div>
-                          <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Analysis Explanation</h4>
-                          <p className="text-sm text-text-primary leading-relaxed bg-surface p-4 rounded-lg border border-border">
-                            {scenario.explanation}
-                          </p>
-                        </div>
-
-                        {scenario.warningSigns.length > 0 && (
-                          <div>
-                            <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Detected Warning Signs</h4>
-                            <div className="grid gap-3">
-                              {scenario.warningSigns.map(sign => (
-                                <div key={sign.id} className="p-3 bg-surface border border-border rounded-lg flex flex-col sm:flex-row sm:items-center gap-3 shadow-sm">
-                                  <span className={`text-[10px] px-2.5 py-1 rounded font-bold uppercase tracking-wider shrink-0 ${sign.severity === 'High' ? 'bg-danger/10 text-danger border border-danger/20' : 'bg-warning/10 text-warning border border-warning/20'}`}>
-                                    {sign.severity} Risk
-                                  </span>
-                                  <div>
-                                    <p className="text-sm font-medium text-text-primary">{sign.label}</p>
-                                    <p className="text-xs text-text-secondary mt-0.5">{sign.explanation}</p>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        <div>
-                          <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Recommended Protocol</h4>
-                          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
-                            <FiInfo className="text-primary mt-0.5 shrink-0" size={16} />
-                            <p className="text-sm font-medium text-text-primary">{scenario.recommendedAction}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-end pt-2 border-t border-border/50">
-                          <Button variant="primary" onClick={nextScenario} className="group px-6">
-                            {currentScenarioIndex < SCENARIOS.length - 1 ? 'Next Training Scenario' : 'Restart Training Lab'} 
-                            <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Sidebar: Inspect Tools */}
-        <div className="lg:col-span-1 space-y-6">
-          <Card className="p-5 border-border bg-bg-elevated">
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider flex items-center gap-2 mb-2">
-                <FiEye className="text-accent" /> Inspection Tools
-              </h3>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                Analyze specific elements of the message for phishing indicators before making your decision.
-              </p>
-            </div>
-            
-            <div className="flex flex-col gap-2.5">
-              <Button 
-                variant="outline" 
-                className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'sender' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
-                onClick={() => setActiveInspection('sender')}
-                aria-label="Inspect Sender"
-              >
-                <FiUser className={`mr-3 ${activeInspection === 'sender' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
-                <span className="font-medium">Inspect Sender</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'link' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
-                onClick={() => setActiveInspection('link')}
-                aria-label="Inspect Links"
-              >
-                <FiLink className={`mr-3 ${activeInspection === 'link' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
-                <span className="font-medium">Inspect Links</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'message' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
-                onClick={() => setActiveInspection('message')}
-                aria-label="Inspect Content"
-              >
-                <FiAlignLeft className={`mr-3 ${activeInspection === 'message' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
-                <span className="font-medium">Inspect Content</span>
-              </Button>
-            </div>
-
-            <AnimatePresence>
-              {activeInspection && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden mt-4"
-                >
-                  <div className="p-4 bg-surface border border-accent/30 rounded-lg relative shadow-sm">
-                    <button 
-                      onClick={() => setActiveInspection(null)} 
-                      className="absolute top-3 right-3 text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 rounded"
-                      aria-label="Close inspection panel"
-                    >
-                      <FiX size={16} />
-                    </button>
-                    <h4 className="text-xs font-bold text-accent uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <FiAlertTriangle size={14} /> {activeInspection} Analysis
-                    </h4>
-                    <p className="text-sm text-text-primary leading-relaxed pr-6">
-                      {scenario.inspections[activeInspection]}
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Analyze specific elements of the message for phishing indicators before making your decision.
                     </p>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Card>
-        </div>
-      </div>
+                  
+                  <div className="flex flex-col gap-2.5">
+                    <Button 
+                      variant="outline" 
+                      className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'sender' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
+                      onClick={() => setActiveInspection('sender')}
+                      aria-label="Inspect Sender"
+                    >
+                      <FiUser className={`mr-3 ${activeInspection === 'sender' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
+                      <span className="font-medium">Inspect Sender</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'link' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
+                      onClick={() => setActiveInspection('link')}
+                      aria-label="Inspect Links"
+                    >
+                      <FiLink className={`mr-3 ${activeInspection === 'link' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
+                      <span className="font-medium">Inspect Links</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className={`justify-start text-sm py-2.5 px-4 transition-all ${activeInspection === 'message' ? 'bg-accent/10 border-accent text-accent shadow-sm' : 'hover:border-text-muted'}`} 
+                      onClick={() => setActiveInspection('message')}
+                      aria-label="Inspect Content"
+                    >
+                      <FiAlignLeft className={`mr-3 ${activeInspection === 'message' ? 'text-accent' : 'text-text-muted'}`} size={16} /> 
+                      <span className="font-medium">Inspect Content</span>
+                    </Button>
+                  </div>
+
+                  <AnimatePresence>
+                    {activeInspection && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden mt-4"
+                      >
+                        <div className="p-4 bg-surface border border-accent/30 rounded-lg relative shadow-sm">
+                          <button 
+                            onClick={() => setActiveInspection(null)} 
+                            className="absolute top-3 right-3 text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50 rounded"
+                            aria-label="Close inspection panel"
+                          >
+                            <FiX size={16} />
+                          </button>
+                          <h4 className="text-xs font-bold text-accent uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <FiAlertTriangle size={14} /> {activeInspection} Analysis
+                          </h4>
+                          <p className="text-sm text-text-primary leading-relaxed pr-6">
+                            {scenario.inspections[activeInspection]}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* SECTION 2: Key Phishing Indicators */}
+                <div className="p-5">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider flex items-center gap-2">
+                      <FiTarget className="text-accent" /> Key Phishing Indicators
+                    </h3>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-text-primary">1. Sender authenticity</p>
+                      <p className="text-xs text-text-secondary mt-1 leading-relaxed">Check whether the sender address matches the claimed organization.</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-text-primary">2. Link destination</p>
+                      <p className="text-xs text-text-secondary mt-1 leading-relaxed">Look for unexpected, suspicious, or misleading domains.</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-text-primary">3. Urgency & pressure</p>
+                      <p className="text-xs text-text-secondary mt-1 leading-relaxed">Be cautious of messages demanding immediate action or threatening consequences.</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-text-primary">4. Message content</p>
+                      <p className="text-xs text-text-secondary mt-1 leading-relaxed">Look for unusual requests, inconsistencies, or suspicious wording.</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Quiz / Feedback Section (Full Width below the columns) */}
+          <div className="w-full">
+            {userAnswer === null ? (
+              <Card className="p-6 border-border bg-bg-elevated shadow-sm">
+                <h3 className="text-base font-medium text-text-primary mb-4 flex items-center gap-2">
+                  <FiShield className="text-accent" /> What is your security decision?
+                </h3>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  {['Report as suspicious', 'Ignore / delete', 'Proceed normally'].map(option => (
+                    <Button 
+                      key={option} 
+                      variant="outline" 
+                      className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-2 hover:bg-surface-hover hover:border-accent hover:text-accent transition-all text-sm font-medium" 
+                      onClick={() => handleAnswer(option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+              </Card>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card className={`overflow-hidden border-2 transition-colors ${isCorrect ? 'border-success/50 bg-success/5' : 'border-danger/50 bg-danger/5'}`}>
+                  <div className={`px-6 py-4 border-b ${isCorrect ? 'border-success/20 bg-success/10' : 'border-danger/20 bg-danger/10'} flex items-center gap-3`}>
+                    {isCorrect ? <FiCheckCircle size={20} className="text-success" /> : <FiAlertCircle size={20} className="text-danger" />}
+                    <h3 className={`text-lg font-semibold ${isCorrect ? 'text-success' : 'text-danger'}`}>
+                      {isCorrect ? 'Correct Decision' : 'Incorrect Decision'}
+                    </h3>
+                  </div>
+                  
+                  <div className="p-6 space-y-6">
+                    <div>
+                      <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Analysis Explanation</h4>
+                      <p className="text-sm text-text-primary leading-relaxed bg-surface p-4 rounded-lg border border-border">
+                        {scenario.explanation}
+                      </p>
+                    </div>
+
+                    {scenario.warningSigns.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Detected Warning Signs</h4>
+                        <div className="grid gap-3">
+                          {scenario.warningSigns.map(sign => (
+                            <div key={sign.id} className="p-3 bg-surface border border-border rounded-lg flex flex-col sm:flex-row sm:items-center gap-3 shadow-sm">
+                              <span className={`text-[10px] px-2.5 py-1 rounded font-bold uppercase tracking-wider shrink-0 ${sign.severity === 'High' ? 'bg-danger/10 text-danger border border-danger/20' : 'bg-warning/10 text-warning border border-warning/20'}`}>
+                                {sign.severity} Risk
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium text-text-primary">{sign.label}</p>
+                                <p className="text-xs text-text-secondary mt-0.5">{sign.explanation}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Recommended Protocol</h4>
+                      <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
+                        <FiInfo className="text-primary mt-0.5 shrink-0" size={16} />
+                        <p className="text-sm font-medium text-text-primary">{scenario.recommendedAction}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end pt-2 border-t border-border/50">
+                      <Button variant="primary" onClick={nextScenario} className="group px-6">
+                        {currentScenarioIndex < SCENARIOS.length - 1 ? 'Next Training Scenario' : 'Restart Training Lab'} 
+                        <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

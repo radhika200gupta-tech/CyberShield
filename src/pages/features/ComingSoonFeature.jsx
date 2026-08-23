@@ -1,17 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { 
   FiCpu, FiShield, FiTarget, FiLayers, FiTerminal, FiActivity, FiLock, FiInfo, FiMap, FiGlobe, 
   FiAlertTriangle, FiList, FiServer, FiMaximize2, FiX, FiFilter, FiCamera, FiVideo, FiCheckCircle, 
-  FiEye, FiEyeOff, FiAlertCircle, FiClock, FiSettings, FiPlay, FiRefreshCw, FiChevronRight, FiBarChart2
+  FiEye, FiEyeOff, FiAlertCircle, FiClock, FiSettings, FiPlay, FiRefreshCw, FiChevronRight, FiBarChart2, FiArrowRight
 } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import WindowControls from '../../components/common/WindowControls';
 import { WORLD_MAP_PATH } from '../../components/common/WorldMapData';
 import WebcamSecurityLabPreview from './WebcamSecurityLabPreview';
+
+function VisualPhishingPreview() {
+  return (
+    <div className="flex flex-col text-left w-full h-full bg-surface/50 rounded-card relative overflow-hidden">
+      <div className="p-6 sm:p-8 flex-1 flex flex-col min-h-[350px]">
+        
+        {/* Upload Area */}
+        <div className="mb-8 p-8 rounded-xl border-2 border-dashed border-border bg-bg-elevated/50 flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center mb-4">
+            <FiCamera size={28} className="text-text-muted" />
+          </div>
+          <h3 className="text-lg font-semibold text-text-primary mb-2">Upload Screenshot</h3>
+          <p className="text-sm text-text-secondary mb-6 max-w-md">
+            Visual analysis engine coming soon. Upload and automated screenshot analysis will be available in a future CyberShield release.
+          </p>
+          <button disabled className="bg-bg-elevated text-text-primary px-4 py-2 rounded-lg border border-border pointer-events-none opacity-50">
+            Select Image
+          </button>
+          <p className="text-xs text-text-muted mt-4 font-mono">Supported: PNG • JPG • WEBP</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Risk Overview */}
+          <div className="md:col-span-1 space-y-4">
+            <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2">Risk Overview</h4>
+            <div className="p-5 rounded-xl border border-border bg-surface shadow-sm">
+              <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Risk Score</div>
+              <div className="text-3xl font-display font-bold text-text-muted mb-4">-- <span className="text-sm font-normal">/ 100</span></div>
+              <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Status</div>
+              <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-bg-elevated border border-border text-xs font-mono text-text-secondary">
+                <FiClock size={12} /> Engine Coming Soon
+              </div>
+            </div>
+
+            <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2 mt-6">Recommended Actions</h4>
+            <div className="p-4 rounded-xl border border-border bg-surface shadow-sm space-y-3">
+              <p className="text-xs text-text-secondary flex items-start gap-2">
+                <span className="text-accent mt-0.5">•</span> Verify the website/domain independently.
+              </p>
+              <p className="text-xs text-text-secondary flex items-start gap-2">
+                <span className="text-accent mt-0.5">•</span> Avoid entering credentials into suspicious forms.
+              </p>
+              <p className="text-xs text-text-secondary flex items-start gap-2">
+                <span className="text-accent mt-0.5">•</span> Check the displayed domain carefully.
+              </p>
+              <p className="text-xs text-text-secondary flex items-start gap-2">
+                <span className="text-accent mt-0.5">•</span> Report suspected phishing content.
+              </p>
+              <div className="mt-2 pt-2 border-t border-border text-[10px] font-mono text-text-muted italic">Demo recommendations</div>
+            </div>
+          </div>
+
+          {/* Analysis Breakdown */}
+          <div className="md:col-span-2 space-y-4">
+            <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2">Visual Findings</h4>
+            <div className="p-5 rounded-xl border border-border bg-surface shadow-sm mb-6">
+              <p className="text-sm text-text-secondary mb-4">Potential indicators the future engine will analyze:</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {['Suspicious branding', 'Login form impersonation', 'Suspicious call-to-action buttons', 'Urgency/manipulation patterns', 'Fake security warnings', 'Suspicious domain/URL presentation', 'Brand/logo impersonation', 'Credential collection indicators'].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs text-text-secondary bg-bg-elevated px-3 py-2 rounded-lg border border-border">
+                    <FiCheckCircle size={12} className="text-text-muted" /> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2">Analysis Breakdown</h4>
+            <div className="space-y-2">
+              {[
+                { label: 'Visual Elements', icon: FiEye },
+                { label: 'Branding & Impersonation', icon: FiShield },
+                { label: 'Login / Credential Capture', icon: FiLock },
+                { label: 'Suspicious CTA', icon: FiTarget },
+                { label: 'Social Engineering Indicators', icon: FiAlertTriangle }
+              ].map((cat, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface hover:bg-surface-hover transition-colors">
+                  <div className="flex items-center gap-3">
+                    <cat.icon size={14} className="text-text-muted" />
+                    <span className="text-sm text-text-primary">{cat.label}</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-text-muted bg-bg-elevated px-2 py-1 rounded border border-border uppercase">Coming Soon</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
 
 function AICopilotPreview() {
   const [input, setInput] = useState('');
@@ -207,7 +298,7 @@ function AICopilotPreview() {
   );
 }
 
-function LiveThreatMapPreview() {
+export function LiveThreatMapPreview({ isCompact = false }) {
   const [threats, setThreats] = useState([]);
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [selectedThreat, setSelectedThreat] = useState(null);
@@ -474,10 +565,43 @@ function LiveThreatMapPreview() {
   const resetFilters = () => setFilters({ type: 'ALL', severity: 'ALL', time: '24H' });
 
   return (
-    <div className="flex flex-col w-full bg-surface/50 rounded-card relative overflow-hidden">
+    <div className={`flex flex-col w-full bg-surface/50 rounded-card relative overflow-hidden ${isCompact ? 'border border-border/50 shadow-sm h-full' : ''}`}>
       {/* MAP HERO SECTION */}
-      <div className="relative w-full h-[400px] sm:h-[500px] border-b border-border bg-[#050B14] overflow-hidden">
+      <div className={`relative w-full ${isCompact ? 'h-full min-h-[280px]' : 'h-[400px] sm:h-[500px]'} border-b border-border bg-surface overflow-hidden`}>
         
+        {isCompact && (
+          <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 pointer-events-none">
+            <div className="bg-bg-elevated/85 backdrop-blur-md border border-border p-3.5 rounded-xl shadow-lg pointer-events-auto">
+              <h4 className="text-[10px] font-bold text-text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+                <FiActivity className="text-accent" size={14} /> Global Threat Network
+              </h4>
+              <div className="flex gap-5">
+                <div>
+                  <div className="text-[9px] text-text-muted font-bold uppercase tracking-widest mb-0.5">Active Threats</div>
+                  <div className="text-lg font-bold text-danger leading-none">{activePaths.length}</div>
+                </div>
+                <div>
+                  <div className="text-[9px] text-text-muted font-bold uppercase tracking-widest mb-0.5">Monitored</div>
+                  <div className="text-lg font-bold text-accent leading-none">{computedRegions.length} <span className="text-xs text-text-muted font-medium">Regions</span></div>
+                </div>
+              </div>
+              <div className="mt-3 pt-2 border-t border-border/50 text-[9px] text-text-muted font-mono flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" /> Live WebRTC Feed Active
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isCompact && (
+          <div className="absolute bottom-4 left-4 z-20 pointer-events-auto">
+            <Link to="/app/coming-soon/threat-map">
+              <Button variant="outline" className="text-[10px] py-1.5 px-3 bg-bg-elevated/80 backdrop-blur-md shadow-lg border-accent/30 text-accent hover:bg-accent/10 hover:border-accent font-semibold tracking-wider uppercase">
+                View Full Threat Map <FiArrowRight className="ml-1.5" size={12} />
+              </Button>
+            </Link>
+          </div>
+        )}
+
         {/* Horizontal Scan Line Overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div 
@@ -494,7 +618,7 @@ function LiveThreatMapPreview() {
 
         {/* Filters Overlay */}
         <div className="absolute top-4 left-4 z-20 flex flex-col gap-3">
-            <div className="flex flex-wrap gap-2 items-center bg-[#050B14]/80 p-2 rounded-xl border border-border/50 backdrop-blur-md shadow-lg">
+            <div className="flex flex-wrap gap-2 items-center bg-bg-elevated/80 p-2 rounded-xl border border-border/50 backdrop-blur-md shadow-lg">
                 <div className="flex items-center gap-2 border-r border-border/50 pr-2">
                    <FiFilter className="text-text-muted" size={12} />
                    <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Type</span>
@@ -822,7 +946,8 @@ function LiveThreatMapPreview() {
       </div>
 
       {/* BOTTOM SECTION: Supporting Information */}
-      <div className="flex flex-col lg:flex-row p-4 sm:p-6 gap-6 relative z-10 bg-surface/50">
+      {!isCompact && (
+        <div className="flex flex-col lg:flex-row p-4 sm:p-6 gap-6 relative z-10 bg-surface/50">
         
         {/* Left Bottom Side: Stats & Region */}
         <div className="flex-1 flex flex-col gap-6">
@@ -910,6 +1035,7 @@ function LiveThreatMapPreview() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
@@ -919,14 +1045,19 @@ export default function ComingSoonFeature(props) {
   const isCopilot = location.pathname.includes('ai-copilot');
   const isThreatMap = location.pathname.includes('threat-map');
   const isWebcamLab = location.pathname.includes('webcam-security');
+  const isVisualPhishing = location.pathname.includes('visual-phishing');
 
-  const title = isWebcamLab ? "Webcam Security Lab" : (isThreatMap ? "Live Cyber Threat Map" : (isCopilot ? "AI Security Copilot" : (props.title || "Advanced Threat Intelligence")));
-  const subtitle = isWebcamLab ? "Simulated environment to audit browser camera security and privacy risks." : (isThreatMap ? "Real-time global visualization of simulated security events and attack vectors." : (isCopilot ? "Intelligent security guidance for suspicious URLs, messages and threats." : (props.subtitle || "Next-generation security capability")));
-  const description = isWebcamLab ? "Experience our frontend-only demonstration of the upcoming Webcam Security Lab. Test mock camera permissions and learn about browser privacy controls." : (isThreatMap ? "Monitor global security activity through our frontend demonstration of the upcoming live threat intelligence visualization." : (isCopilot ? "Ask CyberShield about a security concern using our interactive demo intelligence engine." : (props.description || "A powerful upcoming module designed to proactively analyze, detect, and mitigate complex security threats using heuristic models and behavioral analysis.")));
-  const Icon = isWebcamLab ? FiCamera : (isThreatMap ? FiMap : (isCopilot ? FiTerminal : (props.icon || FiCpu)));
-  const category = isWebcamLab ? "Privacy Lab" : (isThreatMap ? "Global Intel" : (isCopilot ? "Security Copilot" : (props.category || "Security Module")));
+  const title = isVisualPhishing ? "Visual Phishing Detection" : isWebcamLab ? "Webcam Security Lab" : (isThreatMap ? "Live Cyber Threat Map" : (isCopilot ? "AI Security Copilot" : (props.title || "Advanced Threat Intelligence")));
+  const subtitle = isVisualPhishing ? "Analyze screenshots and visual content for potential phishing indicators." : isWebcamLab ? "Simulated environment to audit browser camera security and privacy risks." : (isThreatMap ? "Real-time global visualization of simulated security events and attack vectors." : (isCopilot ? "Intelligent security guidance for suspicious URLs, messages and threats." : (props.subtitle || "Next-generation security capability")));
+  const description = isVisualPhishing ? "Upload and automated screenshot analysis will be available in a future CyberShield release." : isWebcamLab ? "Experience our frontend-only demonstration of the upcoming Webcam Security Lab. Test mock camera permissions and learn about browser privacy controls." : (isThreatMap ? "Monitor global security activity through our frontend demonstration of the upcoming live threat intelligence visualization." : (isCopilot ? "Ask CyberShield about a security concern using our interactive demo intelligence engine." : (props.description || "A powerful upcoming module designed to proactively analyze, detect, and mitigate complex security threats using heuristic models and behavioral analysis.")));
+  const Icon = isVisualPhishing ? FiEye : isWebcamLab ? FiCamera : (isThreatMap ? FiMap : (isCopilot ? FiTerminal : (props.icon || FiCpu)));
+  const category = isVisualPhishing ? "Visual Intelligence" : isWebcamLab ? "Privacy Lab" : (isThreatMap ? "Global Intel" : (isCopilot ? "Security Copilot" : (props.category || "Security Module")));
   
-  const features = isWebcamLab ? [
+  const features = isVisualPhishing ? [
+    { icon: FiEye, title: "Visual Analysis", description: "Scans uploaded screenshots for deceptive design patterns and cloned branding." },
+    { icon: FiTarget, title: "Form Detection", description: "Identifies fake credential collection forms and suspicious input fields." },
+    { icon: FiAlertTriangle, title: "Social Engineering", description: "Detects urgency cues and manipulative language in visual contexts." }
+  ] : isWebcamLab ? [
     { icon: FiEyeOff, title: "Privacy Controls", description: "Audit browser-level camera permissions and access states." },
     { icon: FiAlertCircle, title: "Threat Scenarios", description: "Learn how malicious websites can exploit camera access." },
     { icon: FiActivity, title: "Live Simulation", description: "Experience interactive simulated permission tests." }
@@ -944,7 +1075,7 @@ export default function ComingSoonFeature(props) {
     { icon: FiLayers, title: "Deep Integration", description: "Seamlessly connects with existing security information management." }
   ])));
   
-  const previewContent = isWebcamLab ? <WebcamSecurityLabPreview /> : (isThreatMap ? <LiveThreatMapPreview /> : (isCopilot ? <AICopilotPreview /> : (props.previewContent || null)));
+  const previewContent = isVisualPhishing ? <VisualPhishingPreview /> : isWebcamLab ? <WebcamSecurityLabPreview /> : (isThreatMap ? <LiveThreatMapPreview /> : (isCopilot ? <AICopilotPreview /> : (props.previewContent || null)));
 
   return (
     <div className="space-y-12 animate-fade-in pb-12 max-w-5xl mx-auto relative">

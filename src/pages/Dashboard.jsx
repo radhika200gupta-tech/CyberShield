@@ -7,6 +7,7 @@ import ChartCard from '../components/charts/ChartCard';
 import WeeklyThreatsChart from '../components/charts/WeeklyThreatsChart';
 import MonthlyScansChart from '../components/charts/MonthlyScansChart';
 import RiskDistributionChart from '../components/charts/RiskDistributionChart';
+import { LiveThreatMapPreview } from './features/ComingSoonFeature';
 import {
   dashboardCards, weeklyThreats, monthlyScans, riskDistribution, recentActivity,
 } from '../data/mockDashboard';
@@ -72,10 +73,11 @@ export default function Dashboard() {
             <ChartCard title="Monthly Scans" subtitle="Total scans run per month">
               <MonthlyScansChart data={monthlyScans} />
             </ChartCard>
-            <div className="sm:col-span-2">
-              <ChartCard title="Risk Distribution" subtitle="Breakdown of all scans by risk level">
-                <RiskDistributionChart data={riskDistribution} />
-              </ChartCard>
+            <ChartCard title="Risk Distribution" subtitle="Breakdown of all scans by risk level">
+              <RiskDistributionChart data={riskDistribution} />
+            </ChartCard>
+            <div className="h-full flex flex-col justify-stretch">
+               <LiveThreatMapPreview isCompact={true} />
             </div>
           </div>
 

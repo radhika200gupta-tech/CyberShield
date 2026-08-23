@@ -40,6 +40,13 @@ export default function ScannerViewport({ enabled = true, paused = false, onDete
         onScan={handleScan}
         onError={handleError}
         paused={paused}
+        formats={['qr_code']}
+        scanDelay={300}
+        constraints={{
+          facingMode: 'environment',
+          width: { ideal: 720, max: 1080 },
+          height: { ideal: 720, max: 1080 },
+        }}
         components={{ finder: false }}
         styles={{
           container: { width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 },

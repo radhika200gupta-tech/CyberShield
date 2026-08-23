@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
+import PageHeader from '../components/common/PageHeader';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { FiUser, FiMail, FiShield, FiActivity, FiEdit2, FiSave, FiX, FiCheckCircle, FiClock, FiLock, FiSmartphone } from 'react-icons/fi';
@@ -42,10 +43,11 @@ export default function Profile() {
   return (
     <div className="space-y-6 animate-fade-in max-w-5xl mx-auto">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-display font-semibold text-text-primary mb-2">Profile</h1>
-        <p className="text-sm text-text-secondary">Manage your CyberShield account information.</p>
-      </div>
+      <PageHeader
+        title="Your Profile"
+        description="Manage your CyberShield account information."
+        icon={<FiUser />}
+      />
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Left Column: Avatar & Security */}

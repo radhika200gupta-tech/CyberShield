@@ -11,7 +11,7 @@ export default function ComingSoon() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading 
           title="Coming Soon" 
-          description="We are actively expanding CyberShield AI with new threat intelligence and detection capabilities."
+          description="We are actively expanding CyberShield with new threat intelligence and detection capabilities."
         />
 
         <div className="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

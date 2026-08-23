@@ -40,7 +40,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-text-secondary text-lg mt-6 max-w-lg"
           >
-            CyberShield AI checks your passwords, links, and emails against real threat patterns in real time — so you catch the phishing attempt before it catches you.
+            CyberShield checks your passwords, links, and emails against real threat patterns in real time — so you catch the phishing attempt before it catches you.
           </motion.p>
 
           <motion.div
@@ -73,7 +73,15 @@ export default function Hero() {
 
 function ScanVisual() {
   return (
-    <div className="relative rounded-card border border-border bg-surface glass p-6 shadow-2xl overflow-hidden">
+    <div className="scan-visual relative rounded-card border border-border bg-surface glass p-6 shadow-2xl overflow-hidden">
+      <style>{`
+        .light .scan-visual {
+          --color-warning: #D97706;
+          --color-accent: #0284C7;
+          --color-success: #16A34A;
+          --color-danger: #DC2626;
+        }
+      `}</style>
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <FiShield className="text-accent" size={16} />

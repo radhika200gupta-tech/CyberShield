@@ -1,5 +1,8 @@
 import { useState, useMemo } from "react";
-
+import { FiKey, FiEye, FiEyeOff, FiCheck, FiX, FiInfo, FiShield, FiClock, FiAlertTriangle, FiLock, FiCpu } from 'react-icons/fi';
+import PageHeader from "../../components/common/PageHeader";
+import Card from "../../components/common/Card";
+import Button from "../../components/common/Button";
 export default function PasswordAnalyzer() {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
@@ -126,28 +129,17 @@ export default function PasswordAnalyzer() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#05070d] p-6 text-[#e7eaf3]">
-      <div className="mx-auto max-w-6xl space-y-6">
-        {/* Header */}
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/10 text-2xl">
-              🔐
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold sm:text-3xl text-[#e7eaf3]">
-                Password Security Lab
-              </h1>
-              <p className="mt-1 text-sm text-[#8b93a7]">
-                Analyze password strength, identify vulnerabilities, and generate secure credentials.
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="max-w-7xl mx-auto">
+      <div className="w-full space-y-6">
+        <PageHeader 
+          title="Password Security Lab"
+          description="Evaluate password strength and identify security risks."
+          icon={<FiKey />}
+        />
 
         {/* Password Input Card */}
-        <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
-          <h2 className="text-lg font-semibold text-[#e7eaf3]">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-text-primary">
             Test Your Password
           </h2>
 
@@ -161,14 +153,14 @@ export default function PasswordAnalyzer() {
                   setCopied(false);
                 }}
                 placeholder="Enter password..."
-                className="w-full rounded-xl border border-[#1e2433] bg-[#05070d] px-4 py-3 font-mono text-sm text-[#e7eaf3] outline-none transition focus:border-cyan-400/50"
+                className="w-full rounded-xl border border-border bg-bg px-4 py-3 font-mono text-sm text-text-primary outline-none transition focus:border-accent/50"
               />
             </div>
 
             <button
               type="button"
               onClick={() => setShow(!show)}
-              className="rounded-xl border border-[#1e2433] bg-[#161b29] px-5 py-3 text-sm font-medium text-[#e7eaf3] transition hover:bg-[#1e2433] hover:text-white"
+              className="rounded-xl border border-border bg-surface px-5 py-3 text-sm font-medium text-text-primary transition hover:bg-surface-hover"
             >
               {show ? "Hide" : "Show"}
             </button>
@@ -176,19 +168,17 @@ export default function PasswordAnalyzer() {
 
           {/* Action Buttons */}
           <div className="mt-4 flex flex-wrap gap-3">
-            <button
-              type="button"
+            <Button
               onClick={generatePassword}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:opacity-90"
             >
               ⚡ Generate Password
-            </button>
+            </Button>
 
             <button
               type="button"
               onClick={copyPassword}
               disabled={!password}
-              className="flex items-center gap-2 rounded-xl border border-[#1e2433] bg-[#161b29] px-5 py-2.5 text-sm font-medium text-[#e7eaf3] transition hover:bg-[#1e2433] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex items-center gap-2 rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text-primary transition hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-40"
             >
               {copied ? "✓ Copied" : "📋 Copy"}
             </button>
@@ -199,13 +189,13 @@ export default function PasswordAnalyzer() {
                 setPassword("");
                 setCopied(false);
               }}
-              className="rounded-xl border border-[#1e2433] bg-[#161b29] px-5 py-2.5 text-sm font-medium text-[#8b93a7] transition hover:bg-[#1e2433] hover:text-[#e7eaf3]"
+              className="rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
             >
               Clear
             </button>
           </div>
 
-          <p className="mt-3 text-xs text-[#8b93a7]">
+          <p className="mt-3 text-xs text-text-secondary">
             {password.length} {password.length === 1 ? "character" : "characters"} entered
           </p>
         </div>
@@ -213,9 +203,9 @@ export default function PasswordAnalyzer() {
         {/* Strength & Risk Metrics */}
         <div className="grid gap-6 md:grid-cols-2">
           {/* Password Strength */}
-          <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#e7eaf3]">
+              <h2 className="text-lg font-semibold text-text-primary">
                 Password Strength
               </h2>
               <span className="text-xl">💪</span>
@@ -224,33 +214,33 @@ export default function PasswordAnalyzer() {
             <p
               className={`mt-4 text-3xl font-bold ${
                 analysis.strength === "Strong"
-                  ? "text-green-400"
+                  ? "text-success"
                   : analysis.strength === "Good"
-                  ? "text-cyan-400"
+                  ? "text-accent"
                   : analysis.strength === "Weak"
-                  ? "text-yellow-400"
+                  ? "text-warning"
                   : analysis.strength === "Very Weak"
-                  ? "text-red-400"
-                  : "text-[#8b93a7]"
+                  ? "text-danger"
+                  : "text-text-secondary"
               }`}
             >
               {analysis.strength}
             </p>
 
-            <p className="mt-2 text-sm text-[#8b93a7]">
-              Security Score: <b className="text-[#e7eaf3]">{analysis.score}/7</b>
+            <p className="mt-2 text-sm text-text-secondary">
+              Security Score: <b className="text-text-primary">{analysis.score}/7</b>
             </p>
 
-            <div className="mt-4 h-3 overflow-hidden rounded-full bg-[#05070d] border border-[#1e2433]">
+            <div className="mt-4 h-3 overflow-hidden rounded-full bg-bg border border-border">
               <div
                 className={`h-full transition-all duration-300 ${
                   analysis.score >= 6
-                    ? "bg-green-400"
+                    ? "bg-success"
                     : analysis.score >= 5
-                    ? "bg-cyan-400"
+                    ? "bg-primary"
                     : analysis.score >= 3
-                    ? "bg-yellow-400"
-                    : "bg-red-400"
+                    ? "bg-warning"
+                    : "bg-danger"
                 }`}
                 style={{
                   width: `${(analysis.score / 7) * 100}%`,
@@ -260,9 +250,9 @@ export default function PasswordAnalyzer() {
           </div>
 
           {/* Security Risk Level */}
-          <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#e7eaf3]">
+              <h2 className="text-lg font-semibold text-text-primary">
                 Security Risk Level
               </h2>
               <span className="text-xl">🛡️</span>
@@ -271,18 +261,18 @@ export default function PasswordAnalyzer() {
             <p
               className={`mt-4 text-3xl font-bold ${
                 analysis.risk === "HIGH"
-                  ? "text-red-400"
+                  ? "text-danger"
                   : analysis.risk === "MEDIUM"
-                  ? "text-yellow-400"
+                  ? "text-warning"
                   : analysis.risk === "LOW"
-                  ? "text-green-400"
-                  : "text-[#8b93a7]"
+                  ? "text-success"
+                  : "text-text-secondary"
               }`}
             >
               {analysis.risk}
             </p>
 
-            <p className="mt-2 text-sm text-[#8b93a7]">
+            <p className="mt-2 text-sm text-text-secondary">
               {password
                 ? `${Math.round((analysis.score / 7) * 100)}% of security checks passed`
                 : "Enter a password to evaluate risk level."}
@@ -292,20 +282,20 @@ export default function PasswordAnalyzer() {
 
         {/* Common Password Warning */}
         {analysis.isCommon && (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
+          <div className="rounded-xl border border-danger/30 bg-danger/10 p-4 text-danger">
             <div className="flex items-center gap-2">
               <span className="text-lg">⚠️</span>
               <b>Common Password Detected</b>
             </div>
-            <p className="mt-1 text-sm text-red-300">
+            <p className="mt-1 text-sm text-danger">
               This password is in lists of commonly used passwords and is extremely vulnerable to dictionary attacks.
             </p>
           </div>
         )}
 
         {/* Security Checks */}
-        <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
-          <h2 className="text-lg font-semibold text-[#e7eaf3]">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-text-primary">
             🔍 Security Checks
           </h2>
 
@@ -315,8 +305,8 @@ export default function PasswordAnalyzer() {
                 key={check.label}
                 className={`flex items-center gap-3 rounded-xl border p-3.5 transition ${
                   check.passed
-                    ? "border-green-500/30 bg-green-500/5 text-green-300"
-                    : "border-red-500/30 bg-red-500/5 text-red-300"
+                    ? "border-success/30 bg-success/5 text-success"
+                    : "border-danger/30 bg-danger/5 text-danger"
                 }`}
               >
                 <span className="text-base">{check.passed ? "✅" : "❌"}</span>
@@ -327,8 +317,8 @@ export default function PasswordAnalyzer() {
         </div>
 
         {/* Character Breakdown */}
-        <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
-          <h2 className="text-lg font-semibold text-[#e7eaf3]">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-text-primary">
             🔤 Character Breakdown
           </h2>
 
@@ -342,14 +332,14 @@ export default function PasswordAnalyzer() {
         </div>
 
         {/* Recommendation Section */}
-        <div className="rounded-2xl border border-[#1e2433] bg-[#10141f] p-6 shadow-xl">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
           <div className="flex items-center gap-2">
             <span className="text-xl">💡</span>
-            <h2 className="text-lg font-semibold text-[#e7eaf3]">
+            <h2 className="text-lg font-semibold text-text-primary">
               Security Recommendation
             </h2>
           </div>
-          <p className="mt-2 text-sm text-[#8b93a7] leading-relaxed">
+          <p className="mt-2 text-sm text-text-secondary leading-relaxed">
             {recommendation()}
           </p>
         </div>
@@ -360,9 +350,11 @@ export default function PasswordAnalyzer() {
 
 function StatBox({ name, value }) {
   return (
-    <div className="rounded-xl border border-[#1e2433] bg-[#05070d] p-4 text-center">
-      <p className="text-xs font-medium text-[#8b93a7]">{name}</p>
-      <p className="mt-1 text-2xl font-bold text-[#e7eaf3]">{value}</p>
+    <div className="rounded-xl border border-border bg-bg p-4 text-center">
+      <p className="text-xs font-medium text-text-secondary">{name}</p>
+      <p className="mt-1 text-2xl font-bold text-text-primary">{value}</p>
     </div>
   );
 }
+
+

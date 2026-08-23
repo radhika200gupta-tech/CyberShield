@@ -13,8 +13,6 @@ import Settings from './pages/Settings';
 import ScreenshotAnalyzer from './pages/features/ScreenshotAnalyzer';
 import PhishingSimulator from './pages/features/PhishingSimulator';
 import PhishingChallenge from './modules/phishing-challenge/PhishingChallenge';
-import UrlScanner from './pages/features/UrlScanner';
-import QrScanner from './pages/features/QrScanner';
 import PasswordLab from './pages/features/PasswordLab';
 import SecurityCenter from './pages/features/SecurityCenter';
 import ComingSoonFeature from './pages/features/ComingSoonFeature';
@@ -41,10 +39,7 @@ function App() {
               <Route path={ROUTES.HOME} element={<Landing />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
 
-              {/* Teammate Web Security Routes */}
-              <Route path="/web-security/url-scanner" element={<URLScanner />} />
-              <Route path="/web-security/qr-scanner" element={<QRSecurityPage />} />
-              <Route path="/web-security/challenge" element={<FakeWebsiteChallenge />} />
+              {/* Teammate Web Security Routes moved inside DashboardLayout */}
 
               {/* Protected Application Routes */}
               <Route element={<ProtectedRoute />}>
@@ -63,14 +58,17 @@ function App() {
                     path={ROUTES.PHISHING_CHALLENGE}
                     element={<PhishingChallenge />}
                   />
+                  
+                  {/* Teammate Web Security Routes */}
                   <Route
                     path={ROUTES.URL_SCANNER}
-                    element={<UrlScanner />}
+                    element={<URLScanner />}
                   />
                   <Route
                     path={ROUTES.QR_SCANNER}
-                    element={<QrScanner />}
+                    element={<QRSecurityPage />}
                   />
+                  <Route path="/web-security/challenge" element={<FakeWebsiteChallenge />} />
                   <Route
                     path={ROUTES.PASSWORD_LAB}
                     element={<PasswordLab />}

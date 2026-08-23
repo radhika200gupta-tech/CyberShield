@@ -1,21 +1,24 @@
 import { useState, useEffect } from 'react';
-import Card from '../components/common/Card';
+import { 
+  FiMoon, FiSun, FiMonitor, FiBell, FiLock, 
+  FiShield, FiRefreshCw, FiSave, FiSettings
+} from 'react-icons/fi';
 import Button from '../components/common/Button';
+import Card from '../components/common/Card';
+import PageHeader from '../components/common/PageHeader';
 import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
-import { 
-  FiSettings, FiBell, FiMoon, FiSun, FiMonitor, 
-  FiLock, FiTerminal, FiSave, FiRefreshCw, FiCheck, FiCheckCircle
-} from 'react-icons/fi';
 
 const Toggle = ({ label, description, checked, onChange }) => (
   <div className="flex items-center justify-between py-4">
     <div className="pr-4">
-      <p className="text-sm font-medium text-text-primary">{label}</p>
-      {description && <p className="text-xs text-text-secondary mt-1">{description}</p>}
+      <h4 className="text-sm font-medium text-text-primary">{label}</h4>
+      <p className="text-xs text-text-secondary mt-1">{description}</p>
     </div>
     <button
       type="button"
+      role="switch"
+      aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg-elevated ${checked ? 'bg-accent' : 'bg-border'}`}
     >
@@ -79,22 +82,19 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-        <div>
-          <h1 className="text-2xl font-display font-semibold text-text-primary mb-2">Settings</h1>
-          <p className="text-sm text-text-secondary">Customize your CyberShield experience.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" onClick={handleReset}>
-            <FiRefreshCw className="mr-2" size={14} /> Reset
-          </Button>
-          <Button variant="primary" onClick={handleSave}>
-            <FiSave className="mr-2" size={14} /> Save Settings
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-6 animate-fade-in max-w-7xl mx-auto">
+      <PageHeader 
+        title="Account & Preferences" 
+        description="Manage your account settings, theme preferences, and notifications."
+        icon={<FiSettings />}
+      >
+        <Button variant="ghost" onClick={handleReset}>
+          <FiRefreshCw className="mr-2" size={14} /> Reset
+        </Button>
+        <Button variant="primary" onClick={handleSave}>
+          <FiSave className="mr-2" size={14} /> Save Settings
+        </Button>
+      </PageHeader>
 
       <div className="space-y-6">
         {/* Appearance */}
@@ -175,26 +175,6 @@ export default function Settings() {
           </div>
         </Card>
 
-        {/* Application */}
-        <Card className="p-6 border-border bg-bg-elevated">
-          <h3 className="text-lg font-medium text-text-primary mb-4 flex items-center gap-2 border-b border-border pb-4">
-            <FiTerminal className="text-accent" /> Application
-          </h3>
-          <div className="grid sm:grid-cols-3 gap-6 pt-2">
-            <div>
-              <p className="text-xs text-text-muted uppercase tracking-wider mb-1">Version</p>
-              <p className="text-sm font-medium text-text-primary">CyberShield v1.0.0</p>
-            </div>
-            <div>
-              <p className="text-xs text-text-muted uppercase tracking-wider mb-1">Environment</p>
-              <p className="text-sm font-medium text-text-primary flex items-center gap-1.5"><FiCheckCircle size={14} className="text-success" /> Frontend Demo</p>
-            </div>
-            <div>
-              <p className="text-xs text-text-muted uppercase tracking-wider mb-1">Storage</p>
-              <p className="text-sm font-medium text-text-primary">Browser Local Storage</p>
-            </div>
-          </div>
-        </Card>
       </div>
     </div>
   );

@@ -1,33 +1,41 @@
+import { ROUTES } from '../constants/routes';
+
 export const features = [
   {
     icon: 'camera',
     title: 'Screenshot Phishing Analyzer',
     description: 'Analyze screenshots for suspicious phishing signals.',
+    path: ROUTES.SCREENSHOT_ANALYZER,
   },
   {
     icon: 'crosshair',
     title: 'Phishing Simulator',
     description: 'Practice identifying common phishing attempts.',
+    path: ROUTES.PHISHING_SIMULATOR,
   },
   {
     icon: 'link',
     title: 'Smart URL Scanner',
     description: 'Check URLs for suspicious security patterns.',
+    path: ROUTES.URL_SCANNER,
   },
   {
     icon: 'maximize',
     title: 'QR Security Scanner',
     description: 'Scan QR codes and analyze their destination.',
+    path: ROUTES.QR_SCANNER,
   },
   {
     icon: 'key',
     title: 'Password Security Lab',
     description: 'Evaluate password strength and security.',
+    path: ROUTES.PASSWORD_LAB,
   },
   {
     icon: 'shield',
     title: 'Security Command Center',
     description: 'Monitor security activity and overall risk.',
+    path: ROUTES.SECURITY_CENTER,
   },
 ];
 
@@ -42,7 +50,7 @@ export const howItWorks = [
   {
     step: '01',
     title: 'Connect a signal',
-    description: 'Paste a URL, an email, or a password — CyberShield AI accepts whatever you\u2019re unsure about.',
+    description: 'Paste a URL, an email, or a password — CyberShield accepts whatever you\u2019re unsure about.',
   },
   {
     step: '02',
@@ -79,7 +87,7 @@ export const testimonials = [
 
 export const faqs = [
   {
-    question: 'Is CyberShield AI free to use?',
+    question: 'Is CyberShield free to use?',
     answer: 'A free tier covers core scanning. Pro unlocks unlimited scans, deeper analytics, and priority AI models.',
   },
   {
@@ -91,7 +99,7 @@ export const faqs = [
     answer: 'Our rule-based and AI-assisted models are benchmarked against known phishing datasets and continuously retrained.',
   },
   {
-    question: 'Can I use CyberShield AI for my whole team?',
+    question: 'Can I use CyberShield for my whole team?',
     answer: 'Team and Enterprise plans add shared dashboards, role-based access, and centralized reporting.',
   },
   {

@@ -22,7 +22,7 @@ export default function CtaBanner() {
               Run your first scan in under a minute
             </h2>
             <p className="text-text-secondary mt-4 max-w-md mx-auto">
-              No setup, no credit card. See exactly what CyberShield AI would have caught.
+              No setup, no credit card. See exactly what CyberShield would have caught.
             </p>
             <div className="mt-8">
               <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.LOGIN)}>

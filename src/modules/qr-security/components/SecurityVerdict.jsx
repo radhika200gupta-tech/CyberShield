@@ -58,6 +58,12 @@ export default function SecurityVerdict({ riskScore, riskLevel }) {
         <div>
           <p className="text-xs uppercase tracking-wide text-text-muted mb-1">Recommendation</p>
           <p className="text-sm text-text-secondary">{recommendation}</p>
+          
+          <div className="mt-4 pt-3 border-t border-border">
+            <p className="text-[10px] text-text-muted italic leading-relaxed">
+              Based on frontend heuristic analysis. This is not a definitive malware or threat-intelligence verdict.
+            </p>
+          </div>
         </div>
       </div>
     </div>

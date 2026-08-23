@@ -25,11 +25,16 @@ export const riskDistribution = [
 ];
 
 export const recentActivity = [
-  { id: 1, type: 'url', label: 'Scanned freepixelicons-download.net', risk: 'high', time: '4 minutes ago' },
-  { id: 2, type: 'password', label: 'Analyzed password for "GitHub"', risk: 'safe', time: '1 hour ago' },
-  { id: 3, type: 'phishing', label: 'Detected phishing attempt from "IT-Support"', risk: 'high', time: '3 hours ago' },
-  { id: 4, type: 'url', label: 'Scanned github.com', risk: 'safe', time: '5 hours ago' },
-  { id: 5, type: 'password', label: 'Analyzed password for "Bank Account"', risk: 'medium', time: 'Yesterday' },
+  { id: 1, type: 'screenshot', label: 'Suspicious phishing indicators detected', risk: 'high', time: '3 hours ago' },
+  { id: 2, type: 'url', label: 'github.com verified as safe', risk: 'safe', time: '5 hours ago' },
+  { id: 3, type: 'password', label: 'Bank Account password evaluated', risk: 'medium', time: 'Yesterday' },
+  { id: 4, type: 'qr', label: 'QR destination checked successfully', risk: 'low', time: 'Yesterday' },
+  { id: 5, type: 'phishing', label: 'Security decision recorded', risk: 'safe', time: '2 days ago' },
+  { id: 6, type: 'url', label: 'Blocked access to malicious domain', risk: 'high', time: '3 days ago' },
+  { id: 7, type: 'screenshot', label: 'Clean desktop environment verified', risk: 'safe', time: '3 days ago' },
+  { id: 8, type: 'password', label: 'Weak network password detected', risk: 'high', time: '4 days ago' },
+  { id: 9, type: 'qr', label: 'Scanned restaurant menu QR code', risk: 'safe', time: '5 days ago' },
+  { id: 10, type: 'phishing', label: 'Failed simulated phishing test', risk: 'high', time: '1 week ago' },
 ];
 
 export const scanHistory = [

@@ -52,28 +52,29 @@ export default function ChallengeTimer(props) {
   const progressPercentage = (secondsLeft / props.duration) * 100;
 
   // Choose a color class depending on how much time is left
-  let urgencyClass = "timer-normal";
+  let textClass = "text-accent"; let bgClass = "bg-accent";
   if (secondsLeft <= 3) {
-    urgencyClass = "timer-critical";
+    textClass = "text-danger"; bgClass = "bg-danger";
   } else if (secondsLeft <= 6) {
-    urgencyClass = "timer-warning";
+    textClass = "text-warning"; bgClass = "bg-warning";
   }
 
   return (
-    <div className="challenge-timer-box">
-      <div className="timer-info-row">
-        <span className="timer-title">⏱️ Time Remaining</span>
-        <span className={"timer-number " + urgencyClass}>
+    <div className="bg-surface border border-border rounded-xl p-4 mb-6">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[0.85rem] font-semibold text-text-secondary">⏱️ Time Remaining</span>
+        <span className={`font-mono font-bold text-[1.1rem] ${textClass}`}>
           {secondsLeft}s
         </span>
       </div>
 
-      <div className="timer-track">
+      <div className="w-full h-1.5 bg-bg-elevated rounded-full overflow-hidden">
         <div
-          className={"timer-fill " + urgencyClass}
+          className={`h-full rounded-full transition-all duration-1000 ease-linear ${bgClass}`}
           style={{ width: progressPercentage + "%" }}
         />
       </div>
     </div>
   );
 }
+

@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import Tesseract from 'tesseract.js';
-import { FiCamera, FiUploadCloud, FiShield, FiType, FiAlertCircle, FiCheckCircle, FiFileText } from 'react-icons/fi';
+import { FiCamera, FiUploadCloud, FiShield, FiType, FiAlertCircle, FiCheckCircle, FiFileText, FiClock, FiLock, FiKey, FiCreditCard, FiLink, FiEye, FiList, FiLayout, FiActivity } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import PageHeader from '../../components/common/PageHeader';
 
 const PHISHING_RULES = [
   {
@@ -185,21 +186,13 @@ export default function ScreenshotAnalyzer() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div>
-        <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-2xl font-display font-semibold text-text-primary">
-            Screenshot Phishing Analyzer
-          </h1>
-          <span className="px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-medium font-mono uppercase tracking-wider">
-            Browser-based analysis
-          </span>
-        </div>
-        <p className="text-sm text-text-secondary">
-          Analyze screenshots for suspicious phishing signals and security indicators.
-        </p>
-      </div>
+    <div className="space-y-8 max-w-7xl mx-auto">
+      <PageHeader 
+        title="Analyze Screenshots"
+        description="Analyze screenshots for suspicious phishing signals and security indicators."
+        badge="Browser-based analysis"
+        icon={<FiCamera />}
+      />
 
       {/* Main Upload Section */}
       <Card className="p-1.5 sm:p-2">
@@ -416,6 +409,100 @@ export default function ScreenshotAnalyzer() {
             )}
           </div>
         </Card>
+      </div>
+
+      {/* NEW INFORMATIONAL SECTION: What We Analyze */}
+      <div className="pt-8 border-t border-border mt-12">
+        <h3 className="text-xl font-display font-semibold text-text-primary mb-2">What We Analyze</h3>
+        <p className="text-sm text-text-secondary mb-6 max-w-2xl">
+          The analyzer extracts visible text from your screenshot and evaluates it against known phishing patterns and social engineering tactics.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { icon: FiClock, title: 'Urgency & Pressure', desc: 'Checks for language designed to create panic or force immediate action.' },
+            { icon: FiLock, title: 'Credential Requests', desc: 'Looks for text requesting passwords, usernames, or account verification.' },
+            { icon: FiKey, title: 'Authentication Codes', desc: 'Identifies requests for OTPs, security codes, or 2FA tokens.' },
+            { icon: FiCreditCard, title: 'Financial Information', desc: 'Detects references to bank details, credit cards, or transactions.' },
+            { icon: FiLink, title: 'Suspicious Links', desc: 'Examines extracted text for unencrypted HTTP links or common URL shorteners.' },
+            { icon: FiEye, title: 'Sensitive Data', desc: 'Looks for requests for PINs, CVVs, or personal security details.' }
+          ].map((item, idx) => (
+            <Card key={idx} className="p-5 flex items-start gap-4 bg-surface/50 hover:bg-surface transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-bg-elevated border border-border flex items-center justify-center shrink-0">
+                <item.icon className="text-accent" size={18} />
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-text-primary mb-1">{item.title}</h4>
+                <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* NEW INFORMATIONAL SECTION: Workflow & Results */}
+      <div className="grid md:grid-cols-2 gap-8 mt-8 pb-12">
+        
+        {/* How It Works */}
+        <div>
+          <h3 className="text-xl font-display font-semibold text-text-primary mb-4">How It Works</h3>
+          <Card className="p-0 overflow-hidden bg-surface/50">
+            <div className="divide-y divide-border">
+              {[
+                { step: '1', title: 'Upload Screenshot', desc: 'Your image is loaded securely in your browser.' },
+                { step: '2', title: 'Text Extraction (OCR)', desc: 'The engine reads all visible text from the image.' },
+                { step: '3', title: 'Pattern Matching', desc: 'Extracted text is evaluated against phishing heuristics.' },
+                { step: '4', title: 'Risk Assessment', desc: 'A final security verdict and score is generated.' }
+              ].map((item, idx) => (
+                <div key={idx} className="p-4 flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full bg-bg-elevated border border-border flex items-center justify-center shrink-0 text-xs font-bold text-text-muted font-mono">
+                    {item.step}
+                  </div>
+                  <div>
+                    <h5 className="text-sm font-medium text-text-primary">{item.title}</h5>
+                    <p className="text-xs text-text-secondary">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        {/* What Results Include */}
+        <div>
+          <h3 className="text-xl font-display font-semibold text-text-primary mb-4">What Results Include</h3>
+          <Card className="p-6 bg-surface/50 h-full">
+            <div className="space-y-5">
+              <div className="flex items-start gap-3">
+                <FiActivity className="text-primary shrink-0 mt-0.5" size={18} />
+                <div>
+                  <h5 className="text-sm font-medium text-text-primary mb-1">Risk Assessment</h5>
+                  <p className="text-xs text-text-secondary">A quantified security score from 0-100 indicating the threat level.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FiAlertCircle className="text-warning shrink-0 mt-0.5" size={18} />
+                <div>
+                  <h5 className="text-sm font-medium text-text-primary mb-1">Detected Indicators</h5>
+                  <p className="text-xs text-text-secondary">A detailed breakdown of every suspicious phrase or pattern found in the text.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FiFileText className="text-text-muted shrink-0 mt-0.5" size={18} />
+                <div>
+                  <h5 className="text-sm font-medium text-text-primary mb-1">Extracted Text</h5>
+                  <p className="text-xs text-text-secondary">The raw OCR output so you can verify exactly what the engine analyzed.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FiCheckCircle className="text-success shrink-0 mt-0.5" size={18} />
+                <div>
+                  <h5 className="text-sm font-medium text-text-primary mb-1">Security Recommendations</h5>
+                  <p className="text-xs text-text-secondary">Actionable advice on how to handle the specific threats detected.</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );

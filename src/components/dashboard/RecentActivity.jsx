@@ -1,7 +1,7 @@
-import { FiKey, FiLink, FiMail } from 'react-icons/fi';
+import { FiKey, FiLink, FiMail, FiCamera, FiMaximize2, FiActivity } from 'react-icons/fi';
 import RiskBadge from '../common/RiskBadge';
 
-const TYPE_ICONS = { password: FiKey, url: FiLink, phishing: FiMail };
+const TYPE_ICONS = { password: FiKey, url: FiLink, phishing: FiMail, screenshot: FiCamera, qr: FiMaximize2, generic: FiActivity };
 
 export default function RecentActivity({ activity }) {
   return (
@@ -22,7 +22,7 @@ export default function RecentActivity({ activity }) {
           
           <ul className="space-y-5">
             {activity.map((item) => {
-              const Icon = TYPE_ICONS[item.type];
+              const Icon = TYPE_ICONS[item.type] || TYPE_ICONS.generic;
               return (
                 <li key={item.id} className="relative flex items-start gap-4">
                   <div className="w-6 h-6 rounded-full bg-surface border border-border flex items-center justify-center shrink-0 z-10 mt-0.5">
