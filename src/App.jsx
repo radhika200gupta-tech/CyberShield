@@ -5,6 +5,7 @@ import { ToastProvider } from './context/ToastContext';
 
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -38,6 +39,7 @@ function App() {
               {/* Public Routes */}
               <Route path={ROUTES.HOME} element={<Landing />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
+              <Route path={ROUTES.SIGNUP} element={<SignUp />} />
 
               {/* Teammate Web Security Routes moved inside DashboardLayout */}
 
