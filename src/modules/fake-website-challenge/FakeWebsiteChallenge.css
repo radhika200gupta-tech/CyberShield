@@ -84,7 +84,7 @@
 }
 
 .stat-pill-highlight {
-  color: var(--color-accent, #38BDF8);
+  color: var(--color-accent);
   font-weight: 700;
 }
 
@@ -122,7 +122,7 @@
 }
 
 .timer-normal {
-  color: var(--color-accent, #38BDF8);
+  color: var(--color-accent);
 }
 
 .timer-warning {
@@ -148,7 +148,7 @@
 }
 
 .timer-fill.timer-normal {
-  background-color: var(--color-accent, #38BDF8);
+  background-color: var(--color-accent);
 }
 
 .timer-fill.timer-warning {
@@ -203,12 +203,12 @@
 
 .website-card:hover:not(.card-fake-revealed):not(.card-real-revealed) {
   transform: translateY(-3px);
-  border-color: var(--color-accent, #38BDF8);
+  border-color: var(--color-accent);
   box-shadow: 0 8px 24px -6px rgba(56, 189, 248, 0.2);
 }
 
 .website-card.card-selected {
-  border-color: var(--color-primary, #2563EB);
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.4);
 }
 
@@ -357,7 +357,7 @@
 }
 
 .mockup-button {
-  background-color: var(--color-primary, #2563EB);
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   font-size: 0.8rem;
@@ -385,7 +385,7 @@
 
 .hint-text {
   font-size: 0.75rem;
-  color: var(--color-accent, #38BDF8);
+  color: var(--color-accent);
   font-weight: 500;
 }
 
@@ -494,7 +494,7 @@
 }
 
 .next-button {
-  background-color: var(--color-primary, #2563EB);
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
@@ -641,7 +641,7 @@
 }
 
 .play-again-button {
-  background-color: var(--color-primary, #2563EB);
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   font-size: 0.95rem;

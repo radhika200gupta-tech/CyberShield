@@ -200,7 +200,7 @@ export default function SecurityCommandCenter() {
             <button
               type="button"
               onClick={detectCommand}
-              className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:opacity-90 active:scale-95"
+              className="rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-semibold text-white shadow-lg shadow-primary/20 transition hover:opacity-90 active:scale-95"
             >
               Scan Command
             </button>

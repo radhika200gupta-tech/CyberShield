@@ -13,7 +13,7 @@ export default function AuthLayout({ title, subtitle, children }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 bg-bg relative overflow-hidden">
       {/* Background glow & subtle grid */}
       <div className="absolute inset-0 grid-fade pointer-events-none opacity-40" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Top Logo */}
       <div className="mb-8 relative z-10">
@@ -25,7 +25,7 @@ export default function AuthLayout({ title, subtitle, children }) {
         initial={{ opacity: 0, y: 16 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}
-        className="w-full max-w-[900px] bg-bg-elevated/90 border border-border/50 rounded-2xl shadow-2xl flex flex-col lg:flex-row overflow-hidden relative z-10 backdrop-blur-xl"
+        className="w-full max-w-[900px] bg-surface border border-border/70 rounded-2xl shadow-[0_20px_50px_var(--shadow-color)] flex flex-col lg:flex-row overflow-hidden relative z-10 backdrop-blur-xl"
       >
         {/* LOGIN SIDE */}
         <div className="flex-1 p-8 sm:p-12 lg:p-14 border-b lg:border-b-0 lg:border-r border-border/50">

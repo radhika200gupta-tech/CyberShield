@@ -11,7 +11,7 @@ const COLOR_MAP = {
 
 export default function StatCard({ icon: Icon, label, value, suffix = '', trend, color = 'primary' }) {
   return (
-    <div className="bg-bg-elevated/50 border border-border/50 rounded-xl p-5 hover:bg-bg-elevated transition-colors group relative overflow-hidden">
+    <div className="bg-surface border border-border/70 rounded-xl p-5 hover:bg-surface-hover shadow-[0_8px_30px_var(--shadow-color)] transition-all group relative overflow-hidden">
       {/* Subtle top edge glow based on color */}
       <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-${color} to-transparent opacity-20 group-hover:opacity-50 transition-opacity`} />
       

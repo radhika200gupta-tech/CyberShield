@@ -98,7 +98,7 @@ export default function WebcamCapture({ onCapture, isAnalyzing }) {
             variant="primary" 
             onClick={handleCapture}
             disabled={isInitializing || isAnalyzing}
-            className="rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,255,0.3)] hover:scale-110 transition-transform"
+            className="rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_20px_rgba(25,195,125,0.3)] hover:scale-110 transition-transform"
          >
             <FiCamera size={24} />
          </Button>

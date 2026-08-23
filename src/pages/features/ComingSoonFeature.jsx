@@ -188,7 +188,7 @@ function AICopilotPreview() {
                >
                   <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-t-xl z-0">
                     <motion.div 
-                      className="absolute w-full h-[2px] bg-accent/40 shadow-[0_0_12px_rgba(0,255,255,0.3)]"
+                      className="absolute w-full h-[2px] bg-accent/40 shadow-[0_0_12px_rgba(25,195,125,0.3)]"
                       animate={{ top: ['0%', '100%', '0%'] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
                     />
@@ -605,7 +605,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
         {/* Horizontal Scan Line Overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div 
-            className="absolute w-full h-[1px] bg-accent/40 shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+            className="absolute w-full h-[1px] bg-accent/40 shadow-[0_0_15px_rgba(25,195,125,0.4)]"
             animate={{ top: ['0%', '100%', '0%'] }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
           />
@@ -678,7 +678,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                    initial={{ opacity: 0, x: -20 }}
                    animate={{ opacity: 1, x: 0 }}
                    exit={{ opacity: 0, x: -20 }}
-                   className="flex items-center gap-3 bg-accent/10 border border-accent/20 text-accent px-3 py-1.5 rounded-full w-max backdrop-blur-md shadow-[0_0_10px_rgba(0,255,255,0.1)]"
+                   className="flex items-center gap-3 bg-accent/10 border border-accent/20 text-accent px-3 py-1.5 rounded-full w-max backdrop-blur-md shadow-[0_0_10px_rgba(25,195,125,0.1)]"
                  >
                    <span className="text-[10px] font-semibold tracking-wider uppercase flex items-center gap-1.5">
                       <FiMap size={10} /> FOCUS: {focusRegion}
@@ -761,7 +761,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                       animate={{ pathLength: 1, opacity: [0, p.isHighlighted ? 0.8 : 0.4, 0] }}
                       transition={{ duration: 2 + (i % 3), repeat: Infinity, ease: "linear", repeatDelay: (i % 2) }}
                     />
-                    <circle r={isHigh ? "3.5" : "2"} fill="currentColor" className={isHigh ? "text-danger drop-shadow-[0_0_6px_rgba(239,68,68,1)]" : "text-accent drop-shadow-[0_0_4px_rgba(0,255,255,0.8)]"}>
+                    <circle r={isHigh ? "3.5" : "2"} fill="currentColor" className={isHigh ? "text-danger drop-shadow-[0_0_6px_rgba(239,68,68,1)]" : "text-accent drop-shadow-[0_0_4px_rgba(25,195,125,0.8)]"}>
                        <animateMotion dur={`${2 + (i % 3)}s`} repeatCount="indefinite" path={d} />
                     </circle>
                   </>
@@ -787,7 +787,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                  
                  {/* Core Node Marker */}
                  <circle cx={r.cx} cy={r.cy} r="5" fill="currentColor" className={`${nodeColorClass} ${!isActive && 'opacity-30'}`} />
-                 <circle cx={r.cx} cy={r.cy} r="2.5" fill="currentColor" className="text-[#050B14]" />
+                 <circle cx={r.cx} cy={r.cy} r="2.5" fill="currentColor" className="text-[#050708]" />
                  
                  {/* Active Pulse Ring */}
                  {isActive && (

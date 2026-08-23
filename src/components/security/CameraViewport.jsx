@@ -58,7 +58,7 @@ export default function CameraViewport({ videoRef, isScanning, isCameraActive })
           {/* Scan Line Animation */}
           {isScanning && (
             <motion.div 
-              className="absolute left-0 right-0 h-0.5 bg-accent shadow-[0_0_8px_rgba(0,255,255,0.8)]"
+              className="absolute left-0 right-0 h-0.5 bg-accent shadow-[0_0_8px_rgba(25,195,125,0.8)]"
               animate={{ top: ['0%', '100%', '0%'] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             />

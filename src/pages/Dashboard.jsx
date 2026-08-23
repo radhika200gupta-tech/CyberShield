@@ -22,10 +22,7 @@ export default function Dashboard() {
       {/* 1. PREMIUM HEADER / SECURITY STATUS */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border/50 pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-success/10 border border-success/20 mb-3">
-             <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-             <span className="text-[10px] font-bold text-success uppercase tracking-widest">Security Systems Operational</span>
-          </div>
+
           <h1 className="font-display font-semibold text-2xl text-text-primary tracking-tight">
             Welcome back, {firstName}
           </h1>
@@ -116,7 +113,7 @@ export default function Dashboard() {
       {/* 7. BOTTOM SYSTEM STATUS */}
       <div className="mt-8 pt-4 border-t border-border/30 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(0,255,255,0.5)]" />
+          <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_rgba(25,195,125,0.5)]" />
           <span className="text-[10px] font-mono font-bold text-text-primary uppercase tracking-widest">CYBERSHIELD MONITORING ACTIVE</span>
         </div>
         <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest">

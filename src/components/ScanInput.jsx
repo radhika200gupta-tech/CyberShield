@@ -62,7 +62,7 @@ export default function ScanInput({ onAnalyze, isScanning }) {
             className={classNames(
               'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 cursor-pointer',
               'text-sm px-5 py-2.5',
-              'bg-primary text-white hover:bg-primary-dim shadow-[0_0_0_1px_rgba(37,99,235,0.4)] hover:shadow-[0_0_24px_-4px_rgba(37,99,235,0.6)]',
+              'bg-primary text-white hover:bg-primary-dim shadow-[0_0_0_1px_rgba(139,92,246,0.4)] hover:shadow-[0_0_24px_-4px_rgba(139,92,246,0.6)]',
               'disabled:opacity-50 disabled:cursor-not-allowed'
             )}
           >

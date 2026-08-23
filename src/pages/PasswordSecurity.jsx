@@ -171,7 +171,7 @@ export default function PasswordAnalyzer() {
             <button
               type="button"
               onClick={generatePassword}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:opacity-90"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition hover:opacity-90"
             >
               ⚡ Generate Password
             </button>

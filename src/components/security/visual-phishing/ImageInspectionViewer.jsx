@@ -18,7 +18,7 @@ export default function ImageInspectionViewer({ imageUrl, matchingWords, showOve
   }, [imageUrl]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full min-h-[400px] max-h-[600px] bg-[#050B14] rounded-xl border border-border overflow-hidden flex items-center justify-center group">
+    <div ref={containerRef} className="relative w-full h-full min-h-[400px] max-h-[600px] bg-[#050708] rounded-xl border border-border overflow-hidden flex items-center justify-center group">
       
       {imageUrl && (
         <div className="relative inline-block max-w-full max-h-full">
@@ -71,7 +71,7 @@ export default function ImageInspectionViewer({ imageUrl, matchingWords, showOve
            </div>
            
            <motion.div 
-             className="absolute left-0 right-0 h-1 bg-accent shadow-[0_0_12px_rgba(0,255,255,0.8)]"
+             className="absolute left-0 right-0 h-1 bg-accent shadow-[0_0_12px_rgba(25,195,125,0.8)]"
              animate={{ top: ['0%', '100%', '0%'] }}
              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
            />

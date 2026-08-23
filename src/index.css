@@ -2,25 +2,26 @@
 
 @theme {
   /* Brand */
-  --color-primary: #2563EB;
-  --color-primary-dim: #1D4ED8;
-  --color-accent: #38BDF8;
+  --color-primary: #8B5CF6;
+  --color-primary-dim: #6D28D9;
+  --color-accent: #A78BFA;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
   --color-success: #22C55E;
+  --color-analytics: #8B5CF6;
 
   /* Surfaces */
-  --color-bg: #05070D;
-  --color-bg-elevated: #0A0E17;
-  --color-surface: #10141F;
-  --color-surface-hover: #161B29;
-  --color-border: #1E2433;
-  --color-border-hover: #2A3245;
+  --color-bg: #07070A;
+  --color-bg-elevated: #0B0A10;
+  --color-surface: #11101A;
+  --color-surface-hover: #161320;
+  --color-border: #25202F;
+  --color-border-hover: #3A2D4D;
 
   /* Text */
-  --color-text-primary: #E7EAF3;
-  --color-text-secondary: #8B93A7;
-  --color-text-muted: #5A6377;
+  --color-text-primary: #F4F2F8;
+  --color-text-secondary: #AAA3B5;
+  --color-text-muted: #777181;
 
   /* Shadows */
   --shadow-color: rgba(0, 0, 0, 0.5);
@@ -70,16 +71,23 @@
 
 /* Light mode */
 .light {
-  --color-bg: #F8FAFC; /* slate-50 */
-  --color-bg-elevated: #FFFFFF; /* white */
-  --color-surface: #F1F5F9; /* slate-100 */
-  --color-surface-hover: #E2E8F0; /* slate-200 */
-  --color-border: #CBD5E1; /* slate-300 */
-  --color-border-hover: #94A3B8; /* slate-400 */
-  --color-text-primary: #0F172A; /* slate-900 */
-  --color-text-secondary: #475569; /* slate-600 */
-  --color-text-muted: #64748B; /* slate-500 */
-  --shadow-color: rgba(15, 23, 42, 0.08); /* slightly stronger shadow */
+  --color-primary: #7C3AED;
+  --color-primary-dim: #6D28D9;
+  --color-accent: #8B5CF6;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+  --color-analytics: #8B5CF6;
+  --color-bg: #F7F6FB;
+  --color-bg-elevated: #FAF9FD;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F3F1F8;
+  --color-border: #E7E2F0;
+  --color-border-hover: #D1C8DF;
+  --color-text-primary: #17131F;
+  --color-text-secondary: #6F687A;
+  --color-text-muted: #867F91;
+  --shadow-color: rgba(124, 58, 237, 0.08);
 }
 
 /* Force opaque surfaces and borders in light mode for clear hierarchy */
@@ -182,12 +190,12 @@
   .grid-fade {
     background-image:
       linear-gradient(
-        color-mix(in srgb, var(--color-border) 60%, transparent) 1px,
+        rgba(139, 92, 246, 0.08) 1px,
         transparent 1px
       ),
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--color-border) 60%, transparent) 1px,
+        rgba(139, 92, 246, 0.08) 1px,
         transparent 1px
       );
     background-size: 44px 44px;
@@ -201,12 +209,12 @@
   .grid-bg {
     background-image:
       linear-gradient(
-        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        rgba(139, 92, 246, 0.08) 1px,
         transparent 1px
       ),
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--color-border) 35%, transparent) 1px,
+        rgba(139, 92, 246, 0.08) 1px,
         transparent 1px
       );
     background-size: 44px 44px;
