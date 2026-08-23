@@ -5,10 +5,10 @@ import { ROUTES } from '../../constants/routes';
 const ACTIONS = [
   { icon: FiCamera, title: 'Screenshot Phishing Analyzer', description: 'Analyze screenshots for threats', path: ROUTES.SCREENSHOT_ANALYZER, borderColor: 'border-l-primary', iconColor: 'text-primary' },
   { icon: FiCrosshair, title: 'Phishing Simulator', description: 'Practice threat detection', path: ROUTES.PHISHING_SIMULATOR, borderColor: 'border-l-accent', iconColor: 'text-accent' },
-  { icon: FiLink, title: 'Smart URL Scanner', description: 'Scan links for reputation risk', path: ROUTES.URL_SCANNER, borderColor: 'border-l-warning', iconColor: 'text-warning' },
+  { icon: FiLink, title: 'Smart URL Scanner', description: 'Scan links for reputation risk', path: ROUTES.URL_SCANNER, borderColor: 'border-l-primary', iconColor: 'text-primary' },
   { icon: FiMaximize, title: 'QR Security Scanner', description: 'Analyze QR code destinations', path: ROUTES.QR_SCANNER, borderColor: 'border-l-primary', iconColor: 'text-primary' },
   { icon: FiKey, title: 'Password Security Lab', description: 'Check strength & entropy', path: ROUTES.PASSWORD_LAB, borderColor: 'border-l-accent', iconColor: 'text-accent' },
-  { icon: FiShield, title: 'Security Command Center', description: 'Monitor overall risk', path: ROUTES.SECURITY_CENTER, borderColor: 'border-l-warning', iconColor: 'text-warning' },
+  { icon: FiShield, title: 'Security Command Center', description: 'Monitor overall risk', path: ROUTES.SECURITY_CENTER, borderColor: 'border-l-accent', iconColor: 'text-accent' },
 ];
 
 export default function QuickActions() {

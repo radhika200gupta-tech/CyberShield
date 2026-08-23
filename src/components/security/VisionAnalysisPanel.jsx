@@ -46,7 +46,7 @@ export default function VisionAnalysisPanel({ telemetry, telemetryHistory }) {
       <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm transition-colors ${riskBg}`}>
         <div>
           <h4 className="text-[10px] font-semibold uppercase tracking-wider mb-1 flex items-center gap-2">
-             <FiShield /> Security Risk
+             <FiShield /> Mock Score
           </h4>
           <span className={`text-2xl font-display font-bold ${riskColor}`}>{riskLevel}</span>
         </div>
