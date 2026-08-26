@@ -58,3 +58,11 @@ export const dashboardCards = {
   safeUrls: 269,
   passwordHealth: 76,
 };
+
+export const threatCategories = [
+  { name: 'Phishing', value: 42 },
+  { name: 'Malicious URLs', value: 35 },
+  { name: 'Weak Passwords', value: 28 },
+  { name: 'Suspicious QR Codes', value: 19 },
+  { name: 'Unsafe Files', value: 14 },
+];

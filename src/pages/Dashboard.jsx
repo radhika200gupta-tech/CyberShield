@@ -7,9 +7,10 @@ import ChartCard from '../components/charts/ChartCard';
 import WeeklyThreatsChart from '../components/charts/WeeklyThreatsChart';
 import MonthlyScansChart from '../components/charts/MonthlyScansChart';
 import RiskDistributionChart from '../components/charts/RiskDistributionChart';
+import ThreatCategoryChart from '../components/charts/ThreatCategoryChart';
 
 import {
-  dashboardCards, weeklyThreats, monthlyScans, riskDistribution, recentActivity,
+  dashboardCards, weeklyThreats, monthlyScans, riskDistribution, recentActivity, threatCategories
 } from '../data/mockDashboard';
 
 export default function Dashboard() {
@@ -72,6 +73,9 @@ export default function Dashboard() {
             </ChartCard>
             <ChartCard title="Risk Distribution" subtitle="Breakdown of all scans by risk level">
               <RiskDistributionChart data={riskDistribution} />
+            </ChartCard>
+            <ChartCard title="Threat Category Analysis" subtitle="Detected threats by category">
+              <ThreatCategoryChart data={threatCategories} />
             </ChartCard>
 
           </div>
