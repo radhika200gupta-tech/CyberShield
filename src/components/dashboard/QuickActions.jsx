@@ -11,6 +11,7 @@ const ACTIONS = [
   { icon: FiShield, title: 'Security Command Center', description: 'Monitor overall risk', path: ROUTES.SECURITY_CENTER, borderColor: 'border-l-accent', iconColor: 'text-accent' },
 ];
 
+
 export default function QuickActions() {
   const navigate = useNavigate();
   return (
