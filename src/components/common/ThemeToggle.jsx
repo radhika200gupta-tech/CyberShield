@@ -2,7 +2,14 @@ import { FiSun, FiMoon } from 'react-icons/fi';
 import { useTheme } from '../../context/ThemeContext';
 import { classNames } from '../../utils/formatters';
 
+// Set to true to temporarily hide the theme toggle across the visible interface
+const HIDE_THEME_TOGGLE = true;
+
 export default function ThemeToggle({ className = '' }) {
+  if (HIDE_THEME_TOGGLE) {
+    return null;
+  }
+
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
 

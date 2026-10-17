@@ -31,15 +31,15 @@ export default function DashboardHeader({ title, onMenuClick }) {
   }, [notifOpen]);
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-bg/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-6">
-      <div className="flex items-center gap-3">
-        <button className="lg:hidden text-text-secondary" onClick={onMenuClick} aria-label="Open sidebar">
+    <header className="sticky top-0 z-30 h-16 bg-header backdrop-blur-md border-b border-border flex items-center justify-between px-4 sm:px-6 w-full min-w-0 box-border">
+      <div className="flex items-center gap-3 min-w-0">
+        <button className="lg:hidden text-text-secondary shrink-0" onClick={onMenuClick} aria-label="Open sidebar">
           <FiMenu size={20} />
         </button>
-        <h1 className="font-display font-semibold text-lg text-text-primary">{title}</h1>
+        <h1 className="font-display font-semibold text-base sm:text-lg text-text-primary truncate">{title}</h1>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         <ThemeToggle />
         <div className="relative" ref={notifRef}>
           <button

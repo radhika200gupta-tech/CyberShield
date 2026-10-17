@@ -131,22 +131,22 @@ export default function WebcamSecurityLabPreview() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-border">
+      <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-border w-full min-w-0">
         
         {/* LEFT / MAIN: Camera & Telemetry */}
-        <div className="flex-1 p-6 flex flex-col gap-6 bg-surface/30">
-           <div className="w-full">
+        <div className="flex-1 min-w-0 p-4 sm:p-6 flex flex-col gap-6 bg-surface/30">
+           <div className="w-full min-w-0">
              <CameraViewport videoRef={videoRef} isScanning={isScanning} isCameraActive={isCameraActive} />
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-w-0">
               {/* Telemetry */}
-              <div className="w-full">
+              <div className="w-full min-w-0">
                  <VisionTelemetry telemetry={telemetry} />
               </div>
               
               {/* Snapshot Preview */}
-              <div className="w-full">
+              <div className="w-full min-w-0">
                  <div className="bg-bg-elevated border border-border rounded-xl p-4 shadow-sm h-full flex flex-col">
                    <div className="flex justify-between items-center mb-3">
                      <h4 className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Security Snapshot</h4>
@@ -155,8 +155,8 @@ export default function WebcamSecurityLabPreview() {
                    
                    {snapshot ? (
                      <div className="flex gap-4">
-                       <img src={snapshot.dataUrl} alt="Snapshot" className="w-24 h-24 object-cover rounded border border-border/50" />
-                       <div className="flex flex-col gap-1 text-[9px] font-mono text-text-secondary">
+                       <img src={snapshot.dataUrl} alt="Snapshot" className="w-24 h-24 object-cover rounded border border-border/50 shrink-0" />
+                       <div className="flex flex-col gap-1 text-[9px] font-mono text-text-secondary min-w-0">
                          <span><strong className="text-text-primary">Time:</strong> {snapshot.time}</span>
                          <span><strong className="text-text-primary">Risk:</strong> {snapshot.telemetry.riskScore}/100</span>
                          <span><strong className="text-text-primary">Motion:</strong> {Math.round(snapshot.telemetry.motion)}%</span>
@@ -173,7 +173,7 @@ export default function WebcamSecurityLabPreview() {
            </div>
 
            {/* Timeline */}
-           <div className="bg-bg-elevated border border-border rounded-xl p-4 shadow-sm flex flex-col h-48">
+           <div className="bg-bg-elevated border border-border rounded-xl p-4 shadow-sm flex flex-col h-48 w-full min-w-0">
               <h4 className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-3 flex items-center gap-2"><FiList /> Detection Timeline</h4>
               <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 flex flex-col gap-2">
                  {timeline.map((evt) => (
@@ -188,9 +188,9 @@ export default function WebcamSecurityLabPreview() {
            </div>
            
            {/* Privacy Notice */}
-           <div className="mt-auto bg-success/5 border border-success/20 rounded p-3 flex items-start gap-3">
-             <FiCheckCircle className="text-success mt-0.5" />
-             <div className="flex flex-col">
+           <div className="mt-auto bg-success/5 border border-success/20 rounded p-3 flex items-start gap-3 w-full min-w-0">
+             <FiCheckCircle className="text-success mt-0.5 shrink-0" />
+             <div className="flex flex-col min-w-0">
                <span className="text-xs font-semibold text-text-primary">LOCAL PROCESSING ENABLED</span>
                <span className="text-[10px] text-text-secondary">Camera frames are analyzed locally in your browser. No image upload is performed by this frontend demonstration.</span>
              </div>
@@ -198,7 +198,7 @@ export default function WebcamSecurityLabPreview() {
         </div>
 
         {/* RIGHT: Vision Analysis Panel */}
-        <div className="w-full lg:w-[380px] p-6 bg-surface/50">
+        <div className="w-full lg:w-[380px] min-w-0 max-w-full p-4 sm:p-6 bg-surface/50">
            <VisionAnalysisPanel telemetry={telemetry} telemetryHistory={telemetryHistory} />
         </div>
       </div>

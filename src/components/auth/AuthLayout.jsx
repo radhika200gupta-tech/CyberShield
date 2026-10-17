@@ -29,7 +29,7 @@ export default function AuthLayout({ title, subtitle, children }) {
       >
         {/* LOGIN SIDE */}
         <div className="flex-1 p-8 sm:p-12 lg:p-14 border-b lg:border-b-0 lg:border-r border-border/50">
-          <h1 className="font-display font-bold text-[28px] sm:text-3xl text-white tracking-tight">{title}</h1>
+          <h1 className="font-display font-bold text-[28px] sm:text-3xl text-text-primary tracking-tight">{title}</h1>
           {subtitle && <p className="text-[15px] text-text-secondary mt-3">{subtitle}</p>}
           <div className="mt-10">{children}</div>
         </div>

@@ -85,7 +85,7 @@ export default function Sidebar({ isOpen, onClose }) {
                     classNames(
                       'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
                         isActive
-                          ? 'text-primary bg-primary/10'
+                          ? 'active text-primary bg-primary/10'
                           : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                       isCollapsed ? 'justify-center' : 'gap-3'
                     )
@@ -132,7 +132,7 @@ export default function Sidebar({ isOpen, onClose }) {
                       classNames(
                         'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
                         isActive
-                          ? 'text-primary bg-primary/10'
+                          ? 'active text-primary bg-primary/10'
                           : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                         isCollapsed ? 'justify-center' : 'justify-between'
                       )
@@ -167,7 +167,7 @@ export default function Sidebar({ isOpen, onClose }) {
               className={({ isActive }) =>
                 classNames(
                   'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                  isActive ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
+                  isActive ? 'active text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                   isCollapsed ? 'justify-center' : 'gap-3'
                 )
               }
@@ -190,7 +190,7 @@ export default function Sidebar({ isOpen, onClose }) {
               className={({ isActive }) =>
                 classNames(
                   'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                  isActive ? 'text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
+                  isActive ? 'active text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                   isCollapsed ? 'justify-center' : 'gap-3'
                 )
               }

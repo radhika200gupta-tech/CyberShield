@@ -4,7 +4,7 @@ function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
   const item = payload[0];
   return (
-    <div className="bg-black border border-border/50 rounded px-3 py-2 shadow-xl text-xs font-mono">
+    <div className="bg-surface border border-border/50 rounded px-3 py-2 shadow-xl text-xs font-mono">
       <p className="text-text-primary"><span style={{color: item.payload.color}} className="font-bold">{item.name}</span>: {item.value}%</p>
     </div>
   );

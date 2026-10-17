@@ -21,7 +21,7 @@ export default function AppNav() {
               classNames(
                 'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors',
                 isActive
-                  ? 'text-primary bg-primary/10 shadow-[0_0_12px_rgba(139,92,246,0.12)]'
+                  ? 'text-primary bg-primary/10 shadow-[0_0_12px_color-mix(in_srgb,var(--color-primary)_20%,transparent)]'
                   : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover'
               )
             }

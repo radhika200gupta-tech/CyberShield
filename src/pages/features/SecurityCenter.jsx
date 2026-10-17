@@ -111,7 +111,7 @@ export default function SecurityCommandCenter() {
   const highRiskCount = history.filter((item) => item.status === "Dangerous" || item.risk === "High").length;
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto w-full min-w-0">
       <div className="w-full space-y-6">
         <PageHeader 
           title="Command Center"
@@ -127,7 +127,7 @@ export default function SecurityCommandCenter() {
         </PageHeader>
 
         {/* 4 Stat Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full min-w-0">
           <StatCard
             icon={<FiShield size={20} />}
             label="Security Score"
@@ -241,7 +241,7 @@ export default function SecurityCommandCenter() {
               </p>
             </div>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-2 w-full min-w-0">
               <div className="rounded-xl border border-border bg-bg p-4">
                 <p className="text-xs font-medium text-text-secondary">
                   Risk Level
@@ -272,7 +272,7 @@ export default function SecurityCommandCenter() {
         )}
 
         {/* Score & Weekly Threat Analytics Chart */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 w-full min-w-0">
           {/* Security Score Display Card */}
           <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">

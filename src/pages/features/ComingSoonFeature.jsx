@@ -33,9 +33,9 @@ function VisualPhishingPreview() {
           <p className="text-xs text-text-muted mt-4 font-mono">Supported: PNG • JPG • WEBP</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full min-w-0">
           {/* Risk Overview */}
-          <div className="md:col-span-1 space-y-4">
+          <div className="lg:col-span-1 min-w-0 space-y-4">
             <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2">Risk Overview</h4>
             <div className="p-5 rounded-xl border border-border bg-surface shadow-sm">
               <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Risk Score</div>
@@ -65,7 +65,7 @@ function VisualPhishingPreview() {
           </div>
 
           {/* Analysis Breakdown */}
-          <div className="md:col-span-2 space-y-4">
+          <div className="lg:col-span-2 min-w-0 space-y-4">
             <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider border-b border-border pb-2">Visual Findings</h4>
             <div className="p-5 rounded-xl border border-border bg-surface shadow-sm mb-6">
               <p className="text-sm text-text-secondary mb-4">Potential indicators the future engine will analyze:</p>
@@ -188,7 +188,7 @@ function AICopilotPreview() {
                >
                   <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-t-xl z-0">
                     <motion.div 
-                      className="absolute w-full h-[2px] bg-accent/40 shadow-[0_0_12px_rgba(25,195,125,0.3)]"
+                      className="absolute w-full h-[2px] bg-accent/40 shadow-[0_0_12px_rgba(36,216,197,0.3)]"
                       animate={{ top: ['0%', '100%', '0%'] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
                     />
@@ -605,7 +605,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
         {/* Horizontal Scan Line Overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div 
-            className="absolute w-full h-[1px] bg-accent/40 shadow-[0_0_15px_rgba(25,195,125,0.4)]"
+            className="absolute w-full h-[1px] bg-accent/40 shadow-[0_0_15px_rgba(36,216,197,0.4)]"
             animate={{ top: ['0%', '100%', '0%'] }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
           />
@@ -678,7 +678,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                    initial={{ opacity: 0, x: -20 }}
                    animate={{ opacity: 1, x: 0 }}
                    exit={{ opacity: 0, x: -20 }}
-                   className="flex items-center gap-3 bg-accent/10 border border-accent/20 text-accent px-3 py-1.5 rounded-full w-max backdrop-blur-md shadow-[0_0_10px_rgba(25,195,125,0.1)]"
+                   className="flex items-center gap-3 bg-accent/10 border border-accent/20 text-accent px-3 py-1.5 rounded-full w-max backdrop-blur-md shadow-[0_0_10px_rgba(36,216,197,0.1)]"
                  >
                    <span className="text-[10px] font-semibold tracking-wider uppercase flex items-center gap-1.5">
                       <FiMap size={10} /> FOCUS: {focusRegion}
@@ -761,7 +761,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                       animate={{ pathLength: 1, opacity: [0, p.isHighlighted ? 0.8 : 0.4, 0] }}
                       transition={{ duration: 2 + (i % 3), repeat: Infinity, ease: "linear", repeatDelay: (i % 2) }}
                     />
-                    <circle r={isHigh ? "3.5" : "2"} fill="currentColor" className={isHigh ? "text-danger drop-shadow-[0_0_6px_rgba(239,68,68,1)]" : "text-accent drop-shadow-[0_0_4px_rgba(25,195,125,0.8)]"}>
+                    <circle r={isHigh ? "3.5" : "2"} fill="currentColor" className={isHigh ? "text-danger drop-shadow-[0_0_6px_rgba(240,68,82,1)]" : "text-accent drop-shadow-[0_0_4px_rgba(36,216,197,0.8)]"}>
                        <animateMotion dur={`${2 + (i % 3)}s`} repeatCount="indefinite" path={d} />
                     </circle>
                   </>
@@ -787,7 +787,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
                  
                  {/* Core Node Marker */}
                  <circle cx={r.cx} cy={r.cy} r="5" fill="currentColor" className={`${nodeColorClass} ${!isActive && 'opacity-30'}`} />
-                 <circle cx={r.cx} cy={r.cy} r="2.5" fill="currentColor" className="text-[#050708]" />
+                 <circle cx={r.cx} cy={r.cy} r="2.5" fill="currentColor" className="text-bg" />
                  
                  {/* Active Pulse Ring */}
                  {isActive && (
@@ -817,7 +817,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="absolute bottom-4 left-4 w-72 bg-bg-elevated/95 backdrop-blur-md border border-border shadow-2xl rounded-xl overflow-hidden z-20 flex flex-col"
+              className="absolute bottom-4 left-4 w-72 max-w-[calc(100%-2rem)] bg-bg-elevated/95 backdrop-blur-md border border-border shadow-2xl rounded-xl overflow-hidden z-20 flex flex-col"
             >
               <div className="bg-surface/50 px-4 py-3 border-b border-border flex justify-between items-center">
                 <h4 className="text-xs font-semibold text-text-primary flex items-center gap-2 tracking-wide uppercase">
@@ -857,7 +857,7 @@ export function LiveThreatMapPreview({ isCompact = false }) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="absolute top-4 bottom-4 right-4 w-80 sm:w-96 bg-bg-elevated/95 backdrop-blur-xl border border-border shadow-2xl rounded-xl overflow-hidden z-30 flex flex-col"
+              className="absolute top-4 bottom-4 right-4 w-80 sm:w-96 max-w-[calc(100%-2rem)] bg-bg-elevated/95 backdrop-blur-xl border border-border shadow-2xl rounded-xl overflow-hidden z-30 flex flex-col"
             >
               <div className="bg-surface/50 px-4 py-3 border-b border-border flex justify-between items-center">
                 <h4 className="text-xs font-semibold text-text-primary flex items-center gap-2 tracking-wide uppercase">
@@ -947,34 +947,34 @@ export function LiveThreatMapPreview({ isCompact = false }) {
 
       {/* BOTTOM SECTION: Supporting Information */}
       {!isCompact && (
-        <div className="flex flex-col lg:flex-row p-4 sm:p-6 gap-6 relative z-10 bg-surface/50">
+        <div className="flex flex-col lg:flex-row p-4 sm:p-6 gap-6 relative z-10 bg-surface/50 w-full min-w-0 box-border">
         
         {/* Left Bottom Side: Stats & Region */}
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full min-w-0">
              {[
                { label: "Threats Monitored", value: stats.monitored.toLocaleString() },
                { label: "Active Events", value: stats.active },
                { label: "Regions", value: stats.regions },
                { label: "High Severity", value: stats.highSev, color: 'text-danger' },
              ].map((stat, i) => (
-               <div key={i} className="bg-bg-elevated/80 border border-border rounded-xl p-3 sm:p-4 flex flex-col gap-1 shadow-sm">
-                 <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">{stat.label}</span>
-                 <span className={`text-xl font-display font-bold ${stat.color || 'text-text-primary'}`}>{stat.value}</span>
+               <div key={i} className="bg-bg-elevated/80 border border-border rounded-xl p-3 sm:p-4 flex flex-col gap-1 shadow-sm min-w-0">
+                 <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider truncate">{stat.label}</span>
+                 <span className={`text-xl font-display font-bold ${stat.color || 'text-text-primary'} truncate`}>{stat.value}</span>
                </div>
              ))}
           </div>
 
-          <div className="bg-bg-elevated/80 border border-border rounded-xl p-4 sm:p-5 shadow-sm">
+          <div className="bg-bg-elevated/80 border border-border rounded-xl p-4 sm:p-5 shadow-sm w-full min-w-0">
             <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
               <FiGlobe className="text-accent" /> Region Activity
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 w-full min-w-0">
               {[...computedRegions].sort((a,b) => b.activeCount - a.activeCount).slice(0,6).map((r, i) => (
-                <div key={i} className="flex flex-col gap-1.5">
+                <div key={i} className="flex flex-col gap-1.5 min-w-0">
                   <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-text-secondary">{r.name}</span>
-                    <span className="text-text-primary font-mono">{r.activeCount}</span>
+                    <span className="text-text-secondary truncate">{r.name}</span>
+                    <span className="text-text-primary font-mono ml-2 shrink-0">{r.activeCount}</span>
                   </div>
                   <div className="w-full h-1.5 bg-surface rounded-full overflow-hidden">
                     <motion.div 
@@ -991,13 +991,13 @@ export function LiveThreatMapPreview({ isCompact = false }) {
         </div>
 
         {/* Right Bottom Side: Timeline */}
-        <div className="w-full lg:w-96 flex flex-col">
+        <div className="w-full lg:w-96 flex flex-col min-w-0 max-w-full">
           <div className="flex-1 flex flex-col bg-bg-elevated/80 border border-border rounded-xl overflow-hidden shadow-sm max-h-[400px]">
             <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-surface/50">
               <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider flex items-center gap-2">
                 <FiList className="text-accent" /> Live Activity Timeline
               </h4>
-              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse shrink-0" />
             </div>
             <div className="flex-1 p-3 overflow-y-auto custom-scrollbar flex flex-col gap-1">
               <AnimatePresence initial={false}>
@@ -1078,29 +1078,29 @@ export default function ComingSoonFeature(props) {
   const previewContent = isVisualPhishing ? <VisualPhishingPreview /> : isWebcamLab ? <WebcamSecurityLabPreview /> : (isThreatMap ? <LiveThreatMapPreview /> : (isCopilot ? <AICopilotPreview /> : (props.previewContent || null)));
 
   return (
-    <div className="space-y-12 animate-fade-in pb-12 max-w-5xl mx-auto relative">
+    <div className="space-y-12 animate-fade-in pb-12 max-w-5xl mx-auto relative w-full min-w-0">
       <div className="absolute inset-0 pointer-events-none z-[-1] overflow-hidden flex justify-center">
          <div className="absolute top-[5%] w-[600px] h-[400px] bg-primary/5 blur-[140px] rounded-full" />
       </div>
 
-      <div className="flex flex-col items-start gap-4 relative z-10">
+      <div className="flex flex-col items-start gap-4 relative z-10 w-full min-w-0">
         <motion.div initial={{opacity: 0, y: 12}} animate={{opacity: 1, y: 0}} className="inline-flex items-center gap-2 border border-border bg-surface glass rounded-full pl-1.5 pr-3.5 py-1.5 mb-2 shadow-sm">
            <span className="bg-primary/20 text-accent text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase">
              {category}
            </span>
         </motion.div>
         
-        <motion.div initial={{opacity: 0, y: 12}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}}>
-          <h1 className="font-display font-semibold text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-5 flex items-center gap-4 tracking-tight">
-             <div className="p-2.5 rounded-xl bg-bg-elevated border border-border shadow-sm">
+        <motion.div initial={{opacity: 0, y: 12}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}} className="w-full min-w-0">
+          <h1 className="font-display font-semibold text-3xl sm:text-4xl lg:text-5xl text-text-primary mb-5 flex flex-wrap sm:flex-nowrap items-center gap-4 tracking-tight break-words">
+             <div className="p-2.5 rounded-xl bg-bg-elevated border border-border shadow-sm shrink-0">
                <Icon className="text-accent" size={28} />
              </div>
-             {title}
+             <span className="min-w-0 flex-1 break-words">{title}</span>
           </h1>
-          <h2 className="text-xl text-text-primary font-medium mb-3 tracking-tight">
+          <h2 className="text-xl text-text-primary font-medium mb-3 tracking-tight break-words">
             {subtitle}
           </h2>
-          <p className="text-text-secondary text-base max-w-3xl leading-relaxed">
+          <p className="text-text-secondary text-base max-w-3xl leading-relaxed break-words">
             {description}
           </p>
         </motion.div>
@@ -1110,10 +1110,10 @@ export default function ComingSoonFeature(props) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="relative z-10"
+        className="relative z-10 w-full min-w-0"
       >
-        <Card className="overflow-hidden border-border bg-surface glass p-0 shadow-2xl relative">
-           <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-bg-elevated/50 relative z-20">
+        <Card className="overflow-hidden border-border bg-surface glass p-0 shadow-2xl relative w-full min-w-0">
+           <div className="px-4 sm:px-6 py-4 border-b border-border flex flex-wrap items-center justify-between gap-3 bg-bg-elevated/50 relative z-20">
               <div className="flex items-center gap-3">
                  <WindowControls />
                  <div className="h-4 w-px bg-border mx-1" />
@@ -1131,19 +1131,19 @@ export default function ComingSoonFeature(props) {
            {previewContent ? (
              previewContent
            ) : (
-             <div className="p-12 sm:p-20 flex flex-col items-center justify-center text-center min-h-[400px] bg-surface/50">
+             <div className="p-8 sm:p-12 md:p-20 flex flex-col items-center justify-center text-center min-h-[350px] sm:min-h-[400px] bg-surface/50 w-full min-w-0">
                <motion.div 
-                 className="w-20 h-20 rounded-2xl bg-bg-elevated border border-border flex items-center justify-center mb-6 shadow-lg"
+                 className="w-20 h-20 rounded-2xl bg-bg-elevated border border-border flex items-center justify-center mb-6 shadow-lg shrink-0"
                  animate={{ y: [0, -8, 0] }}
                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                >
                   <Icon size={32} className="text-accent" />
                </motion.div>
                
-               <h3 className="text-xl font-display font-semibold text-text-primary mb-3 tracking-tight">
+               <h3 className="text-xl font-display font-semibold text-text-primary mb-3 tracking-tight break-words max-w-full">
                   Experience the future of {title.toLowerCase()}
                </h3>
-               <p className="text-sm text-text-secondary max-w-md leading-relaxed">
+               <p className="text-sm text-text-secondary max-w-md leading-relaxed break-words">
                   This capability is currently in development. The frontend operations shell is standing by for logic integration.
                </p>
              </div>
@@ -1151,22 +1151,23 @@ export default function ComingSoonFeature(props) {
         </Card>
       </motion.div>
 
-      <div className="grid sm:grid-cols-3 gap-5 relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10 w-full min-w-0">
          {features.map((feature, idx) => (
             <motion.div 
               key={idx}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 + 0.3 }}
+              className="min-w-0 w-full flex flex-col"
             >
-              <Card className="p-6 h-full border-border bg-surface glass hover:border-accent/40 transition-colors duration-300 shadow-lg">
-                 <div className="w-10 h-10 rounded-lg bg-bg-elevated border border-border flex items-center justify-center mb-4 shadow-sm">
+              <Card className="p-5 sm:p-6 h-full border-border bg-surface glass hover:border-accent/40 transition-colors duration-300 shadow-lg min-w-0 flex flex-col justify-start">
+                 <div className="w-10 h-10 rounded-lg bg-bg-elevated border border-border flex items-center justify-center mb-4 shadow-sm shrink-0">
                     <feature.icon className="text-accent" size={20} />
                  </div>
-                 <h4 className="text-base font-semibold text-text-primary mb-2 tracking-tight">
+                 <h4 className="text-base font-semibold text-text-primary mb-2 tracking-tight break-words">
                     {feature.title}
                  </h4>
-                 <p className="text-sm text-text-secondary leading-relaxed">
+                 <p className="text-sm text-text-secondary leading-relaxed break-words">
                     {feature.description}
                  </p>
               </Card>
