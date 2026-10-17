@@ -17,11 +17,11 @@ export default function DashboardLayout({ children }) {
   const title = activeLink?.label || 'Overview';
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="flex min-h-screen bg-bg w-full max-w-full">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 max-w-full flex flex-col">
         <DashboardHeader title={title} onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 max-w-[1600px] w-full min-w-0 mx-auto box-border">
           {children || <Outlet />}
         </main>
       </div>

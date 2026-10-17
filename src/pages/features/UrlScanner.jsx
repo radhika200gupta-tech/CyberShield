@@ -4,8 +4,8 @@ import PageHeader from '../../components/common/PageHeader';
 
 export default function UrlScanner() {
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="w-full space-y-6">
+    <div className="max-w-7xl mx-auto w-full min-w-0">
+      <div className="w-full min-w-0 space-y-6">
         <PageHeader 
           title="URL Scanner"
           description="Analyze URLs for suspicious patterns and potential threats."

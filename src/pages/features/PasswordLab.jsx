@@ -129,7 +129,7 @@ export default function PasswordAnalyzer() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto w-full min-w-0">
       <div className="w-full space-y-6">
         <PageHeader 
           title="Password Security Lab"
@@ -201,7 +201,7 @@ export default function PasswordAnalyzer() {
         </div>
 
         {/* Strength & Risk Metrics */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 w-full min-w-0">
           {/* Password Strength */}
           <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
             <div className="flex items-center justify-between">
@@ -299,7 +299,7 @@ export default function PasswordAnalyzer() {
             🔍 Security Checks
           </h2>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full min-w-0">
             {checksList.map((check) => (
               <div
                 key={check.label}
@@ -322,7 +322,7 @@ export default function PasswordAnalyzer() {
             🔤 Character Breakdown
           </h2>
 
-          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 w-full min-w-0">
             <StatBox name="Total" value={password.length} />
             <StatBox name="Uppercase" value={analysis.upper} />
             <StatBox name="Lowercase" value={analysis.lower} />

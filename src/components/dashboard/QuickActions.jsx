@@ -20,20 +20,20 @@ export default function QuickActions() {
         <h3 className="text-xs font-semibold text-text-muted uppercase tracking-widest">Active Security Tools</h3>
       </div>
       
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full min-w-0">
         {ACTIONS.map((action) => (
           <button
             key={action.title}
             onClick={() => navigate(action.path)}
-            className={`flex items-center justify-between p-4 bg-bg-elevated/40 hover:bg-surface border border-border/50 border-l-2 ${action.borderColor} rounded-r-xl rounded-l-sm text-left group transition-all`}
+            className={`flex items-center justify-between p-4 bg-bg-elevated/40 hover:bg-surface border border-border/50 border-l-2 ${action.borderColor} rounded-r-xl rounded-l-sm text-left group transition-all w-full min-w-0`}
           >
-            <div className="flex items-center gap-3">
-              <div className={`p-2 rounded bg-surface/50 border border-border/50 ${action.iconColor}`}>
+            <div className="flex items-center gap-3 min-w-0 flex-1 mr-2">
+              <div className={`p-2 rounded bg-surface/50 border border-border/50 ${action.iconColor} shrink-0`}>
                 <action.icon size={16} />
               </div>
-              <div>
-                <p className="font-semibold text-text-primary text-sm group-hover:text-accent transition-colors">{action.title}</p>
-                <p className="text-[10px] text-text-muted mt-0.5 uppercase tracking-wide">{action.description}</p>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-text-primary text-sm group-hover:text-accent transition-colors break-words">{action.title}</p>
+                <p className="text-[10px] text-text-muted mt-0.5 uppercase tracking-wide truncate">{action.description}</p>
               </div>
             </div>
             <FiArrowRight className="text-text-muted group-hover:text-accent group-hover:translate-x-1 transition-all shrink-0" size={14} />

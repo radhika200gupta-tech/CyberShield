@@ -186,7 +186,7 @@ export default function ScreenshotAnalyzer() {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl w-full min-w-0 mx-auto">
       <PageHeader 
         title="Analyze Screenshots"
         description="Analyze screenshots for suspicious phishing signals and security indicators."
@@ -195,12 +195,12 @@ export default function ScreenshotAnalyzer() {
       />
 
       {/* Main Upload Section */}
-      <Card className="p-1.5 sm:p-2">
-        <div className="grid lg:grid-cols-2 gap-2">
+      <Card className="p-1.5 sm:p-2 w-full min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 w-full min-w-0">
           {/* Left: Upload Area */}
           {previewUrl ? (
-            <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center border-2 border-border rounded-xl bg-surface min-h-[400px]">
-              <img src={previewUrl} alt="Screenshot Preview" className="max-h-[260px] object-contain rounded-lg shadow-sm border border-border mb-6" />
+            <div className="p-4 sm:p-8 flex flex-col items-center justify-center text-center border-2 border-border rounded-xl bg-surface min-h-[350px] sm:min-h-[400px] w-full min-w-0">
+              <img src={previewUrl} alt="Screenshot Preview" className="max-h-[220px] sm:max-h-[260px] max-w-full object-contain rounded-lg shadow-sm border border-border mb-6" />
               <p className="text-sm font-medium text-text-primary truncate max-w-full px-4 mb-4">
                 {selectedFile?.name}
               </p>
@@ -210,7 +210,7 @@ export default function ScreenshotAnalyzer() {
             </div>
           ) : (
             <div
-              className="p-8 sm:p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-xl bg-surface hover:bg-surface-hover hover:border-primary/50 transition-colors cursor-pointer group min-h-[400px]"
+              className="p-6 sm:p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-xl bg-surface hover:bg-surface-hover hover:border-primary/50 transition-colors cursor-pointer group min-h-[350px] sm:min-h-[400px] w-full min-w-0"
               onClick={() => fileInputRef.current?.click()}
             >
               <input
@@ -238,7 +238,7 @@ export default function ScreenshotAnalyzer() {
           )}
 
           {/* Right: Analysis Preview */}
-          <div className="p-8 sm:p-10 flex flex-col items-center justify-center text-center bg-bg-elevated rounded-xl min-h-[400px]">
+          <div className="p-6 sm:p-10 flex flex-col items-center justify-center text-center bg-bg-elevated rounded-xl min-h-[350px] sm:min-h-[400px] w-full min-w-0">
             {isAnalyzing ? (
               <>
                 <div className="w-16 h-16 rounded-full bg-surface border border-border flex items-center justify-center mb-6">
@@ -314,34 +314,34 @@ export default function ScreenshotAnalyzer() {
       </Card>
 
       {/* 3 Small Cards */}
-      <div className="grid sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full min-w-0">
         {[
           { icon: FiType, title: 'OCR Analysis', desc: 'Extract visible text from screenshots.', color: 'text-primary bg-primary/10' },
           { icon: FiAlertCircle, title: 'Threat Indicators', desc: 'Identify suspicious phrases, links and requests.', color: 'text-danger bg-danger/10' },
           { icon: FiCheckCircle, title: 'Risk Assessment', desc: 'Understand the potential security risk.', color: 'text-success bg-success/10' },
         ].map((item) => (
-          <Card key={item.title} className="p-5 flex items-start gap-4">
+          <Card key={item.title} className="p-5 flex items-start gap-4 min-w-0 w-full">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${item.color}`}>
               <item.icon size={18} />
             </div>
-            <div>
-              <h4 className="text-sm font-medium text-text-primary mb-1">{item.title}</h4>
-              <p className="text-xs text-text-secondary">{item.desc}</p>
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-medium text-text-primary mb-1 break-words">{item.title}</h4>
+              <p className="text-xs text-text-secondary leading-relaxed break-words">{item.desc}</p>
             </div>
           </Card>
         ))}
       </div>
 
       {/* Security Analysis Tabs */}
-      <div>
+      <div className="w-full min-w-0">
         <h3 className="text-lg font-display font-semibold text-text-primary mb-4">Security Analysis</h3>
-        <Card className="overflow-hidden">
-          <div className="flex border-b border-border px-2">
+        <Card className="overflow-hidden w-full min-w-0">
+          <div className="flex border-b border-border px-2 overflow-x-auto scrollbar-none">
             {['Detected Indicators', 'Extracted Text', 'Recommendations'].map((tab, i) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === i
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors shrink-0 whitespace-nowrap ${activeTab === i
                     ? 'border-accent text-accent'
                     : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border'
                   }`}
@@ -350,16 +350,16 @@ export default function ScreenshotAnalyzer() {
               </button>
             ))}
           </div>
-          <div className="p-8">
+          <div className="p-4 sm:p-8 w-full min-w-0">
             {activeTab === 0 && analysisResults ? (
-              <div className="text-left space-y-4 max-h-[400px] overflow-y-auto pr-2">
+              <div className="text-left space-y-4 max-h-[400px] overflow-y-auto pr-2 w-full min-w-0">
                 {analysisResults.indicators.length > 0 ? (
                   analysisResults.indicators.map((ind, i) => (
-                    <div key={i} className="p-4 rounded-lg border border-border bg-surface flex items-start gap-4">
+                    <div key={i} className="p-4 rounded-lg border border-border bg-surface flex items-start gap-4 min-w-0 w-full">
                       <div className={`mt-1.5 shrink-0 w-2 h-2 rounded-full ${ind.severity === 'high' ? 'bg-danger' : 'bg-warning'}`} />
-                      <div>
-                        <h5 className="text-sm font-medium text-text-primary mb-1">{ind.category}</h5>
-                        <p className="text-sm text-text-secondary">{ind.description}</p>
+                      <div className="min-w-0 flex-1">
+                        <h5 className="text-sm font-medium text-text-primary mb-1 break-words">{ind.category}</h5>
+                        <p className="text-sm text-text-secondary break-words">{ind.description}</p>
                       </div>
                     </div>
                   ))
@@ -372,9 +372,9 @@ export default function ScreenshotAnalyzer() {
                 )}
               </div>
             ) : activeTab === 1 && extractedText !== null ? (
-              <div className="text-left bg-surface border border-border p-6 rounded-lg max-h-[400px] overflow-y-auto">
+              <div className="text-left bg-surface border border-border p-4 sm:p-6 rounded-lg max-h-[400px] overflow-y-auto overflow-x-auto w-full min-w-0">
                 {extractedText ? (
-                  <pre className="text-sm text-text-secondary whitespace-pre-wrap font-mono">
+                  <pre className="text-sm text-text-secondary whitespace-pre-wrap font-mono break-words break-all max-w-full">
                     {extractedText}
                   </pre>
                 ) : (
@@ -382,12 +382,12 @@ export default function ScreenshotAnalyzer() {
                 )}
               </div>
             ) : activeTab === 2 && analysisResults ? (
-              <div className="text-left space-y-3 max-h-[400px] overflow-y-auto pr-2">
+              <div className="text-left space-y-3 max-h-[400px] overflow-y-auto pr-2 w-full min-w-0">
                 {analysisResults.recommendations.length > 0 ? (
                   analysisResults.recommendations.map((rec, i) => (
-                    <div key={i} className="p-4 rounded-lg bg-primary/10 border border-primary/20 flex items-start gap-3">
+                    <div key={i} className="p-4 rounded-lg bg-primary/10 border border-primary/20 flex items-start gap-3 min-w-0 w-full">
                       <FiAlertCircle className="text-primary mt-0.5 shrink-0" size={16} />
-                      <p className="text-sm text-text-primary">{rec}</p>
+                      <p className="text-sm text-text-primary min-w-0 flex-1 break-words">{rec}</p>
                     </div>
                   ))
                 ) : (
@@ -412,12 +412,12 @@ export default function ScreenshotAnalyzer() {
       </div>
 
       {/* NEW INFORMATIONAL SECTION: What We Analyze */}
-      <div className="pt-8 border-t border-border mt-12">
+      <div className="pt-8 border-t border-border mt-12 w-full min-w-0">
         <h3 className="text-xl font-display font-semibold text-text-primary mb-2">What We Analyze</h3>
         <p className="text-sm text-text-secondary mb-6 max-w-2xl">
           The analyzer extracts visible text from your screenshot and evaluates it against known phishing patterns and social engineering tactics.
         </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full min-w-0">
           {[
             { icon: FiClock, title: 'Urgency & Pressure', desc: 'Checks for language designed to create panic or force immediate action.' },
             { icon: FiLock, title: 'Credential Requests', desc: 'Looks for text requesting passwords, usernames, or account verification.' },
@@ -426,13 +426,13 @@ export default function ScreenshotAnalyzer() {
             { icon: FiLink, title: 'Suspicious Links', desc: 'Examines extracted text for unencrypted HTTP links or common URL shorteners.' },
             { icon: FiEye, title: 'Sensitive Data', desc: 'Looks for requests for PINs, CVVs, or personal security details.' }
           ].map((item, idx) => (
-            <Card key={idx} className="p-5 flex items-start gap-4 bg-surface/50 hover:bg-surface transition-colors">
+            <Card key={idx} className="p-5 flex items-start gap-4 bg-surface/50 hover:bg-surface transition-colors min-w-0 w-full">
               <div className="w-10 h-10 rounded-lg bg-bg-elevated border border-border flex items-center justify-center shrink-0">
                 <item.icon className="text-accent" size={18} />
               </div>
-              <div>
-                <h4 className="text-sm font-medium text-text-primary mb-1">{item.title}</h4>
-                <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-medium text-text-primary mb-1 break-words">{item.title}</h4>
+                <p className="text-xs text-text-secondary leading-relaxed break-words">{item.desc}</p>
               </div>
             </Card>
           ))}
@@ -440,26 +440,26 @@ export default function ScreenshotAnalyzer() {
       </div>
 
       {/* NEW INFORMATIONAL SECTION: Workflow & Results */}
-      <div className="grid md:grid-cols-2 gap-8 mt-8 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mt-8 pb-12 w-full min-w-0">
         
         {/* How It Works */}
-        <div>
+        <div className="min-w-0 w-full">
           <h3 className="text-xl font-display font-semibold text-text-primary mb-4">How It Works</h3>
-          <Card className="p-0 overflow-hidden bg-surface/50">
-            <div className="divide-y divide-border">
+          <Card className="p-0 overflow-hidden bg-surface/50 w-full min-w-0">
+            <div className="divide-y divide-border w-full min-w-0">
               {[
                 { step: '1', title: 'Upload Screenshot', desc: 'Your image is loaded securely in your browser.' },
                 { step: '2', title: 'Text Extraction (OCR)', desc: 'The engine reads all visible text from the image.' },
                 { step: '3', title: 'Pattern Matching', desc: 'Extracted text is evaluated against phishing heuristics.' },
                 { step: '4', title: 'Risk Assessment', desc: 'A final security verdict and score is generated.' }
               ].map((item, idx) => (
-                <div key={idx} className="p-4 flex items-center gap-4">
+                <div key={idx} className="p-4 flex items-center gap-4 min-w-0 w-full">
                   <div className="w-8 h-8 rounded-full bg-bg-elevated border border-border flex items-center justify-center shrink-0 text-xs font-bold text-text-muted font-mono">
                     {item.step}
                   </div>
-                  <div>
-                    <h5 className="text-sm font-medium text-text-primary">{item.title}</h5>
-                    <p className="text-xs text-text-secondary">{item.desc}</p>
+                  <div className="min-w-0 flex-1">
+                    <h5 className="text-sm font-medium text-text-primary break-words">{item.title}</h5>
+                    <p className="text-xs text-text-secondary break-words">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -468,36 +468,36 @@ export default function ScreenshotAnalyzer() {
         </div>
 
         {/* What Results Include */}
-        <div>
+        <div className="min-w-0 w-full">
           <h3 className="text-xl font-display font-semibold text-text-primary mb-4">What Results Include</h3>
-          <Card className="p-6 bg-surface/50 h-full">
-            <div className="space-y-5">
-              <div className="flex items-start gap-3">
+          <Card className="p-6 bg-surface/50 h-full w-full min-w-0">
+            <div className="space-y-5 w-full min-w-0">
+              <div className="flex items-start gap-3 min-w-0 w-full">
                 <FiActivity className="text-primary shrink-0 mt-0.5" size={18} />
-                <div>
-                  <h5 className="text-sm font-medium text-text-primary mb-1">Risk Assessment</h5>
-                  <p className="text-xs text-text-secondary">A quantified security score from 0-100 indicating the threat level.</p>
+                <div className="min-w-0 flex-1">
+                  <h5 className="text-sm font-medium text-text-primary mb-1 break-words">Risk Assessment</h5>
+                  <p className="text-xs text-text-secondary break-words">A quantified security score from 0-100 indicating the threat level.</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 min-w-0 w-full">
                 <FiAlertCircle className="text-warning shrink-0 mt-0.5" size={18} />
-                <div>
-                  <h5 className="text-sm font-medium text-text-primary mb-1">Detected Indicators</h5>
-                  <p className="text-xs text-text-secondary">A detailed breakdown of every suspicious phrase or pattern found in the text.</p>
+                <div className="min-w-0 flex-1">
+                  <h5 className="text-sm font-medium text-text-primary mb-1 break-words">Detected Indicators</h5>
+                  <p className="text-xs text-text-secondary break-words">A detailed breakdown of every suspicious phrase or pattern found in the text.</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 min-w-0 w-full">
                 <FiFileText className="text-text-muted shrink-0 mt-0.5" size={18} />
-                <div>
-                  <h5 className="text-sm font-medium text-text-primary mb-1">Extracted Text</h5>
-                  <p className="text-xs text-text-secondary">The raw OCR output so you can verify exactly what the engine analyzed.</p>
+                <div className="min-w-0 flex-1">
+                  <h5 className="text-sm font-medium text-text-primary mb-1 break-words">Extracted Text</h5>
+                  <p className="text-xs text-text-secondary break-words">The raw OCR output so you can verify exactly what the engine analyzed.</p>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 min-w-0 w-full">
                 <FiCheckCircle className="text-success shrink-0 mt-0.5" size={18} />
-                <div>
-                  <h5 className="text-sm font-medium text-text-primary mb-1">Security Recommendations</h5>
-                  <p className="text-xs text-text-secondary">Actionable advice on how to handle the specific threats detected.</p>
+                <div className="min-w-0 flex-1">
+                  <h5 className="text-sm font-medium text-text-primary mb-1 break-words">Security Recommendations</h5>
+                  <p className="text-xs text-text-secondary break-words">Actionable advice on how to handle the specific threats detected.</p>
                 </div>
               </div>
             </div>

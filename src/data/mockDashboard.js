@@ -18,10 +18,10 @@ export const monthlyScans = [
 ];
 
 export const riskDistribution = [
-  { name: 'Low Risk', value: 45, color: '#22C55E' },
-  { name: 'Medium Risk', value: 30, color: '#F59E0B' },
-  { name: 'High Risk', value: 15, color: '#EF4444' },
-  { name: 'Critical', value: 10, color: '#991B1B' },
+  { name: 'Critical', value: 10, color: '#F04452' },
+  { name: 'High Risk', value: 15, color: '#FF7849' },
+  { name: 'Medium Risk', value: 30, color: '#F5A623' },
+  { name: 'Low Risk', value: 45, color: '#20C997' },
 ];
 
 export const recentActivity = [

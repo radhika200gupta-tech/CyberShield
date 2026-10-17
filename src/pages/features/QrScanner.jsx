@@ -3,7 +3,7 @@ import { FiMaximize } from 'react-icons/fi';
 
 export default function QrScanner() {
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto w-full min-w-0 space-y-6">
       <Card className="p-8 text-center flex flex-col items-center justify-center min-h-[400px]">
         <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mb-6">
           <FiMaximize size={32} className="text-accent" />

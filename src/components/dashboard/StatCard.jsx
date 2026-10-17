@@ -11,22 +11,22 @@ const COLOR_MAP = {
 
 export default function StatCard({ icon: Icon, label, value, suffix = '', trend, color = 'primary' }) {
   return (
-    <div className="bg-surface border border-border/70 rounded-xl p-5 hover:bg-surface-hover shadow-[0_8px_30px_var(--shadow-color)] transition-all group relative overflow-hidden">
+    <div className="bg-surface border border-border/70 rounded-xl p-5 hover:bg-surface-hover shadow-[0_8px_30px_var(--shadow-color)] transition-all group relative overflow-hidden w-full min-w-0">
       {/* Subtle top edge glow based on color */}
       <div className={`absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-${color} to-transparent opacity-20 group-hover:opacity-50 transition-opacity`} />
       
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-semibold text-text-muted uppercase tracking-wider">{label}</p>
+      <div className="flex items-start justify-between gap-3 min-w-0">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold text-text-muted uppercase tracking-wider truncate">{label}</p>
           <motion.p
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-mono font-semibold text-2xl sm:text-3xl text-text-primary mt-2 tracking-tight"
+            className="font-mono font-semibold text-2xl sm:text-3xl text-text-primary mt-2 tracking-tight truncate"
           >
             {value}<span className="text-text-muted text-xl">{suffix}</span>
           </motion.p>
           {trend && (
-            <p className={classNames('text-[10px] mt-2 font-mono uppercase tracking-widest', trend.positive ? 'text-success' : 'text-danger')}>
+            <p className={classNames('text-[10px] mt-2 font-mono uppercase tracking-widest truncate', trend.positive ? 'text-success' : 'text-danger')}>
               {trend.positive ? '▲' : '▼'} {trend.label}
             </p>
           )}

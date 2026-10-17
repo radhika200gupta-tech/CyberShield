@@ -4,7 +4,7 @@ export default function Card({ children, className = '', hoverable = false, glas
   return (
     <Tag
       className={classNames(
-        'rounded-card border border-border p-5',
+        'rounded-card border border-border p-5 max-w-full min-w-0 box-border',
         glass ? 'glass' : 'bg-surface',
         hoverable && 'transition-all duration-200 hover:border-border-hover hover:-translate-y-0.5 hover:shadow-[0_8px_30px_-12px_var(--shadow-color)]',
         className

@@ -5,8 +5,8 @@ const TYPE_ICONS = { password: FiKey, url: FiLink, phishing: FiMail, screenshot:
 
 export default function RecentActivity({ activity }) {
   return (
-    <div className="bg-bg-elevated/30 border border-border/50 rounded-xl p-5 h-full flex flex-col">
-      <div className="flex items-center justify-between border-b border-border/50 pb-3 mb-4">
+    <div className="bg-bg-elevated/30 border border-border/50 rounded-xl p-5 h-full flex flex-col w-full min-w-0">
+      <div className="flex items-center justify-between border-b border-border/50 pb-3 mb-4 min-w-0 gap-2">
         <h3 className="text-xs font-semibold text-text-muted uppercase tracking-widest">Recent Activity Feed</h3>
         <span className="text-[10px] font-mono text-accent">LIVE</span>
       </div>

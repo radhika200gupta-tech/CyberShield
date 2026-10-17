@@ -402,12 +402,12 @@ export default function PhishingSimulator() {
                 <h3 className="text-base font-medium text-text-primary mb-4 flex items-center gap-2">
                   <FiShield className="text-accent" /> What is your security decision?
                 </h3>
-                <div className="grid sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full min-w-0">
                   {['Report as suspicious', 'Ignore / delete', 'Proceed normally'].map(option => (
                     <Button 
                       key={option} 
                       variant="outline" 
-                      className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-2 hover:bg-surface-hover hover:border-accent hover:text-accent transition-all text-sm font-medium" 
+                      className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-2 hover:bg-surface-hover hover:border-accent hover:text-accent transition-all text-sm font-medium text-center break-words" 
                       onClick={() => handleAnswer(option)}
                     >
                       {option}

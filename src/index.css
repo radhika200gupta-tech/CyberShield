@@ -2,29 +2,34 @@
 
 @theme {
   /* Brand */
-  --color-primary: #8B5CF6;
-  --color-primary-dim: #6D28D9;
-  --color-accent: #A78BFA;
-  --color-danger: #EF4444;
-  --color-warning: #F59E0B;
-  --color-success: #22C55E;
-  --color-analytics: #8B5CF6;
+  --color-primary: #24D8C5;
+  --color-primary-dim: #1db8a7;
+  --color-accent: #36C9E8;
+  --color-danger: #F04452;
+  --color-warning: #F5A623;
+  --color-success: #20C997;
+  --color-analytics: #36C9E8;
 
   /* Surfaces */
-  --color-bg: #07070A;
-  --color-bg-elevated: #0B0A10;
-  --color-surface: #11101A;
-  --color-surface-hover: #161320;
-  --color-border: #25202F;
-  --color-border-hover: #3A2D4D;
+  --color-bg: #05080D;
+  --color-sidebar: #080E16;
+  --color-header: #080E16;
+  --color-bg-elevated: #080E16;
+  --color-surface: #0D151E;
+  --color-surface-hover: #121C27;
+  --color-border: #1B2B38;
+  --color-border-hover: #263c4e;
 
   /* Text */
-  --color-text-primary: #F4F2F8;
-  --color-text-secondary: #AAA3B5;
-  --color-text-muted: #777181;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #A5B5C7;
+  --color-text-muted: #71869B;
+
+  /* Navigation */
+  --color-nav-active-bg: #0D292D;
 
   /* Shadows */
-  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-color: rgba(0, 0, 0, 0.6);
 
   /* Fonts */
   --font-display: "Space Grotesk", "Inter", sans-serif;
@@ -69,66 +74,286 @@
   }
 }
 
+/* Explicit Dark mode */
+.dark {
+  --color-primary: #24D8C5;
+  --color-primary-dim: #1db8a7;
+  --color-accent: #36C9E8;
+  --color-danger: #F04452;
+  --color-warning: #F5A623;
+  --color-success: #20C997;
+  --color-analytics: #36C9E8;
+  --color-bg: #05080D;
+  --color-sidebar: #080E16;
+  --color-header: #080E16;
+  --color-bg-elevated: #080E16;
+  --color-surface: #0D151E;
+  --color-surface-hover: #121C27;
+  --color-border: #1B2B38;
+  --color-border-hover: #263c4e;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #A5B5C7;
+  --color-text-muted: #71869B;
+  --color-nav-active-bg: #0D292D;
+  --shadow-color: rgba(0, 0, 0, 0.6);
+}
+
 /* Light mode */
 .light {
-  --color-primary: #8B5CF6;
-  --color-primary-dim: #7C3AED;
-  --color-accent: #A78BFA;
-  --color-danger: #EF4444;
-  --color-warning: #F59E0B;
-  --color-success: #22C55E;
-  --color-analytics: #8B5CF6;
-  --color-bg: #F7F5FF;
-  --color-bg-elevated: #F1EEFF;
+  --color-primary: #087F8C;
+  --color-primary-dim: #066b75;
+  --color-accent: #3976A8;
+  --color-danger: #F04452;
+  --color-warning: #F5A623;
+  --color-success: #20C997;
+  --color-analytics: #3976A8;
+  --color-bg: #F1F5F7;
+  --color-sidebar: #FFFFFF;
+  --color-header: #FFFFFF;
+  --color-bg-elevated: #E8EFF2;
   --color-surface: #FFFFFF;
-  --color-surface-hover: #F9F8FF;
-  --color-border: #E2D9F3;
-  --color-border-hover: #D1C8DF;
-  --color-text-primary: #1A1525;
-  --color-text-secondary: #5D5470;
-  --color-text-muted: #867F91;
-  --shadow-color: rgba(139, 92, 246, 0.08);
+  --color-surface-hover: #EAF5F5;
+  --color-border: #D7E1E6;
+  --color-border-hover: #BACCD6;
+  --color-text-primary: #12313B;
+  --color-text-secondary: #5C707A;
+  --color-text-muted: #5C707A;
+  --color-nav-active-bg: #DDF1F0;
+  --shadow-color: rgba(18, 49, 59, 0.06);
 }
 
-/* Force opaque surfaces and borders in light mode for clear hierarchy */
-.light .bg-bg-elevated,
-.light .bg-bg-elevated\/20,
-.light .bg-bg-elevated\/30,
-.light .bg-bg-elevated\/40,
-.light .bg-bg-elevated\/50,
-.light .bg-bg-elevated\/80,
-.light .bg-bg-elevated\/90,
-.light .bg-bg-elevated\/95 {
-  background-color: var(--color-bg-elevated) !important;
-  border-color: var(--color-border) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 8px var(--shadow-color) !important;
+/* Base Body and Root Canvas in Light Mode */
+.light body,
+.light #root,
+.light .bg-bg {
+  background-color: #F1F5F7 !important;
+  color: #12313B !important;
 }
 
+/* Sidebar in Light Mode */
+.light aside,
+.light aside.bg-bg-elevated,
+.light .bg-sidebar {
+  background-color: #FFFFFF !important;
+  border-right-color: #D7E1E6 !important;
+}
+
+.light aside .border-border,
+.light aside .border-b,
+.light aside .border-t {
+  border-color: #D7E1E6 !important;
+}
+
+/* Header in Light Mode */
+.light header,
+.light header.dashboard-header,
+.light .bg-header {
+  background-color: #FFFFFF !important;
+  border-bottom-color: #D7E1E6 !important;
+}
+
+/* Cards & Pure White Surfaces in Light Mode */
 .light .bg-surface,
+.light .bg-surface\/20,
 .light .bg-surface\/30,
 .light .bg-surface\/40,
 .light .bg-surface\/50,
-.light .bg-surface\/80 {
-  background-color: var(--color-surface) !important;
-  border-color: var(--color-border) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 16px var(--shadow-color) !important;
+.light .bg-surface\/60,
+.light .bg-surface\/70,
+.light .bg-surface\/80,
+.light .bg-surface\/90 {
+  background-color: #FFFFFF !important;
+  border-color: #D7E1E6 !important;
 }
 
+/* Secondary Surfaces in Light Mode */
+.light .bg-bg-elevated:not(aside),
+.light .bg-bg-elevated\/20:not(aside),
+.light .bg-bg-elevated\/30:not(aside),
+.light .bg-bg-elevated\/40:not(aside),
+.light .bg-bg-elevated\/50:not(aside),
+.light .bg-bg-elevated\/60:not(aside),
+.light .bg-bg-elevated\/70:not(aside),
+.light .bg-bg-elevated\/80:not(aside),
+.light .bg-bg-elevated\/90:not(aside),
+.light .bg-bg-elevated\/95:not(aside) {
+  background-color: #E8EFF2 !important;
+  border-color: #D7E1E6 !important;
+}
+
+/* All Borders in Light Mode */
+.light .border-border,
+.light .border-border\/20,
 .light .border-border\/30,
+.light .border-border\/40,
 .light .border-border\/50,
-.light .border-border\/70 {
-  border-color: var(--color-border) !important;
+.light .border-border\/60,
+.light .border-border\/70,
+.light .border-border\/80,
+.light .border-border\/90 {
+  border-color: #D7E1E6 !important;
 }
 
-/* Ensure Dashboard panels have proper depth in Light Mode */
+/* Distinct Card & Panel Depth */
 .light .rounded-card,
-.light .rounded-xl {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 6px 20px var(--shadow-color) !important;
-  border: 1px solid var(--color-border) !important;
+.light .rounded-xl,
+.light .rounded-2xl {
+  box-shadow: 0 1px 3px rgba(18, 49, 59, 0.04), 0 4px 14px rgba(18, 49, 59, 0.03) !important;
+  border: 1px solid #D7E1E6 !important;
+}
+
+/* Selected navigation item in Light Mode */
+.light aside nav a.active,
+.light aside a.active,
+.light aside nav a.text-primary.bg-primary\/10,
+.light aside a.text-primary.bg-primary\/10,
+.light nav .rounded-full a.active,
+.light nav .rounded-full a[class*="text-primary"] {
+  background-color: #DDF1F0 !important;
+  color: #087F8C !important;
+  border: 1px solid rgba(8, 127, 140, 0.3) !important;
+  box-shadow: none !important;
+}
+
+.light aside nav a.active span.bg-accent,
+.light aside a.active span.bg-accent,
+.light aside nav a[class*="text-primary"] span.bg-accent,
+.light aside a[class*="text-primary"] span.bg-accent {
+  background-color: #087F8C !important;
+}
+
+/* Navigation and Surface Hover States in Light Mode */
+.light aside nav a:hover:not(.active):not([class*="bg-primary"]),
+.light aside a:hover:not(.active):not([class*="bg-primary"]),
+.light .hover\:bg-surface-hover:hover {
+  background-color: #EAF5F5 !important;
+  color: #12313B !important;
+}
+
+.light .hover\:bg-surface:hover {
+  background-color: #FFFFFF !important;
+}
+
+/* Text Colors in Light Mode */
+.light .text-text-primary {
+  color: #12313B !important;
+}
+
+.light .text-text-secondary {
+  color: #5C707A !important;
+}
+
+.light .text-text-muted {
+  color: #5C707A !important;
+}
+
+/* Primary and Accent Accents in Light Mode */
+.light .text-primary {
+  color: #087F8C !important;
+}
+
+.light .text-accent {
+  color: #3976A8 !important;
+}
+
+.light .border-primary,
+.light .border-l-primary {
+  border-color: #087F8C !important;
+}
+
+.light .border-accent,
+.light .border-l-accent {
+  border-color: #3976A8 !important;
+}
+
+/* Primary and Accent Buttons in Light Mode */
+.light button.bg-primary,
+.light a.bg-primary,
+.light button[class*="bg-primary"],
+.light a[class*="bg-primary"] {
+  background-color: #087F8C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(8, 127, 140, 0.25) !important;
+}
+
+.light button.bg-primary:hover,
+.light a.bg-primary:hover,
+.light button[class*="bg-primary"]:hover,
+.light a[class*="bg-primary"]:hover {
+  background-color: #066b75 !important;
+  color: #FFFFFF !important;
+}
+
+.light button.bg-accent,
+.light a.bg-accent,
+.light button[class*="bg-accent"],
+.light a[class*="bg-accent"] {
+  background-color: #3976A8 !important;
+  color: #FFFFFF !important;
+}
+
+.light button.bg-accent:hover,
+.light a.bg-accent:hover {
+  background-color: #306591 !important;
+  color: #FFFFFF !important;
+}
+
+/* Glass and Logo Gradients in Light Mode */
+.light .glass {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: #D7E1E6 !important;
+}
+
+.light .bg-gradient-to-br.from-primary.to-accent,
+.light [class*="bg-gradient-to-br"][class*="from-primary"][class*="to-accent"] {
+  background-image: linear-gradient(to bottom right, #087F8C, #3976A8) !important;
+}
+
+/* Selection and Scrollbar in Light Mode */
+.light ::selection {
+  background-color: #087F8C !important;
+  color: #FFFFFF !important;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #F1F5F7 !important;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #D7E1E6 !important;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #BACCD6 !important;
+}
+
+/* Sidebar and Header backgrounds default */
+aside,
+.dark aside {
+  background-color: var(--color-sidebar) !important;
+}
+
+header.dashboard-header,
+header {
+  background-color: var(--color-header, #080E16);
+}
+
+/* Selected sidebar navigation item in Dark Mode */
+aside nav a.active,
+aside a.active,
+aside nav a.text-primary.bg-primary\/10,
+aside a.text-primary.bg-primary\/10 {
+  background-color: var(--color-nav-active-bg, #0D292D) !important;
+  color: var(--color-primary, #24D8C5) !important;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent) !important;
 }
 
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   * {
     border-color: var(--color-border);
   }
@@ -191,7 +416,7 @@
     -webkit-backdrop-filter: blur(16px);
   }
 
-  .text-gradient {
+  .text-gradient { 
     background: linear-gradient(
       90deg,
       var(--color-accent),
@@ -205,12 +430,12 @@
   .grid-fade {
     background-image:
       linear-gradient(
-        rgba(139, 92, 246, 0.08) 1px,
+        color-mix(in srgb, var(--color-primary) 6%, transparent) 1px,
         transparent 1px
       ),
       linear-gradient(
         90deg,
-        rgba(139, 92, 246, 0.08) 1px,
+        color-mix(in srgb, var(--color-primary) 6%, transparent) 1px,
         transparent 1px
       );
     background-size: 44px 44px;
@@ -224,12 +449,12 @@
   .grid-bg {
     background-image:
       linear-gradient(
-        rgba(139, 92, 246, 0.08) 1px,
+        color-mix(in srgb, var(--color-primary) 6%, transparent) 1px,
         transparent 1px
       ),
       linear-gradient(
         90deg,
-        rgba(139, 92, 246, 0.08) 1px,
+        color-mix(in srgb, var(--color-primary) 6%, transparent) 1px,
         transparent 1px
       );
     background-size: 44px 44px;

@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { classNames } from '../../utils/formatters';
 
 const VARIANTS = {
-  primary: 'bg-primary text-white hover:bg-primary-dim shadow-[0_0_0_1px_rgba(139,92,246,0.4)] hover:shadow-[0_0_24px_-4px_rgba(139,92,246,0.6)]',
-  accent: 'bg-accent text-[#07070A] hover:brightness-110 shadow-[0_0_24px_-6px_rgba(167,139,250,0.7)]',
+  primary: 'bg-primary text-[#05080D] font-semibold hover:bg-primary-dim shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] hover:shadow-[0_0_24px_-4px_color-mix(in_srgb,var(--color-primary)_60%,transparent)]',
+  accent: 'bg-accent text-[#05080D] font-semibold hover:brightness-110 shadow-[0_0_24px_-6px_color-mix(in_srgb,var(--color-accent)_60%,transparent)]',
   outline: 'border border-border text-text-primary hover:border-border-hover hover:bg-surface-hover',
   ghost: 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
   danger: 'bg-danger text-white hover:brightness-110',
