@@ -4,6 +4,7 @@ export const ROUTES = {
   SIGNUP: '/signup',
   FORGOT_PASSWORD: '/forgot-password',
   DASHBOARD: '/app/dashboard',
+  INCIDENTS: '/app/incidents',
   SCREENSHOT_ANALYZER: '/app/screenshot-analyzer',
   PHISHING_SIMULATOR: '/app/phishing-simulator',
   PHISHING_CHALLENGE: '/app/phishing-challenge',
@@ -26,6 +27,7 @@ export const NAV_LINKS = [
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+  { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
   { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
   { label: 'Phishing Simulator', path: ROUTES.PHISHING_SIMULATOR, icon: 'crosshair' },
   { label: 'Smart URL Scanner', path: ROUTES.URL_SCANNER, icon: 'link' },

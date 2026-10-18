@@ -7,6 +7,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
+import IncidentCommandCenter from './pages/IncidentCommandCenter';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 
@@ -48,6 +49,7 @@ function App() {
                 <Route element={<DashboardLayout />}>
 
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                  <Route path={ROUTES.INCIDENTS} element={<IncidentCommandCenter />} />
                   <Route
                     path={ROUTES.SCREENSHOT_ANALYZER}
                     element={<ScreenshotAnalyzer />}
