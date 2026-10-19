@@ -17,13 +17,13 @@ export default function VisionTelemetry({ telemetry }) {
   ];
 
   return (
-    <div className="bg-bg-elevated border border-border rounded-xl p-4 shadow-sm">
-      <h4 className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-3">Vision Telemetry</h4>
+    <div className="bg-bg-elevated border border-border rounded-xl p-4 sm:p-5 shadow-sm">
+      <h4 className="text-xs sm:text-sm font-semibold text-text-primary uppercase tracking-wider mb-3">Vision Telemetry</h4>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {metrics.map(m => (
-          <div key={m.label} className="flex flex-col bg-surface/50 border border-border/50 rounded p-2">
-            <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider mb-0.5">{m.label}</span>
-            <span className="text-xs font-mono font-semibold text-text-primary">{m.value}</span>
+          <div key={m.label} className="flex flex-col bg-surface/60 border border-border/70 rounded-lg p-2.5">
+            <span className="text-xs font-mono font-semibold text-text-secondary uppercase tracking-wider mb-1">{m.label}</span>
+            <span className="text-sm sm:text-base font-mono font-bold text-text-primary">{m.value}</span>
           </div>
         ))}
       </div>

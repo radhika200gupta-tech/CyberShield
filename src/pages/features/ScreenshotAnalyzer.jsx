@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Tesseract from 'tesseract.js';
-import { FiCamera, FiUploadCloud, FiShield, FiType, FiAlertCircle, FiCheckCircle, FiFileText, FiClock, FiLock, FiKey, FiCreditCard, FiLink, FiEye, FiList, FiLayout, FiActivity } from 'react-icons/fi';
+import { FiCamera, FiUploadCloud, FiShield, FiType, FiAlertCircle, FiCheckCircle, FiFileText, FiClock, FiLock, FiKey, FiCreditCard, FiLink, FiEye, FiActivity, FiX } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import PageHeader from '../../components/common/PageHeader';
+import { ROUTES } from '../../constants/routes';
+import { setTransferredScreenshot, consumeTransferredScreenshot } from '../../services/imageHandoffService';
 
 const PHISHING_RULES = [
   {
@@ -64,7 +67,7 @@ const analyzeTextForPhishing = (text) => {
   if (!text) return { score: 0, indicators: [], recommendations: [] };
 
   // Normalize OCR text: lowercase, safely handle punctuation (preserve URL chars and hyphens), and collapse whitespace
-  const normalizedText = text.toLowerCase().replace(/[^\w\s:/\.-]/g, ' ').replace(/\s+/g, ' ').trim();
+  const normalizedText = text.toLowerCase().replace(/[^\w\s:/.-]/g, ' ').replace(/\s+/g, ' ').trim();
 
   PHISHING_RULES.forEach(rule => {
     if (rule.pattern.test(normalizedText)) {
@@ -93,6 +96,8 @@ const getRiskLevel = (score) => {
 };
 
 export default function ScreenshotAnalyzer() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -101,8 +106,40 @@ export default function ScreenshotAnalyzer() {
   const [analysisResults, setAnalysisResults] = useState(null);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [copilotHandoffReceived, setCopilotHandoffReceived] = useState(false);
 
   const fileInputRef = useRef(null);
+
+  // Consume transferred screenshot from AI Copilot or other security modules
+  useEffect(() => {
+    const handoffFile = consumeTransferredScreenshot() || location.state?.transferredFile;
+    if (handoffFile && (handoffFile instanceof File || handoffFile instanceof Blob)) {
+      setSelectedFile(handoffFile);
+      setPreviewUrl(URL.createObjectURL(handoffFile));
+      setIsAnalyzing(false);
+      setOcrProgress(null);
+      setExtractedText(null);
+      setAnalysisResults(null);
+      setError(null);
+      setCopilotHandoffReceived(true);
+      const shouldAuto = location.state?.autoScan;
+      if (location.state?.transferredFile) {
+        navigate(location.pathname, { replace: true, state: {} });
+      }
+      if (shouldAuto) {
+        setTimeout(() => handleAnalyze(), 400);
+      }
+    }
+  }, [location.pathname, location.state, navigate]);
+
+  const handleOpenVisualPhishing = () => {
+    if (selectedFile) {
+      setTransferredScreenshot(selectedFile);
+    }
+    navigate(ROUTES.VISUAL_PHISHING, {
+      state: selectedFile ? { transferredFile: selectedFile } : undefined
+    });
+  };
 
   useEffect(() => {
     return () => {
@@ -193,6 +230,28 @@ export default function ScreenshotAnalyzer() {
         badge="Browser-based analysis"
         icon={<FiCamera />}
       />
+
+      {/* Copilot Handoff Banner */}
+      {copilotHandoffReceived && (
+        <div className="flex items-center justify-between p-4 rounded-xl bg-accent/10 border border-accent/40 text-text-primary text-sm shadow-sm animate-fade-in">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="p-2 rounded-lg bg-accent/20 text-accent shrink-0">
+              <FiCamera size={18} />
+            </span>
+            <div>
+              <p className="font-semibold text-text-primary">Screenshot Received from Security Copilot</p>
+              <p className="text-xs text-text-secondary">Your image has been transferred and is ready for analysis. Click "Analyze Screenshot" below to run OCR text extraction.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setCopilotHandoffReceived(false)}
+            className="text-text-muted hover:text-text-primary p-1.5 cursor-pointer rounded-lg hover:bg-surface transition-colors"
+            title="Dismiss notification"
+          >
+            <FiX size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Main Upload Section */}
       <Card className="p-1.5 sm:p-2 w-full min-w-0">
@@ -410,6 +469,34 @@ export default function ScreenshotAnalyzer() {
           </div>
         </Card>
       </div>
+
+      {/* Advanced Investigation Call-to-Action */}
+      {(selectedFile || analysisResults) && (
+        <Card className="p-5 sm:p-6 border border-accent/30 bg-surface/80 hover:border-accent/50 transition-colors w-full min-w-0 shadow-sm animate-fade-in">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5 min-w-0 flex-1">
+              <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/25 flex items-center justify-center shrink-0 text-accent mt-0.5">
+                <FiEye size={20} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-semibold text-text-primary mb-1">
+                  Want to investigate further?
+                </h4>
+                <p className="text-xs text-text-secondary leading-relaxed">
+                  Explore detailed evidence, suspicious text highlights, and rule-by-rule findings in the Visual Phishing Detection Lab.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="accent"
+              onClick={handleOpenVisualPhishing}
+              className="text-xs font-semibold px-4 py-2.5 shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              Open Visual Phishing Detection &rarr;
+            </Button>
+          </div>
+        </Card>
+      )}
 
       {/* NEW INFORMATIONAL SECTION: What We Analyze */}
       <div className="pt-8 border-t border-border mt-12 w-full min-w-0">

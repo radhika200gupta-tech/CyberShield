@@ -5,7 +5,7 @@ import { decodeFromImageFile } from '../utils/qrDecoder';
 
 const ACCEPTED_TYPES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
-export default function QRUpload({ onDecoded, compact = false }) {
+export default function QRUpload({ onDecoded, onFileSelected, compact = false }) {
   const inputRef = useRef(null);
   const [status, setStatus] = useState('idle'); // idle | processing | failure
 
@@ -13,6 +13,11 @@ export default function QRUpload({ onDecoded, compact = false }) {
     if (!file) return;
     if (!ACCEPTED_TYPES.includes(file.type)) {
       setStatus('failure');
+      return;
+    }
+    if (onFileSelected) {
+      setStatus('idle');
+      onFileSelected(file);
       return;
     }
     setStatus('processing');
@@ -48,7 +53,11 @@ export default function QRUpload({ onDecoded, compact = false }) {
           type="file"
           accept="image/png,image/jpeg,image/jpg,image/webp"
           className="sr-only"
-          onChange={(e) => handleFile(e.target.files?.[0])}
+          onChange={(e) => {
+            const selected = e.target.files?.[0];
+            e.target.value = '';
+            handleFile(selected);
+          }}
         />
 
         {status === 'processing' ? (

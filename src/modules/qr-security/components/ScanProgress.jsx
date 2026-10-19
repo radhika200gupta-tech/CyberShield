@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FiCheck } from 'react-icons/fi';
 
@@ -14,15 +14,19 @@ const STEP_DURATION = 220;
 
 export default function ScanProgress({ onComplete }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   useEffect(() => {
     if (activeIndex >= STEPS.length) {
-      const timeout = setTimeout(onComplete, 260);
+      const timeout = setTimeout(() => {
+        onCompleteRef.current?.();
+      }, 260);
       return () => clearTimeout(timeout);
     }
     const timeout = setTimeout(() => setActiveIndex((i) => i + 1), STEP_DURATION);
     return () => clearTimeout(timeout);
-  }, [activeIndex, onComplete]);
+  }, [activeIndex]);
 
   return (
     <motion.div

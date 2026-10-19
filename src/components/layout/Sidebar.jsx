@@ -4,15 +4,15 @@ import {
   FiGrid, FiKey, FiLink, FiMail, FiShield, FiClock,
   FiUser, FiSettings, FiLogOut, FiX, FiCamera, FiCrosshair,
   FiMaximize, FiCpu, FiActivity, FiFileText, FiEye, FiServer, FiMap, FiZap,
-  FiChevronLeft, FiChevronRight
+  FiChevronLeft, FiChevronRight, FiSearch
 } from 'react-icons/fi';
 import Logo from '../common/Logo';
-import { SIDEBAR_LINKS, COMING_SOON_LINKS, ROUTES } from '../../constants/routes';
+import { SIDEBAR_SECTIONS, ROUTES } from '../../constants/routes';
 import { useAuth } from '../../context/AuthContext';
 import { classNames } from '../../utils/formatters';
 
 const ICONS = { 
-  grid: FiGrid, key: FiKey, link: FiLink, mail: FiMail, shield: FiShield, history: FiClock,
+  grid: FiGrid, key: FiKey, link: FiLink, mail: FiMail, search: FiSearch, shield: FiShield, history: FiClock,
   camera: FiCamera, crosshair: FiCrosshair, maximize: FiMaximize,
   cpu: FiCpu, activity: FiActivity, fileText: FiFileText, eye: FiEye, server: FiServer,
   map: FiMap, zap: FiZap
@@ -71,93 +71,54 @@ export default function Sidebar({ isOpen, onClose }) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6 flex flex-col">
-          <nav className="space-y-1">
-            {SIDEBAR_LINKS.map((link) => {
-              const Icon = ICONS[link.icon];
-              return (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  onClick={onClose}
-                  title={isCollapsed ? link.label : undefined}
-                  className={({ isActive }) =>
-                    classNames(
-                      'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                        isActive
-                          ? 'active text-primary bg-primary/10'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
-                      isCollapsed ? 'justify-center' : 'gap-3'
-                    )
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-r" />
-                      )}
-                      <Icon size={17} className="shrink-0" />
-                      
-                      {!isCollapsed && (
-                        <span className="whitespace-nowrap">
-                          {link.label}
-                        </span>
-                      )}
-                    </>
-                  )}
-                </NavLink>
-              );
-            })}
-          </nav>
-
-          <div>
-            {!isCollapsed && (
-              <h3 className="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 whitespace-nowrap">
-                Coming Soon
-              </h3>
-            )}
-            {isCollapsed && (
-               <div className="h-px w-8 mx-auto bg-border mb-4 mt-2" />
-            )}
-            <nav className="space-y-1">
-              {COMING_SOON_LINKS.map((link) => {
-                const Icon = ICONS[link.icon];
-                return (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    onClick={onClose}
-                    title={isCollapsed ? link.label : undefined}
-                    className={({ isActive }) =>
-                      classNames(
-                        'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                        isActive
-                          ? 'active text-primary bg-primary/10'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
-                        isCollapsed ? 'justify-center' : 'justify-between'
-                      )
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        {isActive && (
-                          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-r" />
-                        )}
-                        <div className={classNames("flex items-center", isCollapsed ? 'justify-center' : 'gap-3')}>
+        <div className="flex-1 overflow-y-auto py-5 px-3 space-y-6 flex flex-col custom-scrollbar">
+          {SIDEBAR_SECTIONS.map((section) => (
+            <div key={section.category} className="space-y-1.5">
+              {!isCollapsed ? (
+                <h3 className="px-3 text-xs sm:text-[13px] font-bold text-text-primary/80 uppercase tracking-wider mb-2 select-none leading-tight">
+                  {section.category}
+                </h3>
+              ) : (
+                <div className="h-px w-6 mx-auto bg-border/80 my-3" />
+              )}
+              <nav className="space-y-0.5">
+                {section.links.map((link) => {
+                  const Icon = ICONS[link.icon] || FiShield;
+                  return (
+                    <NavLink
+                      key={link.path}
+                      to={link.path}
+                      onClick={onClose}
+                      title={isCollapsed ? link.label : undefined}
+                      className={({ isActive }) =>
+                        classNames(
+                          'group flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all relative',
+                          isActive
+                            ? 'active text-accent bg-accent/15 font-semibold shadow-xs'
+                            : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
+                          isCollapsed ? 'justify-center' : 'gap-3'
+                        )
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          {isActive && (
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
+                          )}
                           <Icon size={17} className="shrink-0" />
                           {!isCollapsed && (
                             <span className="truncate">
                               {link.label}
                             </span>
                           )}
-                        </div>
-                      </>
-                    )}
-                  </NavLink>
-                );
-              })}
-            </nav>
-          </div>
+                        </>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
           
           <div className="mt-auto pt-6 border-t border-border space-y-1">
             <NavLink
@@ -167,7 +128,7 @@ export default function Sidebar({ isOpen, onClose }) {
               className={({ isActive }) =>
                 classNames(
                   'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                  isActive ? 'active text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
+                  isActive ? 'active text-accent bg-accent/15 font-semibold shadow-xs' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                   isCollapsed ? 'justify-center' : 'gap-3'
                 )
               }
@@ -175,7 +136,7 @@ export default function Sidebar({ isOpen, onClose }) {
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-r" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
                   )}
                   <FiUser size={17} className="shrink-0" />
                   {!isCollapsed && <span className="whitespace-nowrap">Profile</span>}
@@ -190,7 +151,7 @@ export default function Sidebar({ isOpen, onClose }) {
               className={({ isActive }) =>
                 classNames(
                   'group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
-                  isActive ? 'active text-primary bg-primary/10' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
+                  isActive ? 'active text-accent bg-accent/15 font-semibold shadow-xs' : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
                   isCollapsed ? 'justify-center' : 'gap-3'
                 )
               }
@@ -198,7 +159,7 @@ export default function Sidebar({ isOpen, onClose }) {
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-accent rounded-r" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
                   )}
                   <FiSettings size={17} className="shrink-0" />
                   {!isCollapsed && <span className="whitespace-nowrap">Settings</span>}

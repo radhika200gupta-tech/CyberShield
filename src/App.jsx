@@ -17,6 +17,10 @@ import PhishingChallenge from './modules/phishing-challenge/PhishingChallenge';
 import PasswordLab from './pages/features/PasswordLab';
 import SecurityCenter from './pages/features/SecurityCenter';
 import ComingSoonFeature from './pages/features/ComingSoonFeature';
+import VisualPhishingLab from './pages/features/VisualPhishingLab';
+import EmailForensicsLab from './pages/features/EmailForensicsLab';
+import EmailAccountDiscovery from './pages/features/EmailAccountDiscovery';
+import WebcamSecurityLab from './pages/features/WebcamSecurityLab';
 
 // Teammate Web Security pages
 import URLScanner from './components/URLScanner';
@@ -80,6 +84,30 @@ function App() {
                     element={<SecurityCenter />}
                   />
 
+                  <Route
+                    path={ROUTES.VISUAL_PHISHING}
+                    element={<VisualPhishingLab />}
+                  />
+                  <Route
+                    path={ROUTES.EMAIL_FORENSICS}
+                    element={<EmailForensicsLab />}
+                  />
+                  <Route
+                    path={ROUTES.EMAIL_DISCOVERY}
+                    element={<EmailAccountDiscovery />}
+                  />
+                  <Route
+                    path={ROUTES.WEBCAM_SECURITY}
+                    element={<WebcamSecurityLab />}
+                  />
+                  <Route
+                    path="/app/coming-soon/visual-phishing"
+                    element={<Navigate to={ROUTES.VISUAL_PHISHING} replace />}
+                  />
+                  <Route
+                    path="/app/coming-soon/webcam-security"
+                    element={<Navigate to={ROUTES.WEBCAM_SECURITY} replace />}
+                  />
                   <Route
                     path="/app/coming-soon/*"
                     element={<ComingSoonFeature />}
