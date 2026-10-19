@@ -45,7 +45,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <aside
         className={classNames(
           'fixed lg:sticky top-0 h-screen bg-bg-elevated border-r border-border flex flex-col z-50 transition-all duration-300 shrink-0',
-          isCollapsed ? 'w-[76px]' : 'w-64',
+          isCollapsed ? 'w-[76px]' : 'w-72',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
@@ -71,11 +71,11 @@ export default function Sidebar({ isOpen, onClose }) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-5 px-3 space-y-6 flex flex-col custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-5 px-3 space-y-6 flex flex-col custom-scrollbar">
           {SIDEBAR_SECTIONS.map((section) => (
             <div key={section.category} className="space-y-1.5">
               {!isCollapsed ? (
-                <h3 className="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 select-none whitespace-nowrap">
+                <h3 className="px-3 text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2 select-none leading-snug break-words">
                   {section.category}
                 </h3>
               ) : (
@@ -92,22 +92,22 @@ export default function Sidebar({ isOpen, onClose }) {
                       title={isCollapsed ? link.label : undefined}
                       className={({ isActive }) =>
                         classNames(
-                          'group flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all relative',
+                          'group flex px-3 py-2 rounded-lg text-sm font-medium transition-all relative',
                           isActive
                             ? 'active text-accent bg-accent/15 font-semibold shadow-xs'
                             : 'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
-                          isCollapsed ? 'justify-center' : 'gap-3'
+                          isCollapsed ? 'justify-center items-center' : 'items-start gap-3'
                         )
                       }
                     >
                       {({ isActive }) => (
                         <>
                           {isActive && (
-                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
+                            <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-accent rounded-r" />
                           )}
-                          <Icon size={17} className="shrink-0" />
+                          <Icon size={17} className={classNames('shrink-0', !isCollapsed && 'mt-0.5')} />
                           {!isCollapsed && (
-                            <span className="truncate">
+                            <span className="leading-snug break-words flex-1 min-w-0">
                               {link.label}
                             </span>
                           )}
@@ -136,7 +136,7 @@ export default function Sidebar({ isOpen, onClose }) {
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-accent rounded-r" />
                   )}
                   <FiUser size={17} className="shrink-0" />
                   {!isCollapsed && <span className="whitespace-nowrap">Profile</span>}
@@ -159,7 +159,7 @@ export default function Sidebar({ isOpen, onClose }) {
               {({ isActive }) => (
                 <>
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-accent rounded-r" />
+                    <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-accent rounded-r" />
                   )}
                   <FiSettings size={17} className="shrink-0" />
                   {!isCollapsed && <span className="whitespace-nowrap">Settings</span>}

@@ -45,18 +45,6 @@ export const SIDEBAR_SECTIONS = [
     ],
   },
   {
-    category: 'INCIDENT INVESTIGATION & RESPONSE',
-    links: [
-      { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
-    ],
-  },
-  {
-    category: 'INCIDENT RECOVERY & ASSISTANCE',
-    links: [
-      { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
-    ],
-  },
-  {
     category: 'PHISHING & EMAIL INVESTIGATION',
     links: [
       { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
@@ -74,11 +62,29 @@ export const SIDEBAR_SECTIONS = [
     ],
   },
   {
+    category: 'AI SECURITY COPILOT',
+    links: [
+      { label: 'Security Copilot', path: ROUTES.AI_COPILOT, icon: 'cpu' },
+    ],
+  },
+  {
+    category: 'INCIDENT INVESTIGATION & RESPONSE',
+    links: [
+      { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
+    ],
+  },
+  {
     category: 'WEB SECURITY',
     links: [
       { label: 'Smart URL Scanner', path: ROUTES.URL_SCANNER, icon: 'link' },
       { label: 'QR Security Scanner', path: ROUTES.QR_SCANNER, icon: 'maximize' },
       { label: 'Phishing Challenge', path: ROUTES.PHISHING_CHALLENGE, icon: 'activity' },
+    ],
+  },
+  {
+    category: 'INCIDENT RECOVERY & ASSISTANCE',
+    links: [
+      { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
     ],
   },
   {
@@ -93,18 +99,10 @@ export const SIDEBAR_SECTIONS = [
       { label: 'Security Command Center', path: ROUTES.SECURITY_CENTER, icon: 'shield' },
     ],
   },
-  {
-    category: 'AI SECURITY ASSISTANCE',
-    links: [
-      { label: 'Security Copilot', path: ROUTES.AI_COPILOT, icon: 'cpu' },
-    ],
-  },
 ];
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
-  { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
-  { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
   { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
   { label: 'Visual Phishing Detection', path: ROUTES.VISUAL_PHISHING, icon: 'eye' },
   { label: 'Email Forensics Lab', path: ROUTES.EMAIL_FORENSICS, icon: 'mail' },
@@ -112,12 +110,14 @@ export const SIDEBAR_LINKS = [
   { label: 'Real-Time Threat Intelligence', path: ROUTES.THREAT_INTEL, icon: 'zap' },
   { label: 'Live Cyber Threat Map', path: ROUTES.THREAT_MAP, icon: 'map' },
   { label: 'Webcam Security Lab', path: ROUTES.WEBCAM_SECURITY, icon: 'camera' },
+  { label: 'Security Copilot', path: ROUTES.AI_COPILOT, icon: 'cpu' },
+  { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
   { label: 'Smart URL Scanner', path: ROUTES.URL_SCANNER, icon: 'link' },
   { label: 'QR Security Scanner', path: ROUTES.QR_SCANNER, icon: 'maximize' },
   { label: 'Phishing Challenge', path: ROUTES.PHISHING_CHALLENGE, icon: 'activity' },
+  { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
   { label: 'Password Security Lab', path: ROUTES.PASSWORD_LAB, icon: 'key' },
   { label: 'Security Command Center', path: ROUTES.SECURITY_CENTER, icon: 'shield' },
-  { label: 'Security Copilot', path: ROUTES.AI_COPILOT, icon: 'cpu' },
 ];
 
 export const INTELLIGENCE_LINKS = [
