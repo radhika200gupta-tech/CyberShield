@@ -13,6 +13,7 @@ import { analyzeUrl } from '../utils/urlAnalyzer';
 import { calculateRisk, assessNonUrlContent } from '../utils/riskEngine';
 import { decodeFromImageFile } from '../utils/qrDecoder';
 import { consumeTransferredScreenshot, hasTransferredScreenshot } from '../../../services/imageHandoffService';
+import { saveQrScan } from '../../../utils/incidentStorage';
 
 const CAMERA_ERROR_COPY = {
   'permission-denied': 'Camera access was denied. You can still upload a QR image.',
@@ -84,6 +85,7 @@ export default function QRScanner() {
 
   // Manage preview URL lifecycle tied strictly to selectedImageFile
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreviewError(false);
 
     if (!selectedImageFile) {
@@ -272,6 +274,11 @@ export default function QRScanner() {
     }
 
     const result = { classified, riskScore, riskLevel, findings };
+    try {
+      saveQrScan(result);
+    } catch (e) {
+      console.warn('Could not record QR scan to incident storage:', e);
+    }
     setOutcome(result);
     setView('result');
   }, [pending]);

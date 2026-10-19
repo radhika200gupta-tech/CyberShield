@@ -4,7 +4,7 @@ import {
   FiGrid, FiKey, FiLink, FiMail, FiShield, FiClock,
   FiUser, FiSettings, FiLogOut, FiX, FiCamera, FiCrosshair,
   FiMaximize, FiCpu, FiActivity, FiFileText, FiEye, FiServer, FiMap, FiZap,
-  FiChevronLeft, FiChevronRight, FiSearch, FiLifeBuoy
+  FiChevronLeft, FiChevronRight, FiSearch, FiLifeBuoy, FiCompass
 } from 'react-icons/fi';
 import Logo from '../common/Logo';
 import { SIDEBAR_SECTIONS, ROUTES } from '../../constants/routes';
@@ -12,7 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 import { classNames } from '../../utils/formatters';
 
 const ICONS = { 
-  grid: FiGrid, lifeBuoy: FiLifeBuoy, key: FiKey, link: FiLink, mail: FiMail, search: FiSearch, shield: FiShield, history: FiClock,
+  grid: FiGrid, compass: FiCompass, lifeBuoy: FiLifeBuoy, key: FiKey, link: FiLink, mail: FiMail, search: FiSearch, shield: FiShield, history: FiClock,
   camera: FiCamera, crosshair: FiCrosshair, maximize: FiMaximize,
   cpu: FiCpu, activity: FiActivity, fileText: FiFileText, eye: FiEye, server: FiServer,
   map: FiMap, zap: FiZap
