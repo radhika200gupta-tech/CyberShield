@@ -7,6 +7,7 @@ import QRResult from './QRResult';
 import { classifyQrContent, QR_TYPES } from '../utils/qrClassifier';
 import { analyzeUrl } from '../utils/urlAnalyzer';
 import { calculateRisk, assessNonUrlContent } from '../utils/riskEngine';
+import { saveQrScan } from '../../../utils/incidentStorage';
 
 const CAMERA_ERROR_COPY = {
   'permission-denied': 'Camera access was denied. You can still upload a QR image.',
@@ -58,6 +59,7 @@ export default function QRScanner() {
     }
 
     const result = { classified, riskScore, riskLevel, findings };
+    saveQrScan(result);
     setOutcome(result);
     setView('result');
   }

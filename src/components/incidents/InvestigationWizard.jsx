@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { FiMail, FiCrosshair, FiLink, FiTerminal, FiShield, FiDatabase, FiCheck, FiArrowRight, FiArrowLeft, FiPlus, FiTrash2 } from 'react-icons/fi';
 import Button from '../common/Button';
 import DetectiveIllustration from './DetectiveIllustration';
@@ -12,7 +12,15 @@ const STAGES = ['PROTOCOL INTRO', 'DETECT INCIDENT', 'EVALUATE THREAT', 'FOLLOW 
 export default function InvestigationWizard({ onLaunch, onCancel }) {
   const [stage, setStage] = useState(0), [created, setCreated] = useState(null), [manualRef, setManualRef] = useState(''), [err, setErr] = useState('');
   const [draft, setDraft] = useState({ title: '', category: 'Malicious QR', severity: 'High', asset: '', impact: '', desc: '', evidence: [] });
-  const scanners = useMemo(() => getAvailableScanners(), []), prvId = useMemo(() => `PRV-${Math.floor(1000 + Math.random() * 9000)}`, []);
+  const [storageTick, setStorageTick] = useState(0);
+
+  useEffect(() => {
+    const handleStorage = () => setStorageTick((t) => t + 1);
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const scanners = useMemo(() => getAvailableScanners(), [stage, storageTick]), prvId = useMemo(() => `PRV-${Math.floor(1000 + Math.random() * 9000)}`, []);
 
   const addEv = (item) => { if (item && !draft.evidence.includes(item)) setDraft((d) => ({ ...d, evidence: [...d.evidence, item] })); };
   const remEv = (idx) => setDraft((d) => ({ ...d, evidence: d.evidence.filter((_, i) => i !== idx) }));
@@ -30,41 +38,21 @@ export default function InvestigationWizard({ onLaunch, onCancel }) {
   return (
     <div className="text-left font-sans animate-fade-in">
       {stage === 0 && (
-        <div className="space-y-4 py-1">
-          <div className="flex justify-between items-center border-b border-border/70 pb-2">
-            <span className="font-mono text-[10px] text-amber-400 font-bold uppercase tracking-widest">CYBERSHIELD INVESTIGATION PROTOCOL</span>
-            <span className="text-xs font-mono text-text-muted">{prvId}</span>
-          </div>
+        <div className="space-y-3.5 py-1">
+          <div className="flex justify-between items-center border-b border-border/70 pb-2"><span className="font-mono text-[10px] text-amber-400 font-bold uppercase tracking-widest">CYBERSHIELD INVESTIGATION PROTOCOL</span><span className="text-xs font-mono text-text-muted">{prvId}</span></div>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-            <div className="md:col-span-5 hidden sm:block">
-              <DetectiveIllustration compact className="h-full min-h-[250px]" />
-            </div>
-            <div className="md:col-span-7 space-y-3">
-              <div>
-                <h2 className="font-display font-extrabold text-2xl text-text-primary tracking-tight">INVESTIGATION PROTOCOL</h2>
-                <p className="text-xs font-semibold text-amber-300 italic mt-0.5">Every signal leaves a trace. Start connecting the evidence.</p>
-              </div>
-              <div className="p-3 rounded-xl bg-[#0c1422] border border-amber-500/30 text-xs space-y-2">
-                <div className="flex justify-between items-center">
-                  <p className="font-mono text-amber-400 font-bold">{prvId} · Provisional Dossier</p>
-                  <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-mono">FORENSIC INTAKE</span>
-                </div>
+            <div className="md:col-span-5 hidden sm:block"><DetectiveIllustration compact className="h-full min-h-[240px]" /></div>
+            <div className="md:col-span-7 space-y-2.5">
+              <div><h2 className="font-display font-extrabold text-2xl text-text-primary tracking-tight">INVESTIGATION PROTOCOL</h2><p className="text-xs font-semibold text-amber-300 italic mt-0.5">Every signal leaves a trace. Start connecting the evidence.</p></div>
+              <div className="p-3 rounded-xl bg-[#0c1422] border border-amber-500/30 text-xs space-y-1.5">
+                <div className="flex justify-between items-center"><p className="font-mono text-amber-400 font-bold">{prvId} · Provisional Dossier</p><span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-mono">FORENSIC INTAKE</span></div>
                 <p className="text-text-muted text-[11px]">Initialize a structured 4-stage digital forensics intake pipeline.</p>
-                <div className="flex flex-wrap gap-1.5 text-[10px] font-mono text-text-muted pt-1">
-                  {['01 DETECT', '02 EVALUATE', '03 EVIDENCE', '04 LAUNCH'].map((s) => (
-                    <span key={s} className="px-2 py-0.5 rounded bg-bg-elevated border border-border">{s}</span>
-                  ))}
-                </div>
+                <div className="flex flex-wrap gap-1.5 text-[10px] font-mono text-text-muted pt-0.5">{['01 DETECT', '02 EVALUATE', '03 EVIDENCE', '04 LAUNCH'].map((s) => (<span key={s} className="px-2 py-0.5 rounded bg-bg-elevated border border-border">{s}</span>))}</div>
               </div>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                This protocol standardizes triage, captures real scanner telemetry, scores risk severity, and builds an auditable incident record before containment actions.
-              </p>
+              <p className="text-xs text-text-secondary leading-relaxed">This protocol standardizes triage, captures real scanner telemetry, scores risk severity, and builds an auditable incident record before containment actions.</p>
             </div>
           </div>
-          <div className="flex justify-between items-center pt-2 border-t border-border/60">
-            <Button variant="outline" size="sm" onClick={onCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={() => setStage(1)} icon={FiArrowRight} iconPosition="right" className="bg-amber-500 hover:bg-amber-400 text-black font-bold shadow-[0_0_20px_rgba(245,166,35,0.25)]">INITIALIZE INVESTIGATION</Button>
-          </div>
+          <div className="flex justify-between items-center pt-2 border-t border-border/60"><Button variant="outline" size="sm" onClick={onCancel}>Cancel</Button><Button variant="primary" size="sm" onClick={() => setStage(1)} icon={FiArrowRight} iconPosition="right" className="bg-amber-500 hover:bg-amber-400 text-black font-bold shadow-[0_0_20px_rgba(245,166,35,0.25)]">INITIALIZE INVESTIGATION</Button></div>
         </div>
       )}
 

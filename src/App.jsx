@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import IncidentCommandCenter from './pages/IncidentCommandCenter';
+import InvestigationWorkspace from './pages/InvestigationWorkspace';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 
@@ -50,6 +51,8 @@ function App() {
 
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.INCIDENTS} element={<IncidentCommandCenter />} />
+                  <Route path={ROUTES.INVESTIGATE} element={<InvestigationWorkspace />} />
+                  <Route path={`${ROUTES.INVESTIGATE}/:incidentId`} element={<InvestigationWorkspace />} />
                   <Route
                     path={ROUTES.SCREENSHOT_ANALYZER}
                     element={<ScreenshotAnalyzer />}

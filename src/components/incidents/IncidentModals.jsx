@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiX, FiFileText, FiCrosshair, FiSearch, FiLayers, FiAlertTriangle, FiEdit2, FiTrash2, FiLink, FiMaximize } from 'react-icons/fi';
 import Button from '../common/Button';
@@ -27,7 +27,25 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
   const navigate = useNavigate(), [flow, setFlow] = useState(initialOption), [err, setErr] = useState('');
   const [manual, setManual] = useState({ title: '', category: 'Malicious QR', severity: 'High', desc: '', asset: '' });
   const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [selectedSample, setSelectedSample] = useState(SAMPLE_CASES[0]);
-  const scans = useMemo(() => (isOpen ? getAvailableScanners() : []), [isOpen]), existingIncidents = useMemo(() => (isOpen ? getIncidents() : []), [isOpen]);
+  const [storageTick, setStorageTick] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFlow(initialOption);
+      setSelectedScan(null);
+      setScanReview(null);
+      setErr('');
+    }
+  }, [isOpen, initialOption]);
+
+  useEffect(() => {
+    const handleStorage = () => setStorageTick((t) => t + 1);
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const scans = useMemo(() => (isOpen ? getAvailableScanners() : []), [isOpen, flow, storageTick]);
+  const existingIncidents = useMemo(() => (isOpen ? getIncidents() : []), [isOpen, storageTick]);
 
   const selectScanForReview = (sc) => {
     setSelectedScan(sc);
@@ -77,15 +95,15 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
           <button onClick={() => setFlow(null)} className="text-xs text-amber-400 hover:underline mb-3 font-mono cursor-pointer">← Back to Options</button>
           {flow === 'guided' && <InvestigationWizard onLaunch={(rec) => { onCreate(rec); onClose(); }} onCancel={() => setFlow(null)} />}
           {flow === 'manual' && (
-            <form onSubmit={handleManual} className="space-y-3 text-xs">
+            <form onSubmit={handleManual} className="space-y-2 text-xs">
               <h3 className="font-display font-bold text-base text-text-primary">Report an Incident</h3>
-              <div><label className="text-text-secondary uppercase block mb-1">Incident Title *</label><input type="text" value={manual.title} onChange={(e) => setManual({ ...manual, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2.5 py-1.5 text-text-primary" /></div>
+              <div><label className="text-text-secondary uppercase block mb-0.5">Title *</label><input type="text" value={manual.title} onChange={(e) => setManual({ ...manual, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
               <div className="grid grid-cols-2 gap-2">
-                <div><label className="text-text-secondary uppercase block mb-1">Category</label><select value={manual.category} onChange={(e) => setManual({ ...manual, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-                <div><label className="text-text-secondary uppercase block mb-1">Severity</label><select value={manual.severity} onChange={(e) => setManual({ ...manual, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
+                <div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={manual.category} onChange={(e) => setManual({ ...manual, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
+                <div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={manual.severity} onChange={(e) => setManual({ ...manual, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
               </div>
-              <div><label className="text-text-secondary uppercase block mb-1">Target Asset</label><input type="text" value={manual.asset} onChange={(e) => setManual({ ...manual, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2.5 py-1 text-text-primary" /></div>
-              <div><label className="text-text-secondary uppercase block mb-1">Description *</label><textarea rows={2} value={manual.desc} onChange={(e) => setManual({ ...manual, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2.5 py-1.5 text-text-primary" /></div>
+              <div><label className="text-text-secondary uppercase block mb-0.5">Target Asset</label><input type="text" value={manual.asset} onChange={(e) => setManual({ ...manual, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
+              <div><label className="text-text-secondary uppercase block mb-0.5">Description *</label><textarea rows={2} value={manual.desc} onChange={(e) => setManual({ ...manual, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
               {err && <p className="text-danger font-semibold">{err}</p>}
               <div className="flex justify-end gap-2 pt-1"><Button variant="outline" size="sm" onClick={() => setFlow(null)}>Cancel</Button><Button variant="primary" size="sm" type="submit">Create Incident</Button></div>
             </form>
@@ -149,6 +167,7 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
 }
 
 export function ViewModal({ incident, onClose, onEdit }) {
+  const navigate = useNavigate();
   if (!incident) return null;
   return (
     <Modal open={Boolean(incident)} onClose={onClose} max="max-w-lg">
@@ -159,7 +178,13 @@ export function ViewModal({ incident, onClose, onEdit }) {
         <div className="p-3 rounded-xl bg-bg-elevated border border-border text-text-secondary whitespace-pre-line leading-relaxed">{incident.description}</div>
         {incident.affectedAsset && <p className="text-text-muted">Target Asset: <strong className="text-text-primary">{incident.affectedAsset}</strong></p>}
         {incident.evidenceReferences?.length > 0 && <div className="space-y-1"><span className="text-[10px] font-mono text-text-muted uppercase">Evidence References:</span>{incident.evidenceReferences.map((e, idx) => <p key={idx} className="font-mono text-[10px] text-accent bg-bg-elevated p-1 rounded truncate">{e}</p>)}</div>}
-        <div className="flex justify-between items-center pt-2 border-t border-border"><span className="text-[10px] font-mono text-text-muted">{new Date(incident.createdAt).toLocaleDateString()}</span><Button variant="primary" size="sm" onClick={() => { onClose(); onEdit(incident); }} icon={FiEdit2}>Edit Incident</Button></div>
+        <div className="flex justify-between items-center pt-2 border-t border-border">
+          <span className="text-[10px] font-mono text-text-muted">{new Date(incident.createdAt).toLocaleDateString()}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => { onClose(); navigate(`/app/incidents/investigate?id=${incident.id}`); }} icon={FiCrosshair}>Investigate</Button>
+            <Button variant="primary" size="sm" onClick={() => { onClose(); onEdit(incident); }} icon={FiEdit2}>Edit</Button>
+          </div>
+        </div>
       </div>
     </Modal>
   );
@@ -170,18 +195,18 @@ export function EditModal({ incident, onClose, onSave }) {
   const [data, setData] = useState({ title: incident.title, category: incident.category, severity: incident.severity, status: incident.status, desc: incident.description, asset: incident.affectedAsset || '' });
   return (
     <Modal open={Boolean(incident)} onClose={onClose} max="max-w-md">
-      <div className="space-y-3 text-xs">
+      <form onSubmit={(e) => { e.preventDefault(); onSave(incident.id, { title: data.title, category: data.category, severity: data.severity, status: data.status, description: data.desc, affectedAsset: data.asset }); onClose(); }} className="space-y-2.5 text-xs">
         <h3 className="font-display font-bold text-base text-text-primary">Edit {incident.id}</h3>
-        <div><label className="text-text-secondary uppercase block mb-1">Headline</label><input type="text" value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
-        <div className="grid grid-cols-3 gap-2">
-          <div><label className="text-text-secondary uppercase block mb-1">Category</label><select value={data.category} onChange={(e) => setData({ ...data, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-          <div><label className="text-text-secondary uppercase block mb-1">Severity</label><select value={data.severity} onChange={(e) => setData({ ...data, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
-          <div><label className="text-text-secondary uppercase block mb-1">Status</label><select value={data.status} onChange={(e) => setData({ ...data, status: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
+        <div><label className="text-text-secondary uppercase block mb-0.5">Headline</label><input type="text" value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
+        <div className="grid grid-cols-3 gap-1.5">
+          <div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={data.category} onChange={(e) => setData({ ...data, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
+          <div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={data.severity} onChange={(e) => setData({ ...data, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
+          <div><label className="text-text-secondary uppercase block mb-0.5">Status</label><select value={data.status} onChange={(e) => setData({ ...data, status: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
         </div>
-        <div><label className="text-text-secondary uppercase block mb-1">Target Asset</label><input type="text" value={data.asset} onChange={(e) => setData({ ...data, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary" /></div>
-        <div><label className="text-text-secondary uppercase block mb-1">Description</label><textarea rows={2} value={data.desc} onChange={(e) => setData({ ...data, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
-        <div className="flex justify-end gap-2 pt-2 border-t border-border"><Button variant="outline" size="sm" onClick={onClose}>Cancel</Button><Button variant="primary" size="sm" onClick={() => { onSave(incident.id, { title: data.title, category: data.category, severity: data.severity, status: data.status, description: data.desc, affectedAsset: data.asset }); onClose(); }}>Save Changes</Button></div>
-      </div>
+        <div><label className="text-text-secondary uppercase block mb-0.5">Target Asset</label><input type="text" value={data.asset} onChange={(e) => setData({ ...data, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary" /></div>
+        <div><label className="text-text-secondary uppercase block mb-0.5">Description</label><textarea rows={2} value={data.desc} onChange={(e) => setData({ ...data, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
+        <div className="flex justify-end gap-2 pt-1 border-t border-border"><Button variant="outline" size="sm" onClick={onClose}>Cancel</Button><Button variant="primary" size="sm" type="submit">Save Changes</Button></div>
+      </form>
     </Modal>
   );
 }
@@ -190,10 +215,7 @@ export function DeleteModal({ incident, onClose, onConfirm }) {
   if (!incident) return null;
   return (
     <Modal open={Boolean(incident)} onClose={onClose} max="max-w-sm">
-      <div className="text-center space-y-3">
-        <FiAlertTriangle size={28} className="text-danger mx-auto" /><h3 className="font-display font-bold text-base text-text-primary">Delete {incident.id}?</h3><p className="text-xs text-text-secondary">Permanently delete "{incident.title}"?</p>
-        <div className="flex justify-center gap-2 pt-1"><Button variant="outline" size="sm" onClick={onClose}>Cancel</Button><Button variant="danger" size="sm" onClick={() => { onConfirm(incident.id); onClose(); }} icon={FiTrash2}>Delete</Button></div>
-      </div>
+      <div className="text-center space-y-2.5"><FiAlertTriangle size={26} className="text-danger mx-auto" /><h3 className="font-display font-bold text-base text-text-primary">Delete {incident.id}?</h3><p className="text-xs text-text-secondary">Permanently delete "{incident.title}"?</p><div className="flex justify-center gap-2 pt-1"><Button variant="outline" size="sm" onClick={onClose}>Cancel</Button><Button variant="danger" size="sm" onClick={() => { onConfirm(incident.id); onClose(); }} icon={FiTrash2}>Delete</Button></div></div>
     </Modal>
   );
 }

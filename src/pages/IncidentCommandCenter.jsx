@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { FiCompass, FiPlus, FiLayers, FiSearch, FiEye, FiEdit2, FiTrash2, FiRotateCcw, FiBriefcase, FiAlertCircle, FiAlertTriangle, FiRefreshCw, FiCheckCircle } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { FiCompass, FiPlus, FiLayers, FiSearch, FiEye, FiEdit2, FiTrash2, FiRotateCcw, FiBriefcase, FiAlertCircle, FiAlertTriangle, FiRefreshCw, FiCheckCircle, FiCrosshair } from 'react-icons/fi';
 import Button from '../components/common/Button';
 import { CreateModal, ViewModal, EditModal, DeleteModal } from '../components/incidents/IncidentModals';
 import { getIncidents, createIncident, updateIncident, deleteIncident, calculateMetrics, CATEGORIES, STATUSES } from '../utils/incidentStorage';
@@ -10,6 +11,7 @@ const SEV_BADGES = { Critical: 'bg-danger/15 text-danger border-danger/30', High
 const STAT_BADGES = { Open: 'bg-accent/10 text-accent border-accent/25', 'In Progress': 'bg-primary/10 text-primary border-primary/25', Resolved: 'bg-success/10 text-success border-success/25' };
 
 export default function IncidentCommandCenter() {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [incidents, setIncidents] = useState(() => getIncidents());
   const [search, setSearch] = useState(''), [sevFilter, setSevFilter] = useState('All'), [statFilter, setStatFilter] = useState('All'), [catFilter, setCatFilter] = useState('All'), [sort, setSort] = useState('newest');
@@ -94,7 +96,7 @@ export default function IncidentCommandCenter() {
                     <td className="py-2.5 px-3.5"><span className={`px-2 py-0.5 rounded-full font-medium border ${SEV_BADGES[inc.severity] || SEV_BADGES.Medium}`}>{inc.severity}</span></td>
                     <td className="py-2.5 px-3.5"><span className={`px-2 py-0.5 rounded font-medium border ${STAT_BADGES[inc.status] || STAT_BADGES.Open}`}>{inc.status}</span></td>
                     <td className="py-2.5 px-3.5 text-text-muted font-mono">{new Date(inc.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                    <td className="py-2.5 px-3.5 text-right whitespace-nowrap"><div className="flex items-center justify-end gap-1"><button onClick={() => setViewItem(inc)} className="p-1 rounded text-text-secondary hover:text-accent" title="View"><FiEye size={14} /></button><button onClick={() => setEditItem(inc)} className="p-1 rounded text-text-secondary hover:text-primary" title="Edit"><FiEdit2 size={14} /></button><button onClick={() => setDelItem(inc)} className="p-1 rounded text-text-secondary hover:text-danger" title="Delete"><FiTrash2 size={14} /></button></div></td>
+                    <td className="py-2.5 px-3.5 text-right whitespace-nowrap"><div className="flex items-center justify-end gap-1"><button onClick={() => navigate(`/app/incidents/investigate?id=${inc.id}`)} className="p-1 rounded text-accent hover:bg-accent/15" title="Investigate in Workspace"><FiCrosshair size={14} /></button><button onClick={() => setViewItem(inc)} className="p-1 rounded text-text-secondary hover:text-accent" title="View"><FiEye size={14} /></button><button onClick={() => setEditItem(inc)} className="p-1 rounded text-text-secondary hover:text-primary" title="Edit"><FiEdit2 size={14} /></button><button onClick={() => setDelItem(inc)} className="p-1 rounded text-text-secondary hover:text-danger" title="Delete"><FiTrash2 size={14} /></button></div></td>
                   </tr>
                 ))}
               </tbody>
