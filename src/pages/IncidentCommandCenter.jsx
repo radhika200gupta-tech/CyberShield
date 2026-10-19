@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiCompass, FiPlus, FiLayers, FiSearch, FiEye, FiEdit2, FiTrash2, FiRotateCcw, FiBriefcase, FiAlertCircle, FiAlertTriangle, FiRefreshCw, FiCheckCircle, FiCrosshair } from 'react-icons/fi';
+import { FiCompass, FiPlus, FiLayers, FiSearch, FiEye, FiEdit2, FiTrash2, FiRotateCcw, FiBriefcase, FiAlertCircle, FiAlertTriangle, FiRefreshCw, FiCheckCircle, FiCrosshair, FiFileText } from 'react-icons/fi';
 import Button from '../components/common/Button';
 import { CreateModal, ViewModal, EditModal, DeleteModal } from '../components/incidents/IncidentModals';
 import { getIncidents, createIncident, updateIncident, deleteIncident, calculateMetrics, CATEGORIES, STATUSES } from '../utils/incidentStorage';
@@ -48,17 +48,8 @@ export default function IncidentCommandCenter() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
         {[
-          { label: 'Total Incidents', val: metrics.total, icon: FiBriefcase, color: 'text-amber-400 border-amber-500/25 bg-amber-500/10' },
-          { label: 'Open', val: metrics.open, icon: FiAlertCircle, color: 'text-accent border-accent/25 bg-accent/10' },
-          { label: 'High Severity', val: metrics.highSeverity, sub: 'High & Critical', icon: FiAlertTriangle, color: 'text-danger border-danger/25 bg-danger/10' },
-          { label: 'In Progress', val: metrics.inProgress, icon: FiRefreshCw, color: 'text-primary border-primary/25 bg-primary/10' },
-          { label: 'Resolved', val: metrics.resolved, icon: FiCheckCircle, color: 'text-success border-success/25 bg-success/10' },
-        ].map((m) => (
-          <div key={m.label} className="bg-surface border border-border/70 rounded-xl p-4 shadow-sm flex justify-between items-start">
-            <div><p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">{m.label} {m.sub && <span className="text-[9px] lowercase">({m.sub})</span>}</p><p className="font-mono font-bold text-2xl text-text-primary mt-1">{m.val}</p></div>
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${m.color}`}><m.icon size={15} /></div>
-          </div>
-        ))}
+          { label: 'Total Incidents', val: metrics.total, icon: FiBriefcase, color: 'text-amber-400 border-amber-500/25 bg-amber-500/10' }, { label: 'Open', val: metrics.open, icon: FiAlertCircle, color: 'text-accent border-accent/25 bg-accent/10' }, { label: 'High Severity', val: metrics.highSeverity, sub: 'High & Critical', icon: FiAlertTriangle, color: 'text-danger border-danger/25 bg-danger/10' }, { label: 'In Progress', val: metrics.inProgress, icon: FiRefreshCw, color: 'text-primary border-primary/25 bg-primary/10' }, { label: 'Resolved', val: metrics.resolved, icon: FiCheckCircle, color: 'text-success border-success/25 bg-success/10' },
+        ].map((m) => (<div key={m.label} className="bg-surface border border-border/70 rounded-xl p-4 shadow-sm flex justify-between items-start"><div><p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">{m.label} {m.sub && <span className="text-[9px] lowercase">({m.sub})</span>}</p><p className="font-mono font-bold text-2xl text-text-primary mt-1">{m.val}</p></div><div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${m.color}`}><m.icon size={15} /></div></div>))}
       </div>
 
       <div className="bg-surface border border-border/70 rounded-xl p-3.5 space-y-3">
@@ -67,14 +58,8 @@ export default function IncidentCommandCenter() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">{['All', 'Critical', 'High', 'Medium', 'Low'].map((s) => (<button key={s} onClick={() => setSevFilter(s)} className={`px-2.5 py-1 rounded-md text-xs font-semibold border transition-all ${sevFilter === s ? 'border-amber-400 bg-amber-500/15 text-amber-300' : 'border-border text-text-secondary bg-bg-elevated/40'}`}>{s}</button>))}</div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/40 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1"><span className="text-text-muted">Status:</span><select value={statFilter} onChange={(e) => setStatFilter(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="All">All Statuses</option>{STATUSES.map((st) => <option key={st} value={st}>{st}</option>)}</select></div>
-            <div className="flex items-center gap-1"><span className="text-text-muted">Category:</span><select value={catFilter} onChange={(e) => setCatFilter(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="All">All Categories</option>{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-          </div>
-          <div className="flex items-center gap-2 ml-auto">
-            <div className="flex items-center gap-1"><span className="text-text-muted">Sort:</span><select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="severity">Highest Severity First</option></select></div>
-            {(search || sevFilter !== 'All' || statFilter !== 'All' || catFilter !== 'All') && <button onClick={() => { setSearch(''); setSevFilter('All'); setStatFilter('All'); setCatFilter('All'); setSort('newest'); }} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border text-text-secondary hover:text-text-primary"><FiRotateCcw size={11} /> Reset</button>}
-          </div>
+          <div className="flex items-center gap-2"><div className="flex items-center gap-1"><span className="text-text-muted">Status:</span><select value={statFilter} onChange={(e) => setStatFilter(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="All">All Statuses</option>{STATUSES.map((st) => <option key={st} value={st}>{st}</option>)}</select></div><div className="flex items-center gap-1"><span className="text-text-muted">Category:</span><select value={catFilter} onChange={(e) => setCatFilter(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="All">All Categories</option>{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div></div>
+          <div className="flex items-center gap-2 ml-auto"><div className="flex items-center gap-1"><span className="text-text-muted">Sort:</span><select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-bg-elevated border border-border rounded px-2 py-0.5 text-text-primary"><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="severity">Highest Severity First</option></select></div>{(search || sevFilter !== 'All' || statFilter !== 'All' || catFilter !== 'All') && <button onClick={() => { setSearch(''); setSevFilter('All'); setStatFilter('All'); setCatFilter('All'); setSort('newest'); }} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border text-text-secondary hover:text-text-primary"><FiRotateCcw size={11} /> Reset</button>}</div>
         </div>
       </div>
 
@@ -96,7 +81,7 @@ export default function IncidentCommandCenter() {
                     <td className="py-2.5 px-3.5"><span className={`px-2 py-0.5 rounded-full font-medium border ${SEV_BADGES[inc.severity] || SEV_BADGES.Medium}`}>{inc.severity}</span></td>
                     <td className="py-2.5 px-3.5"><span className={`px-2 py-0.5 rounded font-medium border ${STAT_BADGES[inc.status] || STAT_BADGES.Open}`}>{inc.status}</span></td>
                     <td className="py-2.5 px-3.5 text-text-muted font-mono">{new Date(inc.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                    <td className="py-2.5 px-3.5 text-right whitespace-nowrap"><div className="flex items-center justify-end gap-1"><button onClick={() => navigate(`/app/incidents/investigate?id=${inc.id}`)} className="p-1 rounded text-accent hover:bg-accent/15" title="Investigate in Workspace"><FiCrosshair size={14} /></button><button onClick={() => setViewItem(inc)} className="p-1 rounded text-text-secondary hover:text-accent" title="View"><FiEye size={14} /></button><button onClick={() => setEditItem(inc)} className="p-1 rounded text-text-secondary hover:text-primary" title="Edit"><FiEdit2 size={14} /></button><button onClick={() => setDelItem(inc)} className="p-1 rounded text-text-secondary hover:text-danger" title="Delete"><FiTrash2 size={14} /></button></div></td>
+                    <td className="py-2.5 px-3.5 text-right whitespace-nowrap"><div className="flex items-center justify-end gap-1"><button onClick={() => navigate(`/app/incidents/report/${inc.id}`)} className="p-1 rounded text-teal-400 hover:bg-teal-400/15" title="Resolution & RCA Report"><FiFileText size={14} /></button><button onClick={() => navigate(`/app/incidents/investigate?id=${inc.id}`)} className="p-1 rounded text-accent hover:bg-accent/15" title="Investigate in Workspace"><FiCrosshair size={14} /></button><button onClick={() => setViewItem(inc)} className="p-1 rounded text-text-secondary hover:text-accent" title="View"><FiEye size={14} /></button><button onClick={() => setEditItem(inc)} className="p-1 rounded text-text-secondary hover:text-primary" title="Edit"><FiEdit2 size={14} /></button><button onClick={() => setDelItem(inc)} className="p-1 rounded text-text-secondary hover:text-danger" title="Delete"><FiTrash2 size={14} /></button></div></td>
                   </tr>
                 ))}
               </tbody>

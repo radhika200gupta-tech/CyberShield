@@ -26,23 +26,10 @@ const INTAKE_MODES = [
 export function CreateModal({ isOpen, onClose, onCreate, initialOption = null }) {
   const navigate = useNavigate(), [flow, setFlow] = useState(initialOption), [err, setErr] = useState('');
   const [manual, setManual] = useState({ title: '', category: 'Malicious QR', severity: 'High', desc: '', asset: '' });
-  const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [selectedSample, setSelectedSample] = useState(SAMPLE_CASES[0]);
-  const [storageTick, setStorageTick] = useState(0);
+  const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [selectedSample, setSelectedSample] = useState(SAMPLE_CASES[0]), [storageTick, setStorageTick] = useState(0);
 
-  useEffect(() => {
-    if (isOpen) {
-      setFlow(initialOption);
-      setSelectedScan(null);
-      setScanReview(null);
-      setErr('');
-    }
-  }, [isOpen, initialOption]);
-
-  useEffect(() => {
-    const handleStorage = () => setStorageTick((t) => t + 1);
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
+  useEffect(() => { if (isOpen) { setFlow(initialOption); setSelectedScan(null); setScanReview(null); setErr(''); } }, [isOpen, initialOption]);
+  useEffect(() => { const h = () => setStorageTick((t) => t + 1); window.addEventListener('storage', h); return () => window.removeEventListener('storage', h); }, []);
 
   const scans = useMemo(() => (isOpen ? getAvailableScanners() : []), [isOpen, flow, storageTick]);
   const existingIncidents = useMemo(() => (isOpen ? getIncidents() : []), [isOpen, storageTick]);
@@ -70,21 +57,14 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
     <Modal open={isOpen} onClose={onClose} max={flow === null ? 'max-w-4xl' : 'max-w-2xl'}>
       {flow === null ? (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
-          <div className="md:col-span-5 hidden sm:block">
-            <DetectiveIllustration className="h-full min-h-[340px]" />
-          </div>
+          <div className="md:col-span-5 hidden sm:block"><DetectiveIllustration className="h-full min-h-[340px]" /></div>
           <div className="md:col-span-7 flex flex-col justify-between space-y-4">
-            <div>
-              <span className="font-mono text-[10px] text-amber-400 font-bold uppercase">CYBERSHIELD COMMAND CENTER</span>
-              <h2 className="font-display font-bold text-xl text-text-primary mt-0.5">Create a New Incident</h2>
-              <p className="text-xs text-text-secondary mt-0.5">Choose how you want to start your investigation.</p>
-            </div>
+            <div><span className="font-mono text-[10px] text-amber-400 font-bold uppercase">CYBERSHIELD COMMAND CENTER</span><h2 className="font-display font-bold text-xl text-text-primary mt-0.5">Create a New Incident</h2><p className="text-xs text-text-secondary mt-0.5">Choose how you want to start your investigation.</p></div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {INTAKE_MODES.map((opt) => (
                 <button key={opt.id} onClick={() => setFlow(opt.id)} className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${opt.highlight ? 'border-amber-500/60 bg-[#0d1624] hover:border-amber-400' : 'border-border bg-[#0d1522] hover:bg-surface-hover'}`}>
                   <div className="flex justify-between items-center mb-1.5"><opt.icon size={16} className={opt.color} />{opt.badge && <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">{opt.badge}</span>}</div>
-                  <h4 className="font-bold text-xs text-text-primary">{opt.title}</h4>
-                  <p className="text-[11px] text-text-muted mt-0.5 leading-snug">{opt.desc}</p>
+                  <h4 className="font-bold text-xs text-text-primary">{opt.title}</h4><p className="text-[11px] text-text-muted mt-0.5 leading-snug">{opt.desc}</p>
                 </button>
               ))}
             </div>
@@ -98,10 +78,7 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
             <form onSubmit={handleManual} className="space-y-2 text-xs">
               <h3 className="font-display font-bold text-base text-text-primary">Report an Incident</h3>
               <div><label className="text-text-secondary uppercase block mb-0.5">Title *</label><input type="text" value={manual.title} onChange={(e) => setManual({ ...manual, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
-              <div className="grid grid-cols-2 gap-2">
-                <div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={manual.category} onChange={(e) => setManual({ ...manual, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-                <div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={manual.severity} onChange={(e) => setManual({ ...manual, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
-              </div>
+              <div className="grid grid-cols-2 gap-2"><div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={manual.category} onChange={(e) => setManual({ ...manual, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div><div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={manual.severity} onChange={(e) => setManual({ ...manual, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div></div>
               <div><label className="text-text-secondary uppercase block mb-0.5">Target Asset</label><input type="text" value={manual.asset} onChange={(e) => setManual({ ...manual, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
               <div><label className="text-text-secondary uppercase block mb-0.5">Description *</label><textarea rows={2} value={manual.desc} onChange={(e) => setManual({ ...manual, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded px-2 py-1 text-text-primary" /></div>
               {err && <p className="text-danger font-semibold">{err}</p>}
@@ -113,23 +90,13 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
               <h3 className="font-display font-bold text-base text-text-primary">Create from Scanner Telemetry</h3>
               {scans.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1.5 max-h-60 overflow-y-auto">
-                    {scans.map((sc) => (
-                      <div key={sc.id} onClick={() => selectScanForReview(sc)} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedScan?.id === sc.id ? 'border-accent bg-accent/15' : 'border-border bg-bg-elevated hover:bg-surface'}`}>
-                        <div className="flex justify-between items-center"><span className="font-mono text-[10px] text-accent uppercase font-bold">{sc.sourceType}</span><span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${sc.riskLevel === 'High' ? 'text-danger bg-danger/10' : sc.riskLevel === 'Medium' ? 'text-warning bg-warning/10' : 'text-success bg-success/10'}`}>{sc.riskLevel}</span></div>
-                        <p className="font-semibold text-text-primary truncate mt-0.5">{sc.target}</p><p className="text-[10px] text-text-muted mt-0.5">{sc.verdict}{sc.timestamp ? ` · ${new Date(sc.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <div className="space-y-1.5 max-h-60 overflow-y-auto">{scans.map((sc) => (<div key={sc.id} onClick={() => selectScanForReview(sc)} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedScan?.id === sc.id ? 'border-accent bg-accent/15' : 'border-border bg-bg-elevated hover:bg-surface'}`}><div className="flex justify-between items-center"><span className="font-mono text-[10px] text-accent uppercase font-bold">{sc.sourceType}</span><span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${sc.riskLevel === 'High' ? 'text-danger bg-danger/10' : sc.riskLevel === 'Medium' ? 'text-warning bg-warning/10' : 'text-success bg-success/10'}`}>{sc.riskLevel}</span></div><p className="font-semibold text-text-primary truncate mt-0.5">{sc.target}</p><p className="text-[10px] text-text-muted mt-0.5">{sc.verdict}{sc.timestamp ? ` · ${new Date(sc.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}</p></div>))}</div>
                   {selectedScan && scanReview ? (
                     <div className="p-3 rounded-xl bg-bg-elevated border border-border space-y-2 flex flex-col justify-between">
                       <div className="space-y-2">
                         <div className="flex justify-between items-center"><span className="font-mono text-accent text-[10px] font-bold uppercase">{selectedScan.sourceType}</span><span className="text-[10px] text-amber-400 font-mono font-bold">{selectedScan.verdict}</span></div>
                         <div><label className="text-[10px] text-text-muted uppercase block">Incident Title</label><input type="text" value={scanReview.title} onChange={(e) => setScanReview({ ...scanReview, title: e.target.value })} className="w-full bg-[#090e17] border border-border rounded px-2 py-1 text-text-primary text-xs" /></div>
-                        <div className="grid grid-cols-2 gap-1.5">
-                          <div><label className="text-[10px] text-text-muted uppercase block">Category</label><select value={scanReview.category} onChange={(e) => setScanReview({ ...scanReview, category: e.target.value })} className="w-full bg-[#090e17] border border-border rounded p-1 text-text-primary text-xs">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-                          <div><label className="text-[10px] text-text-muted uppercase block">Severity</label><select value={scanReview.severity} onChange={(e) => setScanReview({ ...scanReview, severity: e.target.value })} className="w-full bg-[#090e17] border border-border rounded p-1 text-text-primary text-xs">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
-                        </div>
+                        <div className="grid grid-cols-2 gap-1.5"><div><label className="text-[10px] text-text-muted uppercase block">Category</label><select value={scanReview.category} onChange={(e) => setScanReview({ ...scanReview, category: e.target.value })} className="w-full bg-[#090e17] border border-border rounded p-1 text-text-primary text-xs">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div><div><label className="text-[10px] text-text-muted uppercase block">Severity</label><select value={scanReview.severity} onChange={(e) => setScanReview({ ...scanReview, severity: e.target.value })} className="w-full bg-[#090e17] border border-border rounded p-1 text-text-primary text-xs">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div></div>
                         {isDuplicate && <p className="text-[10px] text-warning bg-warning/10 p-1.5 rounded border border-warning/20">A record with this scan target already exists in registry.</p>}
                       </div>
                       <Button variant="primary" size="sm" onClick={confirmScanImport} className="w-full mt-2">Confirm & Import Incident</Button>
@@ -148,15 +115,8 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
             <div className="space-y-3 text-xs">
               <h3 className="font-display font-bold text-base text-text-primary">Simulated Case Investigations</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">{SAMPLE_CASES.map((s) => (
-                  <div key={s.id} onClick={() => setSelectedSample(s)} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedSample?.id === s.id ? 'border-amber-400 bg-amber-500/10' : 'border-border bg-bg-elevated'}`}><div className="flex justify-between font-bold text-text-primary"><span>{s.title}</span><span className="text-amber-400">{s.severity}</span></div><p className="text-[10px] text-text-muted mt-0.5 truncate">{s.desc}</p></div>
-                ))}</div>
-                {selectedSample && (
-                  <div className="p-3 rounded-xl bg-bg-elevated border border-border space-y-2 flex flex-col justify-between">
-                    <div><span className="text-[10px] font-mono text-amber-400 font-bold uppercase">{selectedSample.category}</span><h4 className="font-bold text-text-primary mt-0.5">{selectedSample.title}</h4><p className="text-text-secondary mt-1">{selectedSample.desc}</p></div>
-                    <Button variant="primary" size="sm" onClick={importSample} className="bg-amber-500 hover:bg-amber-400 text-black font-bold">Import Simulated Incident</Button>
-                  </div>
-                )}
+                <div className="space-y-1.5">{SAMPLE_CASES.map((s) => (<div key={s.id} onClick={() => setSelectedSample(s)} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedSample?.id === s.id ? 'border-amber-400 bg-amber-500/10' : 'border-border bg-bg-elevated'}`}><div className="flex justify-between font-bold text-text-primary"><span>{s.title}</span><span className="text-amber-400">{s.severity}</span></div><p className="text-[10px] text-text-muted mt-0.5 truncate">{s.desc}</p></div>))}</div>
+                {selectedSample && (<div className="p-3 rounded-xl bg-bg-elevated border border-border space-y-2 flex flex-col justify-between"><div><span className="text-[10px] font-mono text-amber-400 font-bold uppercase">{selectedSample.category}</span><h4 className="font-bold text-text-primary mt-0.5">{selectedSample.title}</h4><p className="text-text-secondary mt-1">{selectedSample.desc}</p></div><Button variant="primary" size="sm" onClick={importSample} className="bg-amber-500 hover:bg-amber-400 text-black font-bold">Import Simulated Incident</Button></div>)}
               </div>
             </div>
           )}
@@ -181,6 +141,7 @@ export function ViewModal({ incident, onClose, onEdit }) {
         <div className="flex justify-between items-center pt-2 border-t border-border">
           <span className="text-[10px] font-mono text-text-muted">{new Date(incident.createdAt).toLocaleDateString()}</span>
           <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => { onClose(); navigate(`/app/incidents/report/${incident.id}`); }} icon={FiFileText}>Report</Button>
             <Button variant="outline" size="sm" onClick={() => { onClose(); navigate(`/app/incidents/investigate?id=${incident.id}`); }} icon={FiCrosshair}>Investigate</Button>
             <Button variant="primary" size="sm" onClick={() => { onClose(); onEdit(incident); }} icon={FiEdit2}>Edit</Button>
           </div>
@@ -198,11 +159,7 @@ export function EditModal({ incident, onClose, onSave }) {
       <form onSubmit={(e) => { e.preventDefault(); onSave(incident.id, { title: data.title, category: data.category, severity: data.severity, status: data.status, description: data.desc, affectedAsset: data.asset }); onClose(); }} className="space-y-2.5 text-xs">
         <h3 className="font-display font-bold text-base text-text-primary">Edit {incident.id}</h3>
         <div><label className="text-text-secondary uppercase block mb-0.5">Headline</label><input type="text" value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
-        <div className="grid grid-cols-3 gap-1.5">
-          <div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={data.category} onChange={(e) => setData({ ...data, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div>
-          <div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={data.severity} onChange={(e) => setData({ ...data, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
-          <div><label className="text-text-secondary uppercase block mb-0.5">Status</label><select value={data.status} onChange={(e) => setData({ ...data, status: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
-        </div>
+        <div className="grid grid-cols-3 gap-1.5"><div><label className="text-text-secondary uppercase block mb-0.5">Category</label><select value={data.category} onChange={(e) => setData({ ...data, category: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}</select></div><div><label className="text-text-secondary uppercase block mb-0.5">Severity</label><select value={data.severity} onChange={(e) => setData({ ...data, severity: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{SEVERITIES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div><div><label className="text-text-secondary uppercase block mb-0.5">Status</label><select value={data.status} onChange={(e) => setData({ ...data, status: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary">{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div></div>
         <div><label className="text-text-secondary uppercase block mb-0.5">Target Asset</label><input type="text" value={data.asset} onChange={(e) => setData({ ...data, asset: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1 text-text-primary" /></div>
         <div><label className="text-text-secondary uppercase block mb-0.5">Description</label><textarea rows={2} value={data.desc} onChange={(e) => setData({ ...data, desc: e.target.value })} className="w-full bg-bg-elevated border border-border rounded p-1.5 text-text-primary" /></div>
         <div className="flex justify-end gap-2 pt-1 border-t border-border"><Button variant="outline" size="sm" onClick={onClose}>Cancel</Button><Button variant="primary" size="sm" type="submit">Save Changes</Button></div>

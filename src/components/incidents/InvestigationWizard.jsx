@@ -11,24 +11,14 @@ const STAGES = ['PROTOCOL INTRO', 'DETECT INCIDENT', 'EVALUATE THREAT', 'FOLLOW 
 
 export default function InvestigationWizard({ onLaunch, onCancel }) {
   const [stage, setStage] = useState(0), [created, setCreated] = useState(null), [manualRef, setManualRef] = useState(''), [err, setErr] = useState('');
-  const [draft, setDraft] = useState({ title: '', category: 'Malicious QR', severity: 'High', asset: '', impact: '', desc: '', evidence: [] });
-  const [storageTick, setStorageTick] = useState(0);
+  const [draft, setDraft] = useState({ title: '', category: 'Malicious QR', severity: 'High', asset: '', impact: '', desc: '', evidence: [] }), [storageTick, setStorageTick] = useState(0);
 
-  useEffect(() => {
-    const handleStorage = () => setStorageTick((t) => t + 1);
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
-
+  useEffect(() => { const h = () => setStorageTick((t) => t + 1); window.addEventListener('storage', h); return () => window.removeEventListener('storage', h); }, []);
   const scanners = useMemo(() => getAvailableScanners(), [stage, storageTick]), prvId = useMemo(() => `PRV-${Math.floor(1000 + Math.random() * 9000)}`, []);
 
   const addEv = (item) => { if (item && !draft.evidence.includes(item)) setDraft((d) => ({ ...d, evidence: [...d.evidence, item] })); };
   const remEv = (idx) => setDraft((d) => ({ ...d, evidence: d.evidence.filter((_, i) => i !== idx) }));
-
-  const nextStage = () => {
-    if (stage === 1 && (!draft.title.trim() || !draft.desc.trim())) { setErr('Case title and initial narrative are required.'); return; }
-    setErr(''); setStage((s) => s + 1);
-  };
+  const nextStage = () => { if (stage === 1 && (!draft.title.trim() || !draft.desc.trim())) { setErr('Case title and initial narrative are required.'); return; } setErr(''); setStage((s) => s + 1); };
 
   const handleLaunch = () => {
     const rec = onLaunch({ title: draft.title, category: draft.category, severity: draft.severity, description: `${draft.desc}${draft.impact ? `\n\nImpact Scope: ${draft.impact}` : ''}`, affectedAsset: draft.asset, evidenceReferences: draft.evidence, sourceType: 'guided' });
@@ -66,15 +56,7 @@ export default function InvestigationWizard({ onLaunch, onCancel }) {
           {stage === 1 && (
             <div className="space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {CATEGORIES.map((cat) => {
-                  const Icon = CAT_ICONS[cat] || FiShield, active = draft.category === cat;
-                  return (
-                    <button key={cat} type="button" onClick={() => setDraft({ ...draft, category: cat })} className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${active ? 'border-amber-400 bg-amber-500/15' : 'border-border bg-bg-elevated hover:bg-surface'}`}>
-                      <div className="flex justify-between items-center mb-1"><Icon size={14} className={active ? 'text-amber-400' : 'text-text-muted'} />{active && <FiCheck size={12} className="text-amber-400" />}</div>
-                      <p className="text-xs font-bold text-text-primary">{cat}</p>
-                    </button>
-                  );
-                })}
+                {CATEGORIES.map((cat) => { const Icon = CAT_ICONS[cat] || FiShield, active = draft.category === cat; return (<button key={cat} type="button" onClick={() => setDraft({ ...draft, category: cat })} className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${active ? 'border-amber-400 bg-amber-500/15' : 'border-border bg-bg-elevated hover:bg-surface'}`}><div className="flex justify-between items-center mb-1"><Icon size={14} className={active ? 'text-amber-400' : 'text-text-muted'} />{active && <FiCheck size={12} className="text-amber-400" />}</div><p className="text-xs font-bold text-text-primary">{cat}</p></button>); })}
               </div>
               <p className="text-[11px] text-amber-300/80 font-mono italic">Context: {CAT_HINTS[draft.category]}</p>
               <div><label className="text-xs font-semibold text-text-secondary uppercase block mb-1">Incident Title *</label><input type="text" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="e.g. Rogue QR decal detected on Cafeteria POS" className="w-full bg-bg-elevated border border-border rounded px-3 py-1.5 text-xs text-text-primary focus:border-amber-400" /></div>
@@ -86,11 +68,7 @@ export default function InvestigationWizard({ onLaunch, onCancel }) {
           {stage === 2 && (
             <div className="space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {SEVERITIES.map((s) => (
-                  <button key={s} type="button" onClick={() => setDraft({ ...draft, severity: s })} className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${draft.severity === s ? 'border-amber-400 bg-amber-500/15' : 'border-border bg-bg-elevated'}`}>
-                    <p className={`text-xs font-bold ${SEV_CARDS[s].color}`}>{s}</p><p className="text-[10px] text-text-muted mt-1 leading-tight">{SEV_CARDS[s].sub}</p>
-                  </button>
-                ))}
+                {SEVERITIES.map((s) => (<button key={s} type="button" onClick={() => setDraft({ ...draft, severity: s })} className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${draft.severity === s ? 'border-amber-400 bg-amber-500/15' : 'border-border bg-bg-elevated'}`}><p className={`text-xs font-bold ${SEV_CARDS[s].color}`}>{s}</p><p className="text-[10px] text-text-muted mt-1 leading-tight">{SEV_CARDS[s].sub}</p></button>))}
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div><label className="text-xs font-semibold text-text-secondary uppercase block mb-1">Target Asset</label><input type="text" value={draft.asset} onChange={(e) => setDraft({ ...draft, asset: e.target.value })} placeholder="e.g. POS Stand #3, Exec Inboxes" className="w-full bg-bg-elevated border border-border rounded px-2.5 py-1 text-xs text-text-primary" /></div>
@@ -106,34 +84,21 @@ export default function InvestigationWizard({ onLaunch, onCancel }) {
                 <span className="text-xs font-mono text-text-secondary uppercase block mb-1">Live Scanner Findings ({scanners.length} available)</span>
                 {scanners.length > 0 ? (
                   <div className="max-h-28 overflow-y-auto space-y-1 p-1 bg-bg-elevated rounded border border-border">
-                    {scanners.map((sc) => (
-                      <div key={sc.id} className="flex justify-between items-center p-1.5 rounded bg-surface border border-border/70 text-[11px]">
-                        <span className="truncate mr-2"><strong className="text-accent font-mono">[{sc.sourceType}]</strong> {sc.target} <span className="text-amber-400">({sc.verdict})</span></span>
-                        <button type="button" onClick={() => addEv(`[${sc.sourceType}] ${sc.target} (${sc.verdict})`)} className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-[10px] shrink-0 font-bold">+ Attach</button>
-                      </div>
-                    ))}
+                    {scanners.map((sc) => (<div key={sc.id} className="flex justify-between items-center p-1.5 rounded bg-surface border border-border/70 text-[11px]"><span className="truncate mr-2"><strong className="text-accent font-mono">[{sc.sourceType}]</strong> {sc.target} <span className="text-amber-400">({sc.verdict})</span></span><button type="button" onClick={() => addEv(`[${sc.sourceType}] ${sc.target} (${sc.verdict})`)} className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-[10px] shrink-0 font-bold cursor-pointer">+ Attach</button></div>))}
                   </div>
                 ) : <p className="text-xs text-text-muted italic p-2 bg-bg-elevated rounded border border-border">No scanner telemetry found. You can add manual evidence pointers below.</p>}
               </div>
               <div className="flex gap-2"><input type="text" value={manualRef} onChange={(e) => setManualRef(e.target.value)} placeholder="e.g. URL, QR payload, or SHA256 checksum" className="flex-1 bg-bg-elevated border border-border rounded px-2.5 py-1 text-xs text-text-primary" /><Button variant="outline" size="sm" onClick={() => { addEv(manualRef.trim()); setManualRef(''); }} icon={FiPlus}>Add</Button></div>
-              <div className="max-h-20 overflow-y-auto space-y-1">
-                {draft.evidence.map((ev, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-1.5 rounded bg-[#0b1320] border border-amber-500/20 text-[11px] font-mono text-accent">
-                    <span className="truncate mr-2">{ev}</span><button type="button" onClick={() => remEv(idx)} className="text-text-muted hover:text-danger"><FiTrash2 size={12} /></button>
-                  </div>
-                ))}
-              </div>
+              <div className="max-h-20 overflow-y-auto space-y-1">{draft.evidence.map((ev, idx) => (<div key={idx} className="flex justify-between items-center p-1.5 rounded bg-[#0b1320] border border-amber-500/20 text-[11px] font-mono text-accent"><span className="truncate mr-2">{ev}</span><button type="button" onClick={() => remEv(idx)} className="text-text-muted hover:text-danger cursor-pointer"><FiTrash2 size={12} /></button></div>))}</div>
             </div>
           )}
 
           {stage === 4 && (
             <div className="p-3.5 rounded-xl bg-[#09111c] border border-amber-500/40 space-y-2 text-xs">
               <div className="flex justify-between border-b border-border/60 pb-1.5"><span className="font-mono text-amber-400 font-bold">{prvId} // DOSSIER READY</span><span className="font-bold text-amber-400 uppercase">{draft.severity} SEVERITY</span></div>
-              <h4 className="font-bold text-sm text-text-primary">{draft.title}</h4>
-              <p className="text-text-secondary leading-relaxed">{draft.desc}</p>
+              <h4 className="font-bold text-sm text-text-primary">{draft.title}</h4><p className="text-text-secondary leading-relaxed">{draft.desc}</p>
               <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/50 text-[11px]">
-                <div>Category: <strong className="text-text-primary">{draft.category}</strong></div>
-                <div>Target Asset: <strong className="text-text-primary">{draft.asset || 'Unspecified'}</strong></div>
+                <div>Category: <strong className="text-text-primary">{draft.category}</strong></div><div>Target Asset: <strong className="text-text-primary">{draft.asset || 'Unspecified'}</strong></div>
                 {draft.impact && <div className="col-span-2">Impact Scope: <strong className="text-text-primary">{draft.impact}</strong></div>}
               </div>
               {draft.evidence.length > 0 && <p className="text-text-muted text-[10px] font-mono">{draft.evidence.length} evidence pointer(s) attached.</p>}
