@@ -10,7 +10,9 @@ export const ROUTES = {
   URL_SCANNER: '/web-security/url-scanner',
   QR_SCANNER: '/web-security/qr-scanner',
   PASSWORD_LAB: '/app/password-lab',
+  PASSWORD_SECURITY: '/app/password-security',
   SECURITY_CENTER: '/app/security-center',
+  CYBER_RESCUE: '/app/cyber-rescue',
   PROFILE: '/app/profile',
   SETTINGS: '/app/settings',
   NOT_FOUND: '*',
@@ -26,6 +28,7 @@ export const NAV_LINKS = [
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+  { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
   { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
   { label: 'Phishing Simulator', path: ROUTES.PHISHING_SIMULATOR, icon: 'crosshair' },
   { label: 'Smart URL Scanner', path: ROUTES.URL_SCANNER, icon: 'link' },

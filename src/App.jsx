@@ -14,8 +14,9 @@ import Settings from './pages/Settings';
 import ScreenshotAnalyzer from './pages/features/ScreenshotAnalyzer';
 import PhishingSimulator from './pages/features/PhishingSimulator';
 import PhishingChallenge from './modules/phishing-challenge/PhishingChallenge';
-import PasswordLab from './pages/features/PasswordLab';
+import PasswordSecurity from './pages/PasswordSecurity';
 import SecurityCenter from './pages/features/SecurityCenter';
+import CyberRescue from './pages/features/CyberRescue';
 import ComingSoonFeature from './pages/features/ComingSoonFeature';
 
 // Teammate Web Security pages
@@ -73,11 +74,19 @@ function App() {
                   <Route path="/web-security/challenge" element={<FakeWebsiteChallenge />} />
                   <Route
                     path={ROUTES.PASSWORD_LAB}
-                    element={<PasswordLab />}
+                    element={<PasswordSecurity />}
+                  />
+                  <Route
+                    path={ROUTES.PASSWORD_SECURITY}
+                    element={<PasswordSecurity />}
                   />
                   <Route
                     path={ROUTES.SECURITY_CENTER}
                     element={<SecurityCenter />}
+                  />
+                  <Route
+                    path={ROUTES.CYBER_RESCUE}
+                    element={<CyberRescue />}
                   />
 
                   <Route
