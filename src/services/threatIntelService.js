@@ -151,11 +151,29 @@ export function extractUrlEvidence(urlStr) {
  */
 export function parseUrlhausCsv(csvText) {
   if (!csvText || typeof csvText !== 'string') {
-    return { providerLastUpdated: null, records: [] };
+    return { providerLastUpdated: null, records: [], isHtmlFallback: false, isRecognizedFormat: false };
+  }
+
+  const trimmed = csvText.trim();
+
+  // Detect HTML fallback responses (e.g. Vercel SPA routing returning index.html)
+  if (
+    trimmed.toLowerCase().startsWith('<!doctype html') ||
+    trimmed.toLowerCase().startsWith('<html') ||
+    trimmed.includes('<div id="root">') ||
+    trimmed.includes('<script type="module"')
+  ) {
+    return {
+      providerLastUpdated: null,
+      records: [],
+      isHtmlFallback: true,
+      isRecognizedFormat: false
+    };
   }
 
   const lines = csvText.split(/\r?\n/);
   let providerLastUpdated = null;
+  let hasUrlhausHeader = false;
   const rawRecords = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -163,6 +181,9 @@ export function parseUrlhausCsv(csvText) {
     if (!rawLine) continue;
 
     if (rawLine.startsWith('#')) {
+      if (rawLine.toLowerCase().includes('urlhaus')) {
+        hasUrlhausHeader = true;
+      }
       if (rawLine.includes('Last updated:')) {
         const match = rawLine.match(/Last updated:\s*([^(]+(?:\(UTC\))?)/i);
         if (match) providerLastUpdated = match[1].trim();
@@ -210,7 +231,14 @@ export function parseUrlhausCsv(csvText) {
     });
   }
 
-  return { providerLastUpdated, records: rawRecords };
+  const isRecognizedFormat = hasUrlhausHeader || rawRecords.length > 0;
+
+  return { 
+    providerLastUpdated, 
+    records: rawRecords, 
+    isHtmlFallback: false, 
+    isRecognizedFormat 
+  };
 }
 
 /**
@@ -289,12 +317,15 @@ export function calculateUniqueIndicators(items) {
  *   error?: string
  * }>}
  */
-export async function fetchThreatIntelligenceFeed({ byteLimit = 65536, signal } = {}) {
+export async function fetchThreatIntelligenceFeed({ 
+  byteLimit = 65536, 
+  endpoint = '/api/urlhaus-feed/downloads/csv_recent/',
+  signal 
+} = {}) {
   const fetchTimestamp = new Date().toISOString();
-  const proxyEndpoint = '/api/urlhaus-feed/downloads/csv_recent/';
 
   try {
-    const response = await fetch(proxyEndpoint, {
+    const response = await fetch(endpoint, {
       headers: {
         'Range': `bytes=0-${byteLimit}`
       },
@@ -302,14 +333,47 @@ export async function fetchThreatIntelligenceFeed({ byteLimit = 65536, signal } 
     });
 
     if (!response.ok && response.status !== 206) {
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(`Feed provider rejected request (HTTP ${response.status} Unauthorized / Forbidden). Check API credentials if required.`);
+      }
+      if (response.status === 429) {
+        throw new Error('Feed provider rate limit reached (HTTP 429). Please wait before retrying.');
+      }
       throw new Error(`Feed request returned HTTP status ${response.status} (${response.statusText || 'Error'})`);
     }
 
+    const contentType = response.headers.get('content-type') || '';
     const csvText = await response.text();
-    const { providerLastUpdated, records: rawRecords } = parseUrlhausCsv(csvText);
 
-    if (!rawRecords || rawRecords.length === 0) {
+    const { 
+      providerLastUpdated, 
+      records: rawRecords, 
+      isHtmlFallback, 
+      isRecognizedFormat 
+    } = parseUrlhausCsv(csvText);
+
+    if (isHtmlFallback || contentType.includes('text/html')) {
+      throw new Error(
+        'Received HTML application shell instead of threat feed. ' +
+        'Ensure the reverse proxy rewrite for "/api/urlhaus-feed" is active in server configuration (vercel.json / vite.config.js).'
+      );
+    }
+
+    if (!isRecognizedFormat && rawRecords.length === 0) {
       throw new Error('Received empty or unrecognized response from threat feed provider.');
+    }
+
+    // Genuinely empty feed from provider
+    if (rawRecords.length === 0) {
+      return {
+        success: true,
+        data: [],
+        providerLastUpdated,
+        fetchedAt: fetchTimestamp,
+        sourceName: 'abuse.ch URLhaus (Recent Feeds)',
+        isProxy: true,
+        isGenuinelyEmpty: true
+      };
     }
 
     const normalizedData = normalizeThreatRecords(rawRecords, fetchTimestamp);
@@ -320,11 +384,17 @@ export async function fetchThreatIntelligenceFeed({ byteLimit = 65536, signal } 
       providerLastUpdated,
       fetchedAt: fetchTimestamp,
       sourceName: 'abuse.ch URLhaus (Recent Feeds)',
-      isProxy: true
+      isProxy: true,
+      isGenuinelyEmpty: false
     };
   } catch (err) {
     if (err.name === 'AbortError') {
       throw err;
+    }
+
+    let message = err.message || 'Failed to connect to abuse.ch URLhaus feed.';
+    if (err.name === 'TypeError' && message.toLowerCase().includes('failed to fetch')) {
+      message = 'Network error or CORS restriction connecting to threat feed provider. A proxy is required to reach URLhaus from browser clients.';
     }
 
     return {
@@ -334,7 +404,7 @@ export async function fetchThreatIntelligenceFeed({ byteLimit = 65536, signal } 
       fetchedAt: fetchTimestamp,
       sourceName: 'abuse.ch URLhaus',
       isProxy: true,
-      error: err.message || 'Failed to connect to abuse.ch URLhaus feed.'
+      error: message
     };
   }
 }

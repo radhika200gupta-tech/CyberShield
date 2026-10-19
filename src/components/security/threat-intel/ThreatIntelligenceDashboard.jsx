@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiZap, FiRefreshCw, FiAlertTriangle, FiCheckCircle, 
-  FiClock, FiShield, FiWifi, FiWifiOff, FiInfo, FiAlertOctagon
+  FiZap, FiRefreshCw, FiAlertTriangle, 
+  FiClock, FiWifiOff, FiInfo 
 } from 'react-icons/fi';
 import Button from '../../common/Button';
 import ThreatStatsCards from './ThreatStatsCards';
@@ -28,6 +27,7 @@ export default function ThreatIntelligenceDashboard() {
   const [providerLastUpdated, setProviderLastUpdated] = useState(null);
   const [lastFetchedAt, setLastFetchedAt] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('CONNECTING'); // 'CONNECTED' | 'ERROR' | 'CONNECTING'
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
 
   // Selected threat for details drawer
   const [selectedThreat, setSelectedThreat] = useState(null);
@@ -45,6 +45,12 @@ export default function ThreatIntelligenceDashboard() {
 
   // CSV export state
   const [isExporting, setIsExporting] = useState(false);
+
+  // Periodic clock update for staleness check
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(Date.now()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   /**
    * Load feed data from abuse.ch URLhaus
@@ -66,6 +72,12 @@ export default function ThreatIntelligenceDashboard() {
         setLastFetchedAt(result.fetchedAt);
         setConnectionStatus('CONNECTED');
         setFetchError(null);
+      } else if (result.success && result.isGenuinelyEmpty) {
+        setThreats([]);
+        setProviderLastUpdated(result.providerLastUpdated);
+        setLastFetchedAt(result.fetchedAt);
+        setConnectionStatus('CONNECTED');
+        setFetchError(null);
       } else {
         setConnectionStatus('ERROR');
         setFetchError(result.error || 'Failed to retrieve genuine threat feed from URLhaus.');
@@ -81,13 +93,68 @@ export default function ThreatIntelligenceDashboard() {
 
   // Fetch once on mount
   useEffect(() => {
-    loadFeed(false);
-  }, [loadFeed]);
+    let ignore = false;
+    async function fetchOnMount() {
+      try {
+        const result = await fetchThreatIntelligenceFeed({ byteLimit: 65536 });
+        if (ignore) return;
+        if (result.success && result.data && result.data.length > 0) {
+          setThreats(result.data);
+          setProviderLastUpdated(result.providerLastUpdated);
+          setLastFetchedAt(result.fetchedAt);
+          setConnectionStatus('CONNECTED');
+          setFetchError(null);
+        } else if (result.success && result.isGenuinelyEmpty) {
+          setThreats([]);
+          setProviderLastUpdated(result.providerLastUpdated);
+          setLastFetchedAt(result.fetchedAt);
+          setConnectionStatus('CONNECTED');
+          setFetchError(null);
+        } else {
+          setConnectionStatus('ERROR');
+          setFetchError(result.error || 'Failed to retrieve genuine threat feed from URLhaus.');
+        }
+      } catch (err) {
+        if (!ignore) {
+          setConnectionStatus('ERROR');
+          setFetchError(err.message || 'Network error: could not connect to threat intelligence feed.');
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    }
+    fetchOnMount();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
-  // Reset pagination to page 1 whenever search or filters change
-  useEffect(() => {
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
     setCurrentPage(1);
-  }, [searchQuery, severityFilter, statusFilter, tagFilter, sortBy]);
+  };
+
+  const handleSeverityChange = (sev) => {
+    setSeverityFilter(sev);
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (status) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+  };
+
+  const handleTagChange = (tag) => {
+    setTagFilter(tag);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (sort) => {
+    setSortBy(sort);
+    setCurrentPage(1);
+  };
 
   /**
    * Extract all unique tags across the loaded threat feed
@@ -196,6 +263,7 @@ export default function ThreatIntelligenceDashboard() {
     setStatusFilter('ALL');
     setTagFilter('ALL');
     setSortBy('newest');
+    setCurrentPage(1);
   };
 
   /**
@@ -218,9 +286,9 @@ export default function ThreatIntelligenceDashboard() {
   // Check if data is stale (> 15 minutes old)
   const isStale = useMemo(() => {
     if (!lastFetchedAt) return false;
-    const ageMs = Date.now() - new Date(lastFetchedAt).getTime();
+    const ageMs = currentTime - new Date(lastFetchedAt).getTime();
     return ageMs > 15 * 60 * 1000;
-  }, [lastFetchedAt]);
+  }, [lastFetchedAt, currentTime]);
 
   const formatLocalTime = (isoStr) => {
     if (!isoStr) return 'Never';
@@ -373,16 +441,16 @@ export default function ThreatIntelligenceDashboard() {
       {/* SEARCH, FILTER & SORT CONTROLS */}
       <ThreatFeedFilters
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         severityFilter={severityFilter}
-        onSeverityChange={setSeverityFilter}
+        onSeverityChange={handleSeverityChange}
         statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
+        onStatusChange={handleStatusChange}
         tagFilter={tagFilter}
-        onTagChange={setTagFilter}
+        onTagChange={handleTagChange}
         availableTags={availableTags}
         sortBy={sortBy}
-        onSortChange={setSortBy}
+        onSortChange={handleSortChange}
         onResetFilters={handleResetFilters}
         hasActiveFilters={hasActiveFilters}
         totalCount={threats.length}
