@@ -11,6 +11,8 @@ export const ROUTES = {
   URL_SCANNER: '/web-security/url-scanner',
   QR_SCANNER: '/web-security/qr-scanner',
   PASSWORD_LAB: '/app/password-lab',
+  PASSWORD_SECURITY: '/app/password-security',
+  CYBER_RESCUE: '/app/cyber-rescue',
   EMAIL_FORENSICS: '/app/email-forensics',
   EMAIL_DISCOVERY: '/app/email-account-discovery',
   WEBCAM_SECURITY: '/app/webcam-security',
@@ -36,6 +38,12 @@ export const SIDEBAR_SECTIONS = [
     category: 'OVERVIEW',
     links: [
       { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+    ],
+  },
+  {
+    category: 'INCIDENT RECOVERY & ASSISTANCE',
+    links: [
+      { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
     ],
   },
   {
@@ -85,6 +93,7 @@ export const SIDEBAR_SECTIONS = [
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+  { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
   { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
   { label: 'Visual Phishing Detection', path: ROUTES.VISUAL_PHISHING, icon: 'eye' },
   { label: 'Email Forensics Lab', path: ROUTES.EMAIL_FORENSICS, icon: 'mail' },
