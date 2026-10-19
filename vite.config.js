@@ -9,7 +9,10 @@ export default defineConfig({
       '/api/urlhaus-feed': {
         target: 'https://urlhaus.abuse.ch',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/urlhaus-feed/, ''),
+        rewrite: (path) => {
+          const sub = path.replace(/^\/api\/urlhaus-feed\/?/, '');
+          return sub ? `/${sub}` : '/downloads/csv_recent/';
+        },
       },
       '/api/urlhaus-api': {
         target: 'https://urlhaus-api.abuse.ch',
