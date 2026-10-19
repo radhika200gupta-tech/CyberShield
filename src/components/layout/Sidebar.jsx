@@ -75,7 +75,7 @@ export default function Sidebar({ isOpen, onClose }) {
           {SIDEBAR_SECTIONS.map((section) => (
             <div key={section.category} className="space-y-1.5">
               {!isCollapsed ? (
-                <h3 className="px-3 text-xs sm:text-[13px] font-bold text-text-primary/80 uppercase tracking-wider mb-2 select-none leading-tight">
+                <h3 className="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider mb-2 select-none whitespace-nowrap">
                   {section.category}
                 </h3>
               ) : (
