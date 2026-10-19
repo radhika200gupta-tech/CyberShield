@@ -5,6 +5,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   DASHBOARD: '/app/dashboard',
   INCIDENTS: '/app/incidents',
+  INVESTIGATION_CENTER: '/app/incidents',
   INVESTIGATE: '/app/incidents/investigate',
   INCIDENT_REPORT: '/app/incidents/report',
   SCREENSHOT_ANALYZER: '/app/screenshot-analyzer',

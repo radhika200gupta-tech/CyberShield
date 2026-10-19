@@ -52,6 +52,8 @@ function App() {
 
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.INCIDENTS} element={<IncidentCommandCenter />} />
+                  <Route path="/app/investigation-center" element={<Navigate to={ROUTES.INCIDENTS} replace />} />
+                  <Route path="/app/investigation" element={<Navigate to={ROUTES.INCIDENTS} replace />} />
                   <Route path={ROUTES.INVESTIGATE} element={<InvestigationWorkspace />} />
                   <Route path={`${ROUTES.INVESTIGATE}/:incidentId`} element={<InvestigationWorkspace />} />
                   <Route path={ROUTES.INCIDENT_REPORT} element={<IncidentResolutionReport />} />

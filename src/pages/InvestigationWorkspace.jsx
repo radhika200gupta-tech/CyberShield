@@ -7,12 +7,14 @@ import { ROUTES } from '../constants/routes';
 
 const STAGES = ['Review incident', 'Collect evidence', 'Build timeline', 'Document findings', 'Review investigation'];
 const NODE_COLS = { incident: { stroke: '#00e5bf', fill: '#092523', text: '#00e5bf', badge: 'bg-primary/20 text-primary border-primary/30', icon: '🛡️' }, url: { stroke: '#38bdf8', fill: '#0a2336', text: '#38bdf8', badge: 'bg-sky-500/20 text-sky-400 border-sky-500/30', icon: '🔗' }, qr: { stroke: '#c084fc', fill: '#221136', text: '#c084fc', badge: 'bg-purple-500/20 text-purple-400 border-purple-500/30', icon: '▦' }, scanner: { stroke: '#fbbf24', fill: '#2d2008', text: '#fbbf24', badge: 'bg-amber-500/20 text-amber-400 border-amber-500/30', icon: '⚡' }, evidence: { stroke: '#2dd4bf', fill: '#082522', text: '#2dd4bf', badge: 'bg-teal-500/20 text-teal-400 border-teal-500/30', icon: '📄' }, screenshot: { stroke: '#34d399', fill: '#0c271d', text: '#34d399', badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: '📷' }, finding: { stroke: '#f43f5e', fill: '#330c17', text: '#f43f5e', badge: 'bg-rose-500/20 text-rose-400 border-rose-500/30', icon: '⚠️' } };
+const makeDnsEv = (res, blk) => ({ id: `ev-bdns-${Date.now()}`, title: res.domain, type: 'URL', source: 'BoundaryDNS CTI', description: `BoundaryDNS verdict: ${blk ? 'BLOCKED' : 'ALLOWED'} (action: ${res.action || 'evaluated'}${res.reason ? `, reason: ${res.reason}` : ''}). Evaluation source: Boundary Logic Labs threat intel.`, relevance: blk ? 'High' : 'Low', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
 
 export default function InvestigationWorkspace() {
   const navigate = useNavigate(), { incidentId: paramId } = useParams(), [params, setParams] = useSearchParams(), activeId = paramId || params.get('id');
   const [incidents] = useState(() => getIncidents()), incident = useMemo(() => incidents.find((i) => i.id === activeId) || incidents[0] || null, [incidents, activeId]);
   const [inv, setInv] = useState(() => incident ? getInvestigation(incident.id, incident) : null), [selNodeId, setSelNodeId] = useState('incident'), [saveStatus, setSaveStatus] = useState('Saved');
   const [evSearch, setEvSearch] = useState(''), [evType, setEvType] = useState('All'), [evRel, setEvRel] = useState('All'), [modal, setModal] = useState(null), saveTimer = useRef(null);
+  const [dnsInput, setDnsInput] = useState(''), [dnsLoading, setDnsLoading] = useState(false), [dnsErr, setDnsErr] = useState(''), [dnsResult, setDnsResult] = useState(null);
 
   useEffect(() => { if (incident) { setInv(getInvestigation(incident.id, incident)); setSelNodeId('incident'); } }, [incident?.id]);
 
@@ -51,6 +53,34 @@ export default function InvestigationWorkspace() {
 
   const filteredEv = (inv?.evidence || []).filter((e) => (!evSearch || e.title.toLowerCase().includes(evSearch.toLowerCase()) || e.description.toLowerCase().includes(evSearch.toLowerCase())) && (evType === 'All' || e.type === evType) && (evRel === 'All' || e.relevance === evRel));
   const scans = useMemo(() => getAvailableScanners(), []);
+
+  const extractDomain = (raw) => (!raw ? '' : raw.trim().replace(/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//, '').split('/')[0].split('?')[0].split('#')[0].split(':')[0].trim().toLowerCase());
+  const handleBoundaryCheck = async (e) => {
+    if (e) e.preventDefault();
+    setDnsErr('');
+    const cleaned = extractDomain(dnsInput);
+    if (!cleaned) { setDnsErr('Please enter a domain or URL.'); return; }
+    if (!/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$/i.test(cleaned)) { setDnsErr('Invalid domain format. Enter a valid hostname (e.g. evil.com).'); return; }
+    if (dnsLoading || (dnsResult && dnsResult.domain === cleaned)) return;
+    setDnsLoading(true); setDnsResult(null);
+    const c = new AbortController(), t = setTimeout(() => c.abort(), 8000);
+    try {
+      const res = await fetch(`https://dns.boundarylogiclabs.com/check?name=${encodeURIComponent(cleaned)}`, { signal: c.signal });
+      clearTimeout(t);
+      if (!res.ok) { const b = await res.json().catch(() => null); throw new Error(b?.error || `HTTP ${res.status}`); }
+      const data = await res.json();
+      if (!data || typeof data.blocked !== 'boolean') throw new Error('Inconclusive telemetry returned.');
+      setDnsResult(data);
+    } catch (err) {
+      clearTimeout(t);
+      setDnsErr(err.name === 'AbortError' ? 'Lookup timed out after 8s.' : (err.message || 'Network error contacting BoundaryDNS.'));
+    } finally { setDnsLoading(false); }
+  };
+  const isDnsSaved = Boolean(dnsResult && (inv?.evidence || []).some((e) => e.source?.includes('BoundaryDNS') && e.title?.toLowerCase() === dnsResult.domain?.toLowerCase()));
+  const handleAddDnsEvidence = () => {
+    if (!dnsResult?.domain || isDnsSaved) return;
+    saveEv(makeDnsEv(dnsResult, Boolean(dnsResult.blocked)));
+  };
 
   if (!incident || !inv) return <div className="p-10 text-center text-text-muted space-y-3"><FiAlertCircle size={32} className="text-amber-400 mx-auto" /><p className="text-sm">No Incident Selected.</p><Button variant="primary" size="sm" onClick={() => navigate(ROUTES.INCIDENTS)}>Command Center</Button></div>;
   const checkDone = inv.checklist.filter(Boolean).length;
@@ -91,15 +121,7 @@ export default function InvestigationWorkspace() {
               })}
               {nodes.map((n) => {
                 const isSel = selNodeId === n.id, isC = n.id === 'incident', cfg = NODE_COLS[n.type] || NODE_COLS.evidence, rad = isC ? 25 : 18;
-                return (
-                  <g key={n.id} onClick={() => setSelNodeId(n.id)} className="cursor-pointer">
-                    {isSel && <circle cx={n.x} cy={n.y} r={rad + 6} fill="none" stroke={cfg.stroke} strokeWidth="1.5" strokeDasharray="4 2" opacity="0.8" />}
-                    <circle cx={n.x} cy={n.y} r={rad} fill={cfg.fill} stroke={isSel ? '#ffffff' : cfg.stroke} strokeWidth={isSel ? 2.5 : 1.5} filter={isSel ? 'url(#glow)' : undefined} />
-                    <text x={n.x} y={n.y + 4} textAnchor="middle" fill={cfg.text} fontSize={isC ? '13' : '11'} fontWeight="bold">{cfg.icon}</text>
-                    <text x={n.x} y={n.y + rad + 11} textAnchor="middle" fill="#f8fafc" fontSize="8.5" fontWeight="600">{n.title.length > 20 ? n.title.slice(0, 18) + '…' : n.title}</text>
-                    <text x={n.x} y={n.y + rad + 20} textAnchor="middle" fill="#64748b" fontSize="7" fontFamily="monospace">{n.type.toUpperCase()}</text>
-                  </g>
-                );
+                return (<g key={n.id} onClick={() => setSelNodeId(n.id)} className="cursor-pointer">{isSel && <circle cx={n.x} cy={n.y} r={rad + 6} fill="none" stroke={cfg.stroke} strokeWidth="1.5" strokeDasharray="4 2" opacity="0.8" />}<circle cx={n.x} cy={n.y} r={rad} fill={cfg.fill} stroke={isSel ? '#ffffff' : cfg.stroke} strokeWidth={isSel ? 2.5 : 1.5} filter={isSel ? 'url(#glow)' : undefined} /><text x={n.x} y={n.y + 4} textAnchor="middle" fill={cfg.text} fontSize={isC ? '13' : '11'} fontWeight="bold">{cfg.icon}</text><text x={n.x} y={n.y + rad + 11} textAnchor="middle" fill="#f8fafc" fontSize="8.5" fontWeight="600">{n.title.length > 20 ? n.title.slice(0, 18) + '…' : n.title}</text><text x={n.x} y={n.y + rad + 20} textAnchor="middle" fill="#64748b" fontSize="7" fontFamily="monospace">{n.type.toUpperCase()}</text></g>);
               })}
             </svg>
           </div>
@@ -118,6 +140,30 @@ export default function InvestigationWorkspace() {
           </div>
           {selNode.id !== 'incident' && <div className="pt-2 border-t border-border/60 flex justify-end"><Button variant="danger" size="sm" icon={FiTrash2} onClick={() => setModal({ type: 'del', data: { type: selNode.type === 'finding' ? 'finding' : 'evidence', id: selNode.id, name: selNode.title } })}>Delete Node</Button></div>}
         </div>
+      </div>
+
+      <div className="bg-[#0b101b] border border-border/80 rounded-xl p-3 sm:p-3.5 shadow space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 pb-2">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-accent/15 border border-accent/30 flex items-center justify-center text-accent font-mono text-[10px] font-bold">CTI</div>
+            <div><h3 className="font-display font-bold text-xs uppercase tracking-wider text-text-primary flex items-center gap-1.5">BoundaryDNS Threat Intelligence <span className="font-mono text-[9px] text-accent bg-accent/10 border border-accent/30 px-1.5 py-0.2 rounded">BOUNDARY LOGIC LABS</span></h3><p className="text-[10px] text-text-muted">Query perimeter resolver intelligence for live threat classifications, domain reputation, and feed reasons.</p></div>
+          </div>
+          <span className="text-[9px] font-mono text-text-muted hidden sm:inline">Endpoint: dns.boundarylogiclabs.com/check</span>
+        </div>
+        <form onSubmit={handleBoundaryCheck} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="relative flex-1"><FiSearch size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" /><input type="text" placeholder="Enter domain or URL to evaluate (e.g. evil.com, https://phish.net/login)..." value={dnsInput} onChange={(e) => { setDnsInput(e.target.value); if (dnsErr) setDnsErr(''); }} disabled={dnsLoading} className="w-full bg-[#070b12] border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent outline-none" /></div>
+          <Button type="submit" variant="primary" size="sm" disabled={dnsLoading || !dnsInput.trim()} className="bg-primary hover:bg-primary-hover text-black font-bold shrink-0 min-w-[120px] justify-center">{dnsLoading ? 'Checking...' : 'Check Domain'}</Button>
+        </form>
+        {dnsErr && <div className="p-2 rounded bg-danger/10 border border-danger/30 text-danger text-[11px] flex items-center gap-2"><FiAlertTriangle size={13} className="shrink-0" /><span>{dnsErr}</span></div>}
+        {dnsResult && (
+          <div className="p-2.5 rounded-lg bg-[#070b12] border border-border/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="space-y-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2"><span className="font-mono text-xs font-bold text-text-primary">{dnsResult.domain}</span><span className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${dnsResult.blocked ? 'bg-danger/20 text-danger border-danger/40' : 'bg-primary/20 text-primary border-primary/40'}`}>{dnsResult.blocked ? 'BLOCKED / THREAT DETECTED' : 'ALLOWED / NO ACTIVE BLOCK'}</span><span className="text-[10px] font-mono text-text-muted">Action: <strong className="text-text-secondary font-mono">{dnsResult.action || 'evaluated'}</strong></span>{dnsResult.reason && <span className="text-[10px] font-mono text-text-muted">Reason: <strong className="text-rose-400 font-mono">{dnsResult.reason}</strong></span>}</div>
+              <p className="text-[10px] text-text-muted leading-relaxed">{dnsResult.blocked ? '⚠️ Flagged by BoundaryDNS perimeter intelligence. Active DNS resolution blocked across monitored resolvers.' : 'ℹ️ Not blocked in BoundaryDNS threat feeds at query time. A clean DNS record does not guarantee safety across all attack vectors.'}</p>
+            </div>
+            <div className="shrink-0"><Button type="button" size="sm" variant={isDnsSaved ? 'outline' : 'primary'} disabled={Boolean(isDnsSaved)} onClick={handleAddDnsEvidence} icon={isDnsSaved ? FiCheck : FiPlus} className={isDnsSaved ? 'border-border text-text-muted' : 'bg-accent/20 border-accent/40 text-accent hover:bg-accent/30'}>{isDnsSaved ? 'Saved in Evidence' : 'Add to Evidence'}</Button></div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3.5 items-stretch">

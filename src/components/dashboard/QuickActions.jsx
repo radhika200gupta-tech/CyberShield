@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FiCamera, FiCrosshair, FiLink, FiMaximize, FiKey, FiShield, FiArrowRight } from 'react-icons/fi';
+import { FiCamera, FiCrosshair, FiLink, FiMaximize, FiKey, FiShield, FiArrowRight, FiSearch } from 'react-icons/fi';
 import { ROUTES } from '../../constants/routes';
 
 const ACTIONS = [
@@ -9,6 +9,7 @@ const ACTIONS = [
   { icon: FiMaximize, title: 'QR Security Scanner', description: 'Analyze QR code destinations', path: ROUTES.QR_SCANNER, borderColor: 'border-l-primary', iconColor: 'text-primary' },
   { icon: FiKey, title: 'Password Security Lab', description: 'Check strength & entropy', path: ROUTES.PASSWORD_LAB, borderColor: 'border-l-accent', iconColor: 'text-accent' },
   { icon: FiShield, title: 'Security Command Center', description: 'Monitor overall risk', path: ROUTES.SECURITY_CENTER, borderColor: 'border-l-accent', iconColor: 'text-accent' },
+  { icon: FiSearch, title: 'Investigation Center', description: 'Manage incidents & investigations', path: ROUTES.INCIDENTS, borderColor: 'border-l-primary', iconColor: 'text-primary' },
 ];
 
 export default function QuickActions() {
@@ -25,7 +26,7 @@ export default function QuickActions() {
           <button
             key={action.title}
             onClick={() => navigate(action.path)}
-            className={`flex items-center justify-between p-4 bg-bg-elevated/40 hover:bg-surface border border-border/50 border-l-2 ${action.borderColor} rounded-r-xl rounded-l-sm text-left group transition-all w-full min-w-0`}
+            className={`flex items-center justify-between p-4 bg-bg-elevated/40 hover:bg-surface border border-border/50 border-l-2 ${action.borderColor} rounded-r-xl rounded-l-sm text-left group transition-all w-full min-w-0 cursor-pointer`}
           >
             <div className="flex items-center gap-3 min-w-0 flex-1 mr-2">
               <div className={`p-2 rounded bg-surface/50 border border-border/50 ${action.iconColor} shrink-0`}>
