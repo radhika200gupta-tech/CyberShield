@@ -319,94 +319,106 @@ export function calculateUniqueIndicators(items) {
  */
 export async function fetchThreatIntelligenceFeed({ 
   byteLimit = 65536, 
-  endpoint = '/api/urlhaus-feed/downloads/csv_recent/',
+  endpoint = '/api/urlhaus-feed',
   signal 
 } = {}) {
   const fetchTimestamp = new Date().toISOString();
 
-  try {
-    const response = await fetch(endpoint, {
-      headers: {
-        'Range': `bytes=0-${byteLimit}`
-      },
-      signal
-    });
+  // Try primary endpoint, with automatic subpath fallback if initial attempt returns HTML
+  const endpointsToTry = [endpoint];
+  if (endpoint === '/api/urlhaus-feed') {
+    endpointsToTry.push('/api/urlhaus-feed/downloads/csv_recent/');
+  }
 
-    if (!response.ok && response.status !== 206) {
-      if (response.status === 401 || response.status === 403) {
-        throw new Error(`Feed provider rejected request (HTTP ${response.status} Unauthorized / Forbidden). Check API credentials if required.`);
+  let lastError = null;
+
+  for (const currentEndpoint of endpointsToTry) {
+    try {
+      const response = await fetch(currentEndpoint, {
+        headers: {
+          'Range': `bytes=0-${byteLimit}`
+        },
+        signal
+      });
+
+      if (!response.ok && response.status !== 206) {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error(`Feed provider rejected request (HTTP ${response.status} Unauthorized / Forbidden). Check API credentials if required.`);
+        }
+        if (response.status === 429) {
+          throw new Error('Feed provider rate limit reached (HTTP 429). Please wait before retrying.');
+        }
+        throw new Error(`Feed request returned HTTP status ${response.status} (${response.statusText || 'Error'})`);
       }
-      if (response.status === 429) {
-        throw new Error('Feed provider rate limit reached (HTTP 429). Please wait before retrying.');
+
+      const contentType = response.headers.get('content-type') || '';
+      const csvText = await response.text();
+
+      const { 
+        providerLastUpdated, 
+        records: rawRecords, 
+        isHtmlFallback, 
+        isRecognizedFormat 
+      } = parseUrlhausCsv(csvText);
+
+      if (isHtmlFallback || contentType.includes('text/html')) {
+        lastError = new Error(
+          'Received HTML application shell instead of threat feed. ' +
+          'Ensure the reverse proxy rewrite or API handler for "/api/urlhaus-feed" is active in server configuration (vercel.json / api/urlhaus-feed.js).'
+        );
+        continue;
       }
-      throw new Error(`Feed request returned HTTP status ${response.status} (${response.statusText || 'Error'})`);
-    }
 
-    const contentType = response.headers.get('content-type') || '';
-    const csvText = await response.text();
+      if (!isRecognizedFormat && rawRecords.length === 0) {
+        throw new Error('Received empty or unrecognized response from threat feed provider.');
+      }
 
-    const { 
-      providerLastUpdated, 
-      records: rawRecords, 
-      isHtmlFallback, 
-      isRecognizedFormat 
-    } = parseUrlhausCsv(csvText);
+      // Genuinely empty feed from provider
+      if (rawRecords.length === 0) {
+        return {
+          success: true,
+          data: [],
+          providerLastUpdated,
+          fetchedAt: fetchTimestamp,
+          sourceName: 'abuse.ch URLhaus (Recent Feeds)',
+          isProxy: true,
+          isGenuinelyEmpty: true
+        };
+      }
 
-    if (isHtmlFallback || contentType.includes('text/html')) {
-      throw new Error(
-        'Received HTML application shell instead of threat feed. ' +
-        'Ensure the reverse proxy rewrite for "/api/urlhaus-feed" is active in server configuration (vercel.json / vite.config.js).'
-      );
-    }
+      const normalizedData = normalizeThreatRecords(rawRecords, fetchTimestamp);
 
-    if (!isRecognizedFormat && rawRecords.length === 0) {
-      throw new Error('Received empty or unrecognized response from threat feed provider.');
-    }
-
-    // Genuinely empty feed from provider
-    if (rawRecords.length === 0) {
       return {
         success: true,
-        data: [],
+        data: normalizedData,
         providerLastUpdated,
         fetchedAt: fetchTimestamp,
         sourceName: 'abuse.ch URLhaus (Recent Feeds)',
         isProxy: true,
-        isGenuinelyEmpty: true
+        isGenuinelyEmpty: false
       };
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        throw err;
+      }
+      lastError = err;
     }
-
-    const normalizedData = normalizeThreatRecords(rawRecords, fetchTimestamp);
-
-    return {
-      success: true,
-      data: normalizedData,
-      providerLastUpdated,
-      fetchedAt: fetchTimestamp,
-      sourceName: 'abuse.ch URLhaus (Recent Feeds)',
-      isProxy: true,
-      isGenuinelyEmpty: false
-    };
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      throw err;
-    }
-
-    let message = err.message || 'Failed to connect to abuse.ch URLhaus feed.';
-    if (err.name === 'TypeError' && message.toLowerCase().includes('failed to fetch')) {
-      message = 'Network error or CORS restriction connecting to threat feed provider. A proxy is required to reach URLhaus from browser clients.';
-    }
-
-    return {
-      success: false,
-      data: [],
-      providerLastUpdated: null,
-      fetchedAt: fetchTimestamp,
-      sourceName: 'abuse.ch URLhaus',
-      isProxy: true,
-      error: message
-    };
   }
+
+  let message = lastError?.message || 'Failed to connect to abuse.ch URLhaus feed.';
+  if (lastError?.name === 'TypeError' && message.toLowerCase().includes('failed to fetch')) {
+    message = 'Network error or CORS restriction connecting to threat feed provider. A proxy is required to reach URLhaus from browser clients.';
+  }
+
+  return {
+    success: false,
+    data: [],
+    providerLastUpdated: null,
+    fetchedAt: fetchTimestamp,
+    sourceName: 'abuse.ch URLhaus',
+    isProxy: true,
+    error: message
+  };
 }
 
 /**

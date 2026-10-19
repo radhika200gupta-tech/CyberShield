@@ -2,14 +2,14 @@
   "rewrites": [
     {
       "source": "/api/urlhaus-feed/:path*",
-      "destination": "https://urlhaus.abuse.ch/:path*"
+      "destination": "/api/urlhaus-feed"
     },
     {
-      "source": "/api/urlhaus-api/:path*",
-      "destination": "https://urlhaus-api.abuse.ch/:path*"
+      "source": "/api/urlhaus-feed",
+      "destination": "/api/urlhaus-feed"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
