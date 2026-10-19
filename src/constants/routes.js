@@ -4,6 +4,10 @@ export const ROUTES = {
   SIGNUP: '/signup',
   FORGOT_PASSWORD: '/forgot-password',
   DASHBOARD: '/app/dashboard',
+  INCIDENTS: '/app/incidents',
+  INVESTIGATION_CENTER: '/app/incidents',
+  INVESTIGATE: '/app/incidents/investigate',
+  INCIDENT_REPORT: '/app/incidents/report',
   SCREENSHOT_ANALYZER: '/app/screenshot-analyzer',
   VISUAL_PHISHING: '/app/visual-phishing',
   PHISHING_SIMULATOR: '/app/phishing-simulator',
@@ -38,6 +42,12 @@ export const SIDEBAR_SECTIONS = [
     category: 'OVERVIEW',
     links: [
       { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+    ],
+  },
+  {
+    category: 'INCIDENT INVESTIGATION & RESPONSE',
+    links: [
+      { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
     ],
   },
   {
@@ -93,6 +103,7 @@ export const SIDEBAR_SECTIONS = [
 
 export const SIDEBAR_LINKS = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'grid' },
+  { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
   { label: 'CyberRescue Assistant', path: ROUTES.CYBER_RESCUE, icon: 'lifeBuoy' },
   { label: 'Screenshot Phishing Analyzer', path: ROUTES.SCREENSHOT_ANALYZER, icon: 'camera' },
   { label: 'Visual Phishing Detection', path: ROUTES.VISUAL_PHISHING, icon: 'eye' },
