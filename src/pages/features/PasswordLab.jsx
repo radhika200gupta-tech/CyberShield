@@ -1,12 +1,25 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FiKey, FiEye, FiEyeOff, FiCheck, FiX, FiInfo, FiShield, FiClock, FiAlertTriangle, FiLock, FiCpu } from 'react-icons/fi';
 import PageHeader from "../../components/common/PageHeader";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
+import { consumeTransferredPassword } from "../../services/imageHandoffService";
+
 export default function PasswordAnalyzer() {
-  const [password, setPassword] = useState("");
+  const location = useLocation();
+  const [password, setPassword] = useState(() => {
+    return consumeTransferredPassword() || location.state?.password || "";
+  });
   const [show, setShow] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const transferred = consumeTransferredPassword() || location.state?.password;
+    if (transferred && typeof transferred === 'string') {
+      setPassword(transferred);
+    }
+  }, [location.state]);
 
   const commonPasswords = useMemo(
     () => [

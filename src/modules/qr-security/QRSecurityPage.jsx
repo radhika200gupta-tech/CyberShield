@@ -14,6 +14,7 @@ export default function QRSecurityPage() {
       pageUnmountTimeout = null;
     }
 
+    if (!navigator.mediaDevices?.getUserMedia) return;
     const originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
     
     navigator.mediaDevices.getUserMedia = async (constraints) => {

@@ -1,11 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiLink, FiSearch } from 'react-icons/fi';
 import { classNames } from '../utils/classNames';
 
-export default function ScanInput({ onAnalyze, isScanning }) {
-  const [value, setValue] = useState('');
+export default function ScanInput({ onAnalyze, isScanning, initialValue = '' }) {
+  const [value, setValue] = useState(initialValue);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+    }
+  }, [initialValue]);
 
   function handleSubmit(e) {
     e.preventDefault();
