@@ -19,7 +19,7 @@ const SEEDED = [
 ];
 
 export const getIncidents = () => { try { const r = localStorage.getItem(STORAGE_KEY); if (!r) { localStorage.setItem(STORAGE_KEY, JSON.stringify(SEEDED)); return SEEDED; } return JSON.parse(r) || []; } catch { return []; } };
-export const saveIncidents = (l) => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); } catch {} };
+export const saveIncidents = (l) => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); } catch { /* ignore */ } };
 
 export const saveQrScan = (res) => {
   try {
@@ -28,7 +28,7 @@ export const saveQrScan = (res) => {
     const verdict = res?.riskLevel?.label || res?.verdict || (res?.riskScore != null ? (res.riskScore <= 39 ? 'High Risk' : res.riskScore <= 59 ? 'Suspicious' : res.riskScore <= 79 ? 'Moderate Risk' : 'Low Risk') : 'Analyzed');
     const score = res?.riskScore ?? res?.score ?? null, levelKey = (res?.riskLevel?.key || res?.level || (score != null ? (score <= 39 ? 'DANGEROUS' : score <= 59 ? 'SUSPICIOUS' : score <= 79 ? 'CAUTION' : 'SAFE') : 'SAFE')).toLowerCase();
     const entry = { id: `qr-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, target, verdict, score, level: levelKey, timestamp: res?.timestamp || new Date().toISOString() };
-    let cur = []; try { const curRaw = localStorage.getItem('cybershield_qr_scan_history'); if (curRaw) { const parsed = JSON.parse(curRaw); if (Array.isArray(parsed)) cur = parsed; } } catch {}
+    let cur = []; try { const curRaw = localStorage.getItem('cybershield_qr_scan_history'); if (curRaw) { const parsed = JSON.parse(curRaw); if (Array.isArray(parsed)) cur = parsed; } } catch { /* ignore */ }
     localStorage.setItem('cybershield_qr_scan_history', JSON.stringify([entry, ...cur.filter((e) => e && typeof e === 'object' && e.target !== target && e.id !== entry.id)].slice(0, 15)));
     window.dispatchEvent(new Event('storage')); return entry;
   } catch { return null; }
@@ -57,10 +57,10 @@ export const getAvailableScanners = () => {
         });
       }
     }
-  } catch {}
-  try { const urlHist = loadUrlHistory(); if (Array.isArray(urlHist)) { urlHist.filter((u) => u && typeof u === 'object').forEach((u) => scans.push({ id: u.id || `url-${Date.now()}`, sourceType: 'Smart URL Scanner', target: u.url || 'URL destination', verdict: u.verdict || (u.score >= 50 ? 'Suspicious' : 'Clean'), riskScore: u.score, riskLevel: u.score >= 70 ? 'High' : u.score >= 35 ? 'Medium' : 'Low', timestamp: u.timestamp || new Date().toISOString(), suggestedCategory: 'Suspicious URL' })); } } catch {}
-  try { const vpHist = visualPhishingService.getHistory(); if (Array.isArray(vpHist)) { vpHist.filter((v) => v && typeof v === 'object').forEach((v) => scans.push({ id: v.id || `vp-${Date.now()}`, sourceType: 'Screenshot Phishing Analyzer', target: v.fileName || 'Screenshot', verdict: v.topIndicator || 'Analyzed', riskScore: v.score, riskLevel: v.score >= 60 ? 'High' : 'Medium', timestamp: v.timestamp || new Date().toISOString(), suggestedCategory: 'Phishing Attempt' })); } } catch {}
-  try { const rawCmd = localStorage.getItem('commandHistory'); if (rawCmd) { const cmdList = JSON.parse(rawCmd); if (Array.isArray(cmdList)) { cmdList.filter((c) => c && typeof c === 'object').forEach((c, idx) => scans.push({ id: `cmd-${idx}`, sourceType: 'Security Command Center', target: c.command || 'Command Execution', verdict: c.status || c.risk || 'Analyzed', riskScore: c.risk === 'High' ? 85 : 45, riskLevel: c.risk === 'High' ? 'High' : 'Medium', timestamp: c.timestamp || new Date().toISOString(), suggestedCategory: 'Account Compromise' })); } } } catch {}
+  } catch { /* ignore */ }
+  try { const urlHist = loadUrlHistory(); if (Array.isArray(urlHist)) { urlHist.filter((u) => u && typeof u === 'object').forEach((u) => scans.push({ id: u.id || `url-${Date.now()}`, sourceType: 'Smart URL Scanner', target: u.url || 'URL destination', verdict: u.verdict || (u.score >= 50 ? 'Suspicious' : 'Clean'), riskScore: u.score, riskLevel: u.score >= 70 ? 'High' : u.score >= 35 ? 'Medium' : 'Low', timestamp: u.timestamp || new Date().toISOString(), suggestedCategory: 'Suspicious URL' })); } } catch { /* ignore */ }
+  try { const vpHist = visualPhishingService.getHistory(); if (Array.isArray(vpHist)) { vpHist.filter((v) => v && typeof v === 'object').forEach((v) => scans.push({ id: v.id || `vp-${Date.now()}`, sourceType: 'Screenshot Phishing Analyzer', target: v.fileName || 'Screenshot', verdict: v.topIndicator || 'Analyzed', riskScore: v.score, riskLevel: v.score >= 60 ? 'High' : 'Medium', timestamp: v.timestamp || new Date().toISOString(), suggestedCategory: 'Phishing Attempt' })); } } catch { /* ignore */ }
+  try { const rawCmd = localStorage.getItem('commandHistory'); if (rawCmd) { const cmdList = JSON.parse(rawCmd); if (Array.isArray(cmdList)) { cmdList.filter((c) => c && typeof c === 'object').forEach((c, idx) => scans.push({ id: `cmd-${idx}`, sourceType: 'Security Command Center', target: c.command || 'Command Execution', verdict: c.status || c.risk || 'Analyzed', riskScore: c.risk === 'High' ? 85 : 45, riskLevel: c.risk === 'High' ? 'High' : 'Medium', timestamp: c.timestamp || new Date().toISOString(), suggestedCategory: 'Account Compromise' })); } } } catch { /* ignore */ }
   return scans;
 };
 
@@ -84,7 +84,7 @@ export const getInvestigation = (incId, inc) => {
 };
 
 export const saveInvestigation = (incId, data) => {
-  try { const all = JSON.parse(localStorage.getItem(INVESTIGATION_KEY) || '{}'); all[incId] = data; localStorage.setItem(INVESTIGATION_KEY, JSON.stringify(all)); } catch {}
+  try { const all = JSON.parse(localStorage.getItem(INVESTIGATION_KEY) || '{}'); all[incId] = data; localStorage.setItem(INVESTIGATION_KEY, JSON.stringify(all)); } catch { /* ignore */ }
 };
 
 export const getReport = (incId, inc, inv) => {
@@ -122,5 +122,5 @@ export const saveReport = (incId, data) => {
     all[incId] = { ...data, lastUpdated: new Date().toISOString() };
     localStorage.setItem(REPORT_KEY, JSON.stringify(all));
     window.dispatchEvent(new Event('storage'));
-  } catch {}
+  } catch { /* ignore */ }
 };

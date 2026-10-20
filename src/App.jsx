@@ -17,9 +17,14 @@ import Settings from './pages/Settings';
 import ScreenshotAnalyzer from './pages/features/ScreenshotAnalyzer';
 import PhishingSimulator from './pages/features/PhishingSimulator';
 import PhishingChallenge from './modules/phishing-challenge/PhishingChallenge';
-import PasswordLab from './pages/features/PasswordLab';
+import PasswordSecurity from './pages/PasswordSecurity';
+import CyberRescue from './pages/features/CyberRescue';
 import SecurityCenter from './pages/features/SecurityCenter';
 import ComingSoonFeature from './pages/features/ComingSoonFeature';
+import VisualPhishingLab from './pages/features/VisualPhishingLab';
+import EmailForensicsLab from './pages/features/EmailForensicsLab';
+import EmailAccountDiscovery from './pages/features/EmailAccountDiscovery';
+import WebcamSecurityLab from './pages/features/WebcamSecurityLab';
 
 // Teammate Web Security pages
 import URLScanner from './components/URLScanner';
@@ -83,13 +88,45 @@ function App() {
                   <Route path="/web-security/challenge" element={<FakeWebsiteChallenge />} />
                   <Route
                     path={ROUTES.PASSWORD_LAB}
-                    element={<PasswordLab />}
+                    element={<PasswordSecurity />}
+                  />
+                  <Route
+                    path={ROUTES.PASSWORD_SECURITY}
+                    element={<PasswordSecurity />}
                   />
                   <Route
                     path={ROUTES.SECURITY_CENTER}
                     element={<SecurityCenter />}
                   />
+                  <Route
+                    path={ROUTES.CYBER_RESCUE}
+                    element={<CyberRescue />}
+                  />
 
+                  <Route
+                    path={ROUTES.VISUAL_PHISHING}
+                    element={<VisualPhishingLab />}
+                  />
+                  <Route
+                    path={ROUTES.EMAIL_FORENSICS}
+                    element={<EmailForensicsLab />}
+                  />
+                  <Route
+                    path={ROUTES.EMAIL_DISCOVERY}
+                    element={<EmailAccountDiscovery />}
+                  />
+                  <Route
+                    path={ROUTES.WEBCAM_SECURITY}
+                    element={<WebcamSecurityLab />}
+                  />
+                  <Route
+                    path="/app/coming-soon/visual-phishing"
+                    element={<Navigate to={ROUTES.VISUAL_PHISHING} replace />}
+                  />
+                  <Route
+                    path="/app/coming-soon/webcam-security"
+                    element={<Navigate to={ROUTES.WEBCAM_SECURITY} replace />}
+                  />
                   <Route
                     path="/app/coming-soon/*"
                     element={<ComingSoonFeature />}

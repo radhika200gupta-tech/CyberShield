@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FiCamera, FiVideoOff, FiCrosshair, FiMaximize, FiShield, FiList, FiClock, FiCheckCircle, FiAlertTriangle, FiTrash2 } from 'react-icons/fi';
 import Button from '../../components/common/Button';
 import CameraViewport from '../../components/security/CameraViewport';
@@ -18,8 +18,14 @@ export default function WebcamSecurityLabPreview() {
     { id: '1', time: new Date().toLocaleTimeString(), msg: 'Vision Lab initialized.', type: 'info' }
   ]);
   const [snapshot, setSnapshot] = useState(null);
+  const [auditResults, setAuditResults] = useState(null);
+  const [activeAnalysisTab, setActiveAnalysisTab] = useState('audit');
+  const lastMotionAlertRef = useRef(0);
 
   useEffect(() => {
+    // Run initial passive privacy audit on mount
+    visionService.runPrivacyAudit().then(setAuditResults).catch(console.error);
+
     // Cleanup on unmount
     return () => {
       visionService.stopCamera();
@@ -38,17 +44,25 @@ export default function WebcamSecurityLabPreview() {
         setTelemetry(newTelemetry);
         setTelemetryHistory(prev => [...prev, { time: Date.now(), motion: newTelemetry.motion, stability: newTelemetry.stability }].slice(-60));
         
-        // Generate mock events based on real heuristics
-        if (newTelemetry.motion > 40 && Math.random() > 0.95) {
-          addTimelineEvent('Elevated frame difference detected.', 'warning');
+        // Deterministic elevated motion alert (throttled to at most once per 4 seconds)
+        const now = Date.now();
+        if (newTelemetry.motion > 50 && now - lastMotionAlertRef.current > 4000) {
+          lastMotionAlertRef.current = now;
+          addTimelineEvent(`Elevated motion detected (${Math.round(newTelemetry.motion)}% frame delta).`, 'warning');
         }
       });
       setIsCameraActive(true);
       addTimelineEvent('Camera stream established.', 'success');
-    } catch (err) {
+      
+      // Refresh audit to reflect active stream state
+      visionService.runPrivacyAudit().then(setAuditResults).catch(console.error);
+    } catch {
       setIsCameraActive(false);
       setErrorState('CAMERA ACCESS BLOCKED. CyberShield requires browser camera permission to initialize the vision lab.');
       addTimelineEvent('Camera access denied or failed.', 'error');
+      
+      // Refresh audit to reflect blocked state
+      visionService.runPrivacyAudit().then(setAuditResults).catch(console.error);
     }
   };
 
@@ -58,6 +72,9 @@ export default function WebcamSecurityLabPreview() {
     setTelemetry(null);
     setTelemetryHistory([]);
     addTimelineEvent('Camera stream stopped.', 'info');
+    
+    // Refresh audit to reflect offline stream state
+    visionService.runPrivacyAudit().then(setAuditResults).catch(console.error);
   };
 
   const handleCapture = () => {
@@ -72,14 +89,26 @@ export default function WebcamSecurityLabPreview() {
     }
   };
 
-  const handleRunScan = () => {
+  const handleRunScan = async () => {
     setIsScanning(true);
-    addTimelineEvent('Initiating detailed security scan...', 'info');
+    setActiveAnalysisTab('audit');
+    addTimelineEvent('Initiating real-time browser privacy audit...', 'info');
     
-    setTimeout(() => {
+    try {
+      // Step through audit checks with realistic feedback
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const audit = await visionService.runPrivacyAudit();
+      setAuditResults(audit);
+      addTimelineEvent(
+        `Privacy audit complete: ${audit.counts.pass} passed, ${audit.counts.warning} warning(s).`,
+        audit.counts.warning > 0 ? 'warning' : 'success'
+      );
+    } catch (err) {
+      console.error('Audit failed:', err);
+      addTimelineEvent('Privacy audit failed to query browser state.', 'error');
+    } finally {
       setIsScanning(false);
-      addTimelineEvent('Scan complete. Environmental conditions evaluated.', 'success');
-    }, 4000);
+    }
   };
 
   return (
@@ -197,9 +226,18 @@ export default function WebcamSecurityLabPreview() {
            </div>
         </div>
 
-        {/* RIGHT: Vision Analysis Panel */}
-        <div className="w-full lg:w-[380px] min-w-0 max-w-full p-4 sm:p-6 bg-surface/50">
-           <VisionAnalysisPanel telemetry={telemetry} telemetryHistory={telemetryHistory} />
+        {/* RIGHT: Vision Analysis & Privacy Audit Panel */}
+        <div className="w-full lg:w-[400px] min-w-0 max-w-full p-4 sm:p-6 bg-surface/50">
+           <VisionAnalysisPanel 
+             telemetry={telemetry} 
+             telemetryHistory={telemetryHistory} 
+             auditResults={auditResults}
+             isScanning={isScanning}
+             onRunScan={handleRunScan}
+             activeTab={activeAnalysisTab}
+             onTabChange={setActiveAnalysisTab}
+             isCameraActive={isCameraActive}
+           />
         </div>
       </div>
     </div>

@@ -18,15 +18,15 @@ export default function CameraViewport({ videoRef, isScanning, isCameraActive })
           
           {/* Top HUD */}
           <div className="flex justify-between items-start">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-mono font-bold text-accent tracking-widest bg-black/50 px-2 py-0.5 rounded">CAMERA: ACTIVE</span>
-              <span className="text-[9px] font-mono text-white/70 bg-black/50 px-2 py-0.5 rounded w-max">1280 × 720</span>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs font-mono font-bold text-accent tracking-wider bg-black/70 px-2.5 py-1 rounded">CAMERA: ACTIVE</span>
+              <span className="text-xs font-mono text-white/90 bg-black/70 px-2.5 py-1 rounded w-max">1280 × 720</span>
             </div>
-            <div className="flex flex-col gap-1 items-end">
-              <span className="text-[10px] font-mono font-bold text-success tracking-widest bg-black/50 px-2 py-0.5 rounded flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" /> VISION ENGINE
+            <div className="flex flex-col gap-1.5 items-end">
+              <span className="text-xs font-mono font-bold text-success tracking-wider bg-black/70 px-2.5 py-1 rounded flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-success animate-pulse" /> VISION ENGINE
               </span>
-              <span className="text-[9px] font-mono text-white/70 bg-black/50 px-2 py-0.5 rounded w-max">LOCAL PROCESSING</span>
+              <span className="text-xs font-mono text-white/90 bg-black/70 px-2.5 py-1 rounded w-max">LOCAL PROCESSING</span>
             </div>
           </div>
 
@@ -47,10 +47,10 @@ export default function CameraViewport({ videoRef, isScanning, isCameraActive })
 
           {/* Bottom HUD */}
           <div className="flex justify-between items-end">
-             <div className="text-[8px] font-mono text-white/50 bg-black/50 px-1.5 py-0.5 rounded">
+             <div className="text-xs font-mono text-white/80 bg-black/70 px-2.5 py-1 rounded">
                NO FRAME DATA UPLOADED
              </div>
-             <div className="text-[9px] font-mono font-semibold text-accent bg-black/50 px-2 py-0.5 rounded">
+             <div className="text-xs font-mono font-semibold text-accent bg-black/70 px-2.5 py-1 rounded">
                MODE: {isScanning ? 'SCANNING' : 'MONITORING'}
              </div>
           </div>
@@ -68,9 +68,9 @@ export default function CameraViewport({ videoRef, isScanning, isCameraActive })
 
       {/* Inactive State */}
       {!isCameraActive && (
-        <div className="absolute flex flex-col items-center justify-center text-text-muted">
-           <span className="text-sm font-mono tracking-widest mb-2">CAMERA OFFLINE</span>
-           <span className="text-xs">Click "Start Camera" to initialize vision engine</span>
+        <div className="absolute flex flex-col items-center justify-center text-text-muted text-center p-4">
+           <span className="text-base font-mono font-semibold tracking-wider text-text-secondary mb-2">CAMERA OFFLINE</span>
+           <span className="text-sm text-text-muted">Click &quot;Start Camera&quot; to initialize vision engine</span>
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ import ScanStatus from './ScanStatus';
 export default function ScannerViewport({ enabled = true, paused = false, onDetect, onError }) {
 
   function handleScan(detectedCodes) {
+    if (paused || !enabled) return;
     if (detectedCodes && detectedCodes.length > 0) {
       const text = detectedCodes[0]?.rawValue;
       if (text) {

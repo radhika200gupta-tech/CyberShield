@@ -28,11 +28,27 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
   const [manual, setManual] = useState({ title: '', category: 'Malicious QR', severity: 'High', desc: '', asset: '' });
   const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [selectedSample, setSelectedSample] = useState(SAMPLE_CASES[0]), [storageTick, setStorageTick] = useState(0);
 
-  useEffect(() => { if (isOpen) { setFlow(initialOption); setSelectedScan(null); setScanReview(null); setErr(''); } }, [isOpen, initialOption]);
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        setFlow(initialOption);
+        setSelectedScan(null);
+        setScanReview(null);
+        setErr('');
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, initialOption]);
   useEffect(() => { const h = () => setStorageTick((t) => t + 1); window.addEventListener('storage', h); return () => window.removeEventListener('storage', h); }, []);
 
-  const scans = useMemo(() => (isOpen ? getAvailableScanners() : []), [isOpen, flow, storageTick]);
-  const existingIncidents = useMemo(() => (isOpen ? getIncidents() : []), [isOpen, storageTick]);
+  const scans = useMemo(() => {
+    void storageTick;
+    return isOpen ? getAvailableScanners() : [];
+  }, [isOpen, storageTick]);
+  const existingIncidents = useMemo(() => {
+    void storageTick;
+    return isOpen ? getIncidents() : [];
+  }, [isOpen, storageTick]);
 
   const selectScanForReview = (sc) => {
     setSelectedScan(sc);
@@ -153,6 +169,10 @@ export function ViewModal({ incident, onClose, onEdit }) {
 
 export function EditModal({ incident, onClose, onSave }) {
   if (!incident) return null;
+  return <EditModalForm incident={incident} onClose={onClose} onSave={onSave} />;
+}
+
+function EditModalForm({ incident, onClose, onSave }) {
   const [data, setData] = useState({ title: incident.title, category: incident.category, severity: incident.severity, status: incident.status, desc: incident.description, asset: incident.affectedAsset || '' });
   return (
     <Modal open={Boolean(incident)} onClose={onClose} max="max-w-md">

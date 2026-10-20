@@ -93,9 +93,10 @@ export const faqs = [
 ];
 
 export const comingSoon = [
-  { title: 'Visual Threat Intelligence', icon: 'eye', description: 'Advanced computer vision models to detect deceptive visual elements.', path: '/app/coming-soon/visual-phishing' },
+  { title: 'Visual Threat Intelligence', icon: 'eye', description: 'Advanced computer vision models to detect deceptive visual elements.', path: ROUTES.VISUAL_PHISHING },
   { title: 'Live Cyber Threat Map', icon: 'map', description: 'Global real-time visualization of intercepted attacks and origin points.', path: '/app/coming-soon/threat-map' },
   { title: 'AI Security Copilot', icon: 'cpu', description: 'Conversational assistant for automated threat response and triage.', path: '/app/coming-soon/ai-copilot' },
   { title: 'Real-Time Threat Intelligence', icon: 'zap', description: 'Live streaming feeds from global honeypots and threat databases.', path: '/app/coming-soon/threat-intel' },
-  { title: 'Webcam Security Lab', icon: 'camera', description: 'Deep analysis of webcam hijacking indicators and local privacy risks.', path: '/app/coming-soon/webcam-security' },
+  { title: 'Webcam Security Lab', icon: 'camera', description: 'Deep analysis of webcam hijacking indicators and local privacy risks.', path: ROUTES.WEBCAM_SECURITY },
 ];
+

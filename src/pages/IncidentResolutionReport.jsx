@@ -19,14 +19,22 @@ export default function IncidentResolutionReport() {
   const summaryRef = useRef(null), conclusionRef = useRef(null), rcaRef = useRef(null), previewRef = useRef(null);
 
   useEffect(() => {
-    if (incident) { const curInv = getInvestigation(incident.id, incident); setInv(curInv); setRep(getReport(incident.id, incident, curInv)); setErrors({}); }
-  }, [incident?.id]);
+    if (incident) {
+      const timer = setTimeout(() => {
+        const curInv = getInvestigation(incident.id, incident);
+        setInv(curInv);
+        setRep(getReport(incident.id, incident, curInv));
+        setErrors({});
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [incident]);
 
   const updateRep = useCallback((fn) => setRep((prev) => {
     const next = typeof fn === 'function' ? fn(prev) : { ...prev, ...fn };
     if (incident?.id) saveReport(incident.id, next);
     return next;
-  }), [incident?.id]);
+  }), [incident]);
 
   const handleSaveDraft = () => { if (incident && rep) { saveReport(incident.id, rep); showToast(`Draft for ${incident.id} saved securely.`, 'success'); } };
   const validateReport = () => {
@@ -59,7 +67,7 @@ export default function IncidentResolutionReport() {
               <span className="px-2 py-0.2 rounded font-mono text-[9px] font-bold text-danger bg-danger/10 border border-danger/30 uppercase tracking-widest">CONFIDENTIAL</span>
             </div>
             <h1 className="font-display font-bold text-base text-text-primary truncate max-w-xl mt-0.5">{incident.title}</h1>
-            <p className="text-[10px] text-text-muted font-mono mt-0.5">Detected: {new Date(incident.createdAt).toLocaleDateString()} · Lead: {rep.preparedBy} · Updated: {new Date(rep.lastUpdated || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+            <p className="text-[10px] text-text-muted font-mono mt-0.5">Detected: {new Date(incident.createdAt).toLocaleDateString()} · Lead: {rep.preparedBy} · Updated: {new Date(rep.lastUpdated || incident.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 shrink-0">

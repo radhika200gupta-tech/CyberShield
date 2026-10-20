@@ -16,7 +16,15 @@ export default function InvestigationWorkspace() {
   const [evSearch, setEvSearch] = useState(''), [evType, setEvType] = useState('All'), [evRel, setEvRel] = useState('All'), [modal, setModal] = useState(null), saveTimer = useRef(null);
   const [dnsInput, setDnsInput] = useState(''), [dnsLoading, setDnsLoading] = useState(false), [dnsErr, setDnsErr] = useState(''), [dnsResult, setDnsResult] = useState(null);
 
-  useEffect(() => { if (incident) { setInv(getInvestigation(incident.id, incident)); setSelNodeId('incident'); } }, [incident?.id]);
+  useEffect(() => {
+    if (incident) {
+      const timer = setTimeout(() => {
+        setInv(getInvestigation(incident.id, incident));
+        setSelNodeId('incident');
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [incident]);
 
   const updateInv = (fn) => setInv((prev) => {
     const next = typeof fn === 'function' ? fn(prev) : { ...prev, ...fn };

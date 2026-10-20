@@ -1,12 +1,50 @@
-import { useState, useMemo } from "react";
-import { FiKey, FiEye, FiEyeOff, FiCheck, FiX, FiInfo, FiShield, FiClock, FiAlertTriangle, FiLock, FiCpu } from 'react-icons/fi';
-import PageHeader from "../../components/common/PageHeader";
-import Card from "../../components/common/Card";
-import Button from "../../components/common/Button";
-export default function PasswordAnalyzer() {
-  const [password, setPassword] = useState("");
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import {
+  FiKey,
+  FiClock,
+  FiLock,
+  FiAlertTriangle,
+  FiSearch,
+  FiCheckCircle,
+  FiAlertOctagon,
+} from 'react-icons/fi';
+import PageHeader from "../components/common/PageHeader";
+import Button from "../components/common/Button";
+import { estimateCrackTime } from "../utils/passwordCrackingEstimator";
+import { consumeTransferredPassword } from "../services/imageHandoffService";
+
+// Native Web Crypto API to calculate SHA-1 hash locally
+async function getSha1Hash(text) {
+  const msgUint8 = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+export default function PasswordSecurity() {
+  const location = useLocation();
+  const [password, setPassword] = useState(() => {
+    return consumeTransferredPassword() || location.state?.password || "";
+  });
   const [show, setShow] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Have I Been Pwned API State
+  const [checkingBreach, setCheckingBreach] = useState(false);
+  const [breachResult, setBreachResult] = useState(null); // { checked, count, isPwned, error }
+
+  // Preserve AI Security Copilot handoff when arriving via navigation state
+  useEffect(() => {
+    const transferred = consumeTransferredPassword() || location.state?.password;
+    if (transferred && typeof transferred === 'string') {
+      const timer = setTimeout(() => {
+        setPassword(transferred);
+        setBreachResult(null);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
 
   const commonPasswords = useMemo(
     () => [
@@ -63,12 +101,16 @@ export default function PasswordAnalyzer() {
       }
     }
 
+    // Local approximate cracking estimate
+    const crackEstimate = estimateCrackTime(password, isCommon);
+
     return {
       checks,
       score,
       strength,
       risk,
       isCommon,
+      crackEstimate,
       upper: (password.match(/[A-Z]/g) || []).length,
       lower: (password.match(/[a-z]/g) || []).length,
       numbers: (password.match(/[0-9]/g) || []).length,
@@ -85,6 +127,7 @@ export default function PasswordAnalyzer() {
     }
     setPassword(newPassword);
     setCopied(false);
+    setBreachResult(null);
   };
 
   const copyPassword = async () => {
@@ -102,6 +145,55 @@ export default function PasswordAnalyzer() {
       document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+    }
+  };
+
+  // Have I Been Pwned (HIBP) k-Anonymity API check
+  const checkPwnedPassword = async () => {
+    if (!password) {
+      setBreachResult({ error: "Please enter a password first." });
+      return;
+    }
+
+    setCheckingBreach(true);
+    setBreachResult(null);
+
+    try {
+      // 1. Calculate SHA-1 locally in browser
+      const fullHash = await getSha1Hash(password);
+      const prefix = fullHash.substring(0, 5);
+      const suffix = fullHash.substring(5);
+
+      // 2. Fetch from HIBP API (only sends first 5 characters of hash)
+      const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+      if (!res.ok) {
+        throw new Error(`Service returned HTTP ${res.status}`);
+      }
+
+      const text = await res.text();
+      const lines = text.split('\n');
+
+      let breachCount = 0;
+      for (const line of lines) {
+        const [hashSuffix, countStr] = line.trim().split(':');
+        if (hashSuffix === suffix) {
+          breachCount = parseInt(countStr, 10);
+          break;
+        }
+      }
+
+      setBreachResult({
+        checked: true,
+        count: breachCount,
+        isPwned: breachCount > 0,
+      });
+    } catch {
+      setBreachResult({
+        checked: false,
+        error: "Unable to reach the breach database. Please verify your internet connection.",
+      });
+    } finally {
+      setCheckingBreach(false);
     }
   };
 
@@ -128,22 +220,29 @@ export default function PasswordAnalyzer() {
     { label: "No spaces", passed: analysis.checks.spaces },
   ];
 
+  const { crackEstimate } = analysis;
+
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto w-full min-w-0 pb-12 animate-fade-in">
       <div className="w-full space-y-6">
         <PageHeader 
           title="Password Security Lab"
-          description="Evaluate password strength and identify security risks."
-          icon={<FiKey />}
+          description="Evaluate password strength, inspect approximate cracking time, and check public breach records using Have I Been Pwned."
+          icon={<FiKey className="text-primary" />}
         />
 
         {/* Password Input Card */}
         <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-text-primary">
-            Test Your Password
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <h2 className="text-lg font-semibold text-text-primary">
+              Test Your Password
+            </h2>
+            <span className="text-[11px] font-mono text-accent bg-accent/10 border border-accent/20 px-2.5 py-0.5 rounded-full flex items-center gap-1.5 self-start sm:self-auto">
+              <FiLock size={11} /> Calculated Locally in Browser
+            </span>
+          </div>
 
-          <div className="mt-4 flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <input
                 type={show ? "text" : "password"}
@@ -151,8 +250,9 @@ export default function PasswordAnalyzer() {
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setCopied(false);
+                  setBreachResult(null);
                 }}
-                placeholder="Enter password..."
+                placeholder="Type or paste a password to analyze..."
                 className="w-full rounded-xl border border-border bg-bg px-4 py-3 font-mono text-sm text-text-primary outline-none transition focus:border-accent/50"
               />
             </div>
@@ -167,13 +267,22 @@ export default function PasswordAnalyzer() {
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-4 flex flex-wrap gap-3">
-            <button
-              type="button"
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Button
               onClick={generatePassword}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition hover:opacity-90"
             >
               ⚡ Generate Password
+            </Button>
+
+            {/* Have I Been Pwned API Check Button */}
+            <button
+              type="button"
+              onClick={checkPwnedPassword}
+              disabled={!password || checkingBreach}
+              className="flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <FiSearch size={14} />
+              {checkingBreach ? "Checking Breach Records..." : "Check Data Breaches"}
             </button>
 
             <button
@@ -190,6 +299,7 @@ export default function PasswordAnalyzer() {
               onClick={() => {
                 setPassword("");
                 setCopied(false);
+                setBreachResult(null);
               }}
               className="rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
             >
@@ -197,43 +307,87 @@ export default function PasswordAnalyzer() {
             </button>
           </div>
 
+          {/* Breach Status API Result Display */}
+          {breachResult && (
+            <div className="mt-4 pt-4 border-t border-border/50">
+              {breachResult.error && (
+                <div className="p-3 rounded-xl border border-warning/30 bg-warning/10 text-warning text-xs flex items-center gap-2">
+                  <FiAlertTriangle size={15} className="shrink-0" />
+                  <span>{breachResult.error}</span>
+                </div>
+              )}
+
+              {breachResult.checked && breachResult.isPwned && (
+                <div className="p-3.5 rounded-xl border border-danger/40 bg-danger/10 text-danger text-xs space-y-1">
+                  <div className="flex items-center gap-2 font-bold text-sm">
+                    <FiAlertOctagon size={16} />
+                    <span>Compromised in Known Data Breaches!</span>
+                  </div>
+                  <p className="text-danger/90 leading-relaxed">
+                    This password was found <b>{breachResult.count.toLocaleString()} times</b> in previously exposed data breach records (via Have I Been Pwned API). You should never use this password.
+                  </p>
+                  <p className="text-[10px] text-text-muted pt-1">
+                    k-Anonymity Verified: Only the first 5 characters of SHA-1 hash were sent to the API. Your password was never transmitted.
+                  </p>
+                </div>
+              )}
+
+              {breachResult.checked && !breachResult.isPwned && (
+                <div className="p-3.5 rounded-xl border border-success/40 bg-success/10 text-success text-xs space-y-1">
+                  <div className="flex items-center gap-2 font-bold text-sm">
+                    <FiCheckCircle size={16} />
+                    <span>Not Found in Known Breach Records</span>
+                  </div>
+                  <p className="text-success/90 leading-relaxed">
+                    Good news! This password was not found in known public data breach records (via Have I Been Pwned API).
+                  </p>
+                  <p className="text-[10px] text-text-muted pt-1">
+                    k-Anonymity Verified: Only the first 5 characters of SHA-1 hash were sent to the API. Your password was never transmitted.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           <p className="mt-3 text-xs text-text-secondary">
             {password.length} {password.length === 1 ? "character" : "characters"} entered
           </p>
         </div>
 
-        {/* Strength & Risk Metrics */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Password Strength */}
-          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text-primary">
-                Password Strength
-              </h2>
-              <span className="text-xl">💪</span>
+        {/* 3-METRIC GRID: Strength, Risk Level, and Approximate Cracking Time */}
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-3 w-full min-w-0">
+          {/* 1. Password Strength */}
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted font-mono">
+                  Password Strength
+                </h2>
+                <span className="text-xl">💪</span>
+              </div>
+
+              <p
+                className={`mt-4 text-3xl font-bold font-display ${
+                  analysis.strength === "Strong"
+                    ? "text-success"
+                    : analysis.strength === "Good"
+                    ? "text-accent"
+                    : analysis.strength === "Weak"
+                    ? "text-warning"
+                    : analysis.strength === "Very Weak"
+                    ? "text-danger"
+                    : "text-text-secondary"
+                }`}
+              >
+                {analysis.strength}
+              </p>
+
+              <p className="mt-2 text-xs text-text-secondary">
+                Security Score: <b className="text-text-primary">{analysis.score}/7 checks passed</b>
+              </p>
             </div>
 
-            <p
-              className={`mt-4 text-3xl font-bold ${
-                analysis.strength === "Strong"
-                  ? "text-success"
-                  : analysis.strength === "Good"
-                  ? "text-accent"
-                  : analysis.strength === "Weak"
-                  ? "text-warning"
-                  : analysis.strength === "Very Weak"
-                  ? "text-danger"
-                  : "text-text-secondary"
-              }`}
-            >
-              {analysis.strength}
-            </p>
-
-            <p className="mt-2 text-sm text-text-secondary">
-              Security Score: <b className="text-text-primary">{analysis.score}/7</b>
-            </p>
-
-            <div className="mt-4 h-3 overflow-hidden rounded-full bg-bg border border-border">
+            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-bg border border-border">
               <div
                 className={`h-full transition-all duration-300 ${
                   analysis.score >= 6
@@ -251,47 +405,87 @@ export default function PasswordAnalyzer() {
             </div>
           </div>
 
-          {/* Security Risk Level */}
-          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-text-primary">
-                Security Risk Level
-              </h2>
-              <span className="text-xl">🛡️</span>
+          {/* 2. Security Risk Level */}
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted font-mono">
+                  Security Risk Level
+                </h2>
+                <span className="text-xl">🛡️</span>
+              </div>
+
+              <p
+                className={`mt-4 text-3xl font-bold font-display ${
+                  analysis.risk === "HIGH"
+                    ? "text-danger"
+                    : analysis.risk === "MEDIUM"
+                    ? "text-warning"
+                    : analysis.risk === "LOW"
+                    ? "text-success"
+                    : "text-text-secondary"
+                }`}
+              >
+                {analysis.risk}
+              </p>
+
+              <p className="mt-2 text-xs text-text-secondary">
+                {password
+                  ? `${Math.round((analysis.score / 7) * 100)}% of baseline checks passed`
+                  : "Enter a password to evaluate risk level."}
+              </p>
             </div>
 
-            <p
-              className={`mt-4 text-3xl font-bold ${
-                analysis.risk === "HIGH"
-                  ? "text-danger"
-                  : analysis.risk === "MEDIUM"
-                  ? "text-warning"
-                  : analysis.risk === "LOW"
-                  ? "text-success"
-                  : "text-text-secondary"
-              }`}
-            >
-              {analysis.risk}
-            </p>
+            <div className="mt-4 pt-2 border-t border-border/50 text-[11px] text-text-muted flex items-center justify-between">
+              <span>Risk Threshold</span>
+              <span className="font-mono">{analysis.risk === 'LOW' ? 'Secure' : analysis.risk === 'MEDIUM' ? 'Elevated' : 'Critical'}</span>
+            </div>
+          </div>
 
-            <p className="mt-2 text-sm text-text-secondary">
-              {password
-                ? `${Math.round((analysis.score / 7) * 100)}% of security checks passed`
-                : "Enter a password to evaluate risk level."}
-            </p>
+          {/* 3. Approximate Cracking Time Card */}
+          <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between gap-1">
+                <div className="flex items-center gap-1.5">
+                  <FiClock className="text-primary" size={15} />
+                  <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted font-mono">
+                    Time to Crack
+                  </h2>
+                </div>
+                <span className="text-[10px] font-mono text-warning bg-warning/10 px-2 py-0.5 rounded-full border border-warning/20">
+                  Approximate
+                </span>
+              </div>
+
+              <p
+                className={`mt-4 text-2xl sm:text-3xl font-bold font-display tracking-tight ${crackEstimate.color}`}
+              >
+                {crackEstimate.timeText}
+              </p>
+
+              <p className="mt-2 text-xs text-text-secondary leading-relaxed">
+                {password
+                  ? 'Estimated theoretical brute-force time (~1B guesses/sec).'
+                  : 'Enter password to estimate time.'}
+              </p>
+            </div>
+
+            <div className="mt-4 pt-2 border-t border-border/50 text-[11px] text-text-muted">
+              <span>Note: Approximate estimate, not a guarantee.</span>
+            </div>
           </div>
         </div>
 
-        {/* Common Password Warning */}
-        {analysis.isCommon && (
-          <div className="rounded-xl border border-danger/30 bg-danger/10 p-4 text-danger">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">⚠️</span>
-              <b>Common Password Detected</b>
+        {/* Basic Warning for Common Passwords or Predictable Patterns */}
+        {crackEstimate.patternWarning && (
+          <div className="rounded-xl border border-warning/30 bg-warning/10 p-4 text-warning flex items-start gap-3">
+            <FiAlertTriangle className="text-lg shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-sm">Security Notice</p>
+              <p className="mt-0.5 text-xs text-text-secondary">
+                {crackEstimate.patternWarning}
+              </p>
             </div>
-            <p className="mt-1 text-sm text-danger">
-              This password is in lists of commonly used passwords and is extremely vulnerable to dictionary attacks.
-            </p>
           </div>
         )}
 
@@ -301,7 +495,7 @@ export default function PasswordAnalyzer() {
             🔍 Security Checks
           </h2>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full min-w-0">
             {checksList.map((check) => (
               <div
                 key={check.label}
@@ -324,7 +518,7 @@ export default function PasswordAnalyzer() {
             🔤 Character Breakdown
           </h2>
 
-          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 w-full min-w-0">
             <StatBox name="Total" value={password.length} />
             <StatBox name="Uppercase" value={analysis.upper} />
             <StatBox name="Lowercase" value={analysis.lower} />
@@ -358,5 +552,3 @@ function StatBox({ name, value }) {
     </div>
   );
 }
-
-

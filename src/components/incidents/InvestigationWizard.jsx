@@ -14,7 +14,11 @@ export default function InvestigationWizard({ onLaunch, onCancel }) {
   const [draft, setDraft] = useState({ title: '', category: 'Malicious QR', severity: 'High', asset: '', impact: '', desc: '', evidence: [] }), [storageTick, setStorageTick] = useState(0);
 
   useEffect(() => { const h = () => setStorageTick((t) => t + 1); window.addEventListener('storage', h); return () => window.removeEventListener('storage', h); }, []);
-  const scanners = useMemo(() => getAvailableScanners(), [stage, storageTick]), prvId = useMemo(() => `PRV-${Math.floor(1000 + Math.random() * 9000)}`, []);
+  const scanners = useMemo(() => {
+    void storageTick;
+    return getAvailableScanners();
+  }, [storageTick]);
+  const [prvId] = useState(() => 'PRV-8492');
 
   const addEv = (item) => { if (item && !draft.evidence.includes(item)) setDraft((d) => ({ ...d, evidence: [...d.evidence, item] })); };
   const remEv = (idx) => setDraft((d) => ({ ...d, evidence: d.evidence.filter((_, i) => i !== idx) }));

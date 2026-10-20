@@ -1,7 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/urlhaus-feed/:path*",
+      "destination": "/api/urlhaus-feed"
+    },
+    {
+      "source": "/api/urlhaus-feed",
+      "destination": "/api/urlhaus-feed"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
