@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
@@ -38,10 +40,11 @@ import { ROUTES } from './constants/routes';
 
 function App() {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <AuthProvider>
-          <BrowserRouter>
+    <Provider store={store}>
+      <ThemeProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <BrowserRouter>
             <Routes>
 
               {/* Public Routes */}
@@ -149,6 +152,7 @@ function App() {
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
+  </Provider>
   );
 }
 

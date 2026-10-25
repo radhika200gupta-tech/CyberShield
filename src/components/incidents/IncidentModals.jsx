@@ -4,7 +4,9 @@ import { FiX, FiFileText, FiCrosshair, FiSearch, FiLayers, FiAlertTriangle, FiEd
 import Button from '../common/Button';
 import InvestigationWizard from './InvestigationWizard';
 import DetectiveIllustration from './DetectiveIllustration';
-import { CATEGORIES, SEVERITIES, STATUSES, SAMPLE_CASES, getAvailableScanners, getIncidents } from '../../utils/incidentStorage';
+import { useSelector, useDispatch } from 'react-redux';
+import { CATEGORIES, SEVERITIES, STATUSES, getAvailableScanners, getIncidents } from '../../utils/incidentStorage';
+import { selectSample, resetSampleSelection } from '../../store/sampleCasesSlice';
 import { ROUTES } from '../../constants/routes';
 
 const Modal = ({ open, onClose, children, max = 'max-w-2xl' }) => open ? (
@@ -25,8 +27,10 @@ const INTAKE_MODES = [
 
 export function CreateModal({ isOpen, onClose, onCreate, initialOption = null }) {
   const navigate = useNavigate(), [flow, setFlow] = useState(initialOption), [err, setErr] = useState('');
+  const dispatch = useDispatch();
+  const { cases: sampleCases, selectedSample } = useSelector((state) => state.sampleCases);
   const [manual, setManual] = useState({ title: '', category: 'Malicious QR', severity: 'High', desc: '', asset: '' });
-  const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [selectedSample, setSelectedSample] = useState(SAMPLE_CASES[0]), [storageTick, setStorageTick] = useState(0);
+  const [selectedScan, setSelectedScan] = useState(null), [scanReview, setScanReview] = useState(null), [storageTick, setStorageTick] = useState(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -66,7 +70,9 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
   };
   const importSample = () => {
     if (!selectedSample) return;
-    onCreate({ title: selectedSample.title, category: selectedSample.category, severity: selectedSample.severity, description: selectedSample.desc, affectedAsset: selectedSample.asset, evidenceReferences: [selectedSample.evidence], sourceType: 'sample', isSample: true }); onClose();
+    onCreate({ title: selectedSample.title, category: selectedSample.category, severity: selectedSample.severity, description: selectedSample.desc, affectedAsset: selectedSample.asset, evidenceReferences: [selectedSample.evidence], sourceType: 'sample', isSample: true });
+    dispatch(resetSampleSelection());
+    onClose();
   };
 
   return (
@@ -131,7 +137,7 @@ export function CreateModal({ isOpen, onClose, onCreate, initialOption = null })
             <div className="space-y-3 text-xs">
               <h3 className="font-display font-bold text-base text-text-primary">Simulated Case Investigations</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">{SAMPLE_CASES.map((s) => (<div key={s.id} onClick={() => setSelectedSample(s)} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedSample?.id === s.id ? 'border-amber-400 bg-amber-500/10' : 'border-border bg-bg-elevated'}`}><div className="flex justify-between font-bold text-text-primary"><span>{s.title}</span><span className="text-amber-400">{s.severity}</span></div><p className="text-[10px] text-text-muted mt-0.5 truncate">{s.desc}</p></div>))}</div>
+                <div className="space-y-1.5">{sampleCases.map((s) => (<div key={s.id} onClick={() => dispatch(selectSample(s))} className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedSample?.id === s.id ? 'border-amber-400 bg-amber-500/10' : 'border-border bg-bg-elevated'}`}><div className="flex justify-between font-bold text-text-primary"><span>{s.title}</span><span className="text-amber-400">{s.severity}</span></div><p className="text-[10px] text-text-muted mt-0.5 truncate">{s.desc}</p></div>))}</div>
                 {selectedSample && (<div className="p-3 rounded-xl bg-bg-elevated border border-border space-y-2 flex flex-col justify-between"><div><span className="text-[10px] font-mono text-amber-400 font-bold uppercase">{selectedSample.category}</span><h4 className="font-bold text-text-primary mt-0.5">{selectedSample.title}</h4><p className="text-text-secondary mt-1">{selectedSample.desc}</p></div><Button variant="primary" size="sm" onClick={importSample} className="bg-amber-500 hover:bg-amber-400 text-black font-bold">Import Simulated Incident</Button></div>)}
               </div>
             </div>
