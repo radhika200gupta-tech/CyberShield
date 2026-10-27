@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link, Navigate } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { 
   FiCpu, FiShield, FiTarget, FiLayers, FiTerminal, FiActivity, FiLock, FiInfo, FiMap, FiGlobe, 
@@ -22,10 +23,18 @@ function AICopilotPreview() {
   return <AICopilotChat />;
 }
 
-
 import LiveThreatMap from '../../components/security/threat-map/LiveThreatMap';
 
+// ============================================================================
+// REVERSIBLE FEATURE CONFIGURATION
+// To restore Real-Time Threat Intelligence or Live Cyber Threat Map on the
+// live website, set the respective constant below to true.
+// ============================================================================
+export const ENABLE_THREAT_INTEL = false;
+export const ENABLE_THREAT_MAP = false;
+
 export function LiveThreatMapPreview({ isCompact = false }) {
+  if (!ENABLE_THREAT_MAP) return null;
   return <LiveThreatMap isCompact={isCompact} />;
 }
 
@@ -38,6 +47,9 @@ export default function ComingSoonFeature(props) {
   const isThreatIntel = location.pathname.includes('threat-intel');
 
   if (isThreatIntel) {
+    if (!ENABLE_THREAT_INTEL) {
+      return <Navigate to={ROUTES.HOME} replace />;
+    }
     return (
       <div className="w-full min-w-0 animate-fade-in pb-8">
         <ThreatIntelligenceDashboard />
@@ -54,6 +66,9 @@ export default function ComingSoonFeature(props) {
   }
 
   if (isThreatMap) {
+    if (!ENABLE_THREAT_MAP) {
+      return <Navigate to={ROUTES.HOME} replace />;
+    }
     return (
       <div className="w-full min-w-0 animate-fade-in pb-8">
         <LiveThreatMapPreview isCompact={false} />

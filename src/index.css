@@ -267,35 +267,49 @@
 }
 
 /* Primary and Accent Buttons in Light Mode */
-.light button.bg-primary,
-.light a.bg-primary,
-.light button[class*="bg-primary"],
-.light a[class*="bg-primary"] {
+.light button.bg-primary:not([class*="/"]),
+.light a.bg-primary:not([class*="/"]),
+.light button[class~="bg-primary"]:not([class*="/"]),
+.light a[class~="bg-primary"]:not([class*="/"]) {
   background-color: #087F8C !important;
   color: #FFFFFF !important;
   box-shadow: 0 1px 3px rgba(8, 127, 140, 0.25) !important;
 }
 
-.light button.bg-primary:hover,
-.light a.bg-primary:hover,
-.light button[class*="bg-primary"]:hover,
-.light a[class*="bg-primary"]:hover {
+.light button.bg-primary:hover:not([class*="/"]),
+.light a.bg-primary:hover:not([class*="/"]),
+.light button[class~="bg-primary"]:hover:not([class*="/"]),
+.light a[class~="bg-primary"]:hover:not([class*="/"]) {
   background-color: #066b75 !important;
   color: #FFFFFF !important;
 }
 
-.light button.bg-accent,
-.light a.bg-accent,
-.light button[class*="bg-accent"],
-.light a[class*="bg-accent"] {
+.light button.bg-accent:not([class*="/"]),
+.light a.bg-accent:not([class*="/"]),
+.light button[class~="bg-accent"]:not([class*="/"]),
+.light a[class~="bg-accent"]:not([class*="/"]) {
   background-color: #3976A8 !important;
   color: #FFFFFF !important;
 }
 
-.light button.bg-accent:hover,
-.light a.bg-accent:hover {
+.light button.bg-accent:hover:not([class*="/"]),
+.light a.bg-accent:hover:not([class*="/"]),
+.light button[class~="bg-accent"]:hover:not([class*="/"]),
+.light a[class~="bg-accent"]:hover:not([class*="/"]) {
   background-color: #306591 !important;
   color: #FFFFFF !important;
+}
+
+/* Theme Option Cards in Light Mode */
+.light .theme-option-card {
+  background-color: #FFFFFF !important;
+  border-color: #D7E1E6 !important;
+  color: #12313B !important;
+}
+
+.light .theme-option-card.active {
+  background-color: rgba(57, 118, 168, 0.08) !important;
+  border-color: #3976A8 !important;
 }
 
 /* Glass and Logo Gradients in Light Mode */

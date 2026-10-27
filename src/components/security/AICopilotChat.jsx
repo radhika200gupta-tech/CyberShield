@@ -1470,7 +1470,7 @@ ${scanResult.recommendations.map((r, i) => `${i + 1}. ${r}`).join('\n')}`;
                 <h1 className="text-sm sm:text-base font-bold text-text-primary tracking-tight truncate">
                   CyberShield AI Security Copilot
                 </h1>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" title="Engine Online" />
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Copilot Ready" />
               </div>
               <p className="text-xs text-text-secondary truncate hidden sm:block">
                 Intelligent threat triage, client-side OCR forensics & incident playbooks
@@ -1479,15 +1479,8 @@ ${scanResult.recommendations.map((r, i) => `${i + 1}. ${r}`).join('\n')}`;
           </div>
         </div>
 
-        {/* Right: Demo Badge, Tools Drawer, Voice Guide, New Chat */}
+        {/* Right: Controls, Voice Audio Toggle, Voice Commands, New Chat */}
         <div className="flex items-center gap-2 shrink-0">
-          
-          {/* Security Engine Status Badge */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent font-mono text-xs font-semibold shrink-0 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span className="hidden sm:inline">Local Security Engine</span>
-            <span className="sm:hidden">Active</span>
-          </div>
 
           {/* Voice Audio Mute / Unmute Toggle */}
           <button

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FiCheckCircle, FiAlertTriangle, FiXCircle, FiInfo, FiX } from 'react-icons/fi';
@@ -33,7 +34,7 @@ export function ToastProvider({ children }) {
   }, [dismiss]);
 
   return (
-    <ToastContext.Provider value={{ showToast, dismiss }}>
+    <ToastContext.Provider value={{ showToast, addToast: showToast, dismiss }}>
       {children}
       <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm">
         <AnimatePresence>

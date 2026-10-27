@@ -9,7 +9,7 @@ import { FiUser, FiMail, FiShield, FiActivity, FiEdit2, FiSave, FiX, FiCheckCirc
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
-  const { addToast } = useToast();
+  const { showToast } = useToast();
   
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ export default function Profile() {
       updateUser(formData);
     }
     setIsEditing(false);
-    addToast('Profile updated successfully', 'success');
+    showToast('Profile updated successfully', 'success');
   };
 
   const handleCancel = () => {

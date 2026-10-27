@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   FiMoon, FiSun, FiMonitor, FiBell, FiLock, 
-  FiShield, FiRefreshCw, FiSave, FiSettings
+  FiRefreshCw, FiSave, FiSettings
 } from 'react-icons/fi';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -30,12 +30,12 @@ const Toggle = ({ label, description, checked, onChange }) => (
   </div>
 );
 
-// Set to true to restore the appearance theme controls in Settings
-const SHOW_APPEARANCE_SETTINGS = false;
+// Restore the appearance theme controls in Settings
+const SHOW_APPEARANCE_SETTINGS = true;
 
 export default function Settings() {
   const { theme, setTheme } = useTheme();
-  const { addToast } = useToast();
+  const { showToast } = useToast();
 
   const defaultSettings = {
     notifications: {
@@ -49,29 +49,27 @@ export default function Settings() {
     }
   };
 
-  const [settings, setSettings] = useState(defaultSettings);
-
-  // Load settings from local storage
-  useEffect(() => {
+  const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('cybershield_settings');
     if (saved) {
       try {
-        setSettings(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse settings");
+        return JSON.parse(saved);
+      } catch {
+        console.error('Failed to parse settings');
       }
     }
-  }, []);
+    return defaultSettings;
+  });
 
   const handleSave = () => {
     localStorage.setItem('cybershield_settings', JSON.stringify(settings));
-    addToast('Settings saved successfully', 'success');
+    showToast('Settings saved successfully', 'success');
   };
 
   const handleReset = () => {
     setSettings(defaultSettings);
     setTheme('dark');
-    addToast('Settings reset to defaults', 'info');
+    showToast('Settings reset to defaults', 'info');
   };
 
   const updateSection = (section, key, value) => {
@@ -108,25 +106,46 @@ export default function Settings() {
             </h3>
             <div className="grid sm:grid-cols-3 gap-4 pt-2">
               <button
+                type="button"
                 onClick={() => setTheme('light')}
-                className={`p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors ${theme === 'light' ? 'border-accent bg-accent/5' : 'border-border hover:border-border-hover bg-surface'}`}
+                className={`theme-option-card p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors cursor-pointer ${
+                  theme === 'light'
+                    ? 'active border-accent bg-accent/10 ring-1 ring-accent/30'
+                    : 'border-border hover:border-border-hover bg-surface hover:bg-surface-hover'
+                }`}
               >
                 <FiSun size={24} className={theme === 'light' ? 'text-accent' : 'text-text-muted'} />
-                <span className={`text-sm font-medium ${theme === 'light' ? 'text-accent' : 'text-text-primary'}`}>Light</span>
+                <span className={`text-sm font-medium ${theme === 'light' ? 'text-text-primary font-semibold' : 'text-text-secondary'}`}>
+                  Light
+                </span>
               </button>
               <button
+                type="button"
                 onClick={() => setTheme('dark')}
-                className={`p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors ${theme === 'dark' ? 'border-accent bg-accent/5' : 'border-border hover:border-border-hover bg-surface'}`}
+                className={`theme-option-card p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors cursor-pointer ${
+                  theme === 'dark'
+                    ? 'active border-accent bg-accent/10 ring-1 ring-accent/30'
+                    : 'border-border hover:border-border-hover bg-surface hover:bg-surface-hover'
+                }`}
               >
                 <FiMoon size={24} className={theme === 'dark' ? 'text-accent' : 'text-text-muted'} />
-                <span className={`text-sm font-medium ${theme === 'dark' ? 'text-accent' : 'text-text-primary'}`}>Dark</span>
+                <span className={`text-sm font-medium ${theme === 'dark' ? 'text-text-primary font-semibold' : 'text-text-secondary'}`}>
+                  Dark
+                </span>
               </button>
               <button
+                type="button"
                 onClick={() => setTheme('system')}
-                className={`p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors ${theme === 'system' ? 'border-accent bg-accent/5' : 'border-border hover:border-border-hover bg-surface'}`}
+                className={`theme-option-card p-4 border rounded-xl flex flex-col items-center gap-3 transition-colors cursor-pointer ${
+                  theme === 'system'
+                    ? 'active border-accent bg-accent/10 ring-1 ring-accent/30'
+                    : 'border-border hover:border-border-hover bg-surface hover:bg-surface-hover'
+                }`}
               >
                 <FiMonitor size={24} className={theme === 'system' ? 'text-accent' : 'text-text-muted'} />
-                <span className={`text-sm font-medium ${theme === 'system' ? 'text-accent' : 'text-text-primary'}`}>System</span>
+                <span className={`text-sm font-medium ${theme === 'system' ? 'text-text-primary font-semibold' : 'text-text-secondary'}`}>
+                  System
+                </span>
               </button>
             </div>
           </Card>

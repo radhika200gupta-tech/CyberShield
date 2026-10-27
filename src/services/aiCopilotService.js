@@ -626,9 +626,7 @@ SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`,
       isDemo: true,
       text: `Hello! I am the **CyberShield AI Security Copilot**.
 
-I assist security analysts and end-users with real-time threat evaluation, email authentication troubleshooting, incident response playbooks, and forensic reporting.
-
-> **LOCAL SECURITY ENGINE ACTIVE**: Responses are generated on-device using CyberShield's deterministic security rule engine and client-side OCR. No external AI APIs are called, and zero telemetry leaves your browser.
+I assist security analysts and users with threat evaluation, email authentication troubleshooting, incident response playbooks, and forensic guidance using built-in security knowledge rules and client-side OCR analysis.
 
 **Select one of the suggested prompts below, choose a security tool, or paste an email/URL to begin.**`
     };

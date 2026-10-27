@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiZap, FiRefreshCw, FiAlertTriangle, 
@@ -26,8 +26,12 @@ export default function ThreatIntelligenceDashboard() {
   const [fetchError, setFetchError] = useState(null);
   const [providerLastUpdated, setProviderLastUpdated] = useState(null);
   const [lastFetchedAt, setLastFetchedAt] = useState(null);
+  const [feedSource, setFeedSource] = useState('Threat Telemetry Feed');
   const [connectionStatus, setConnectionStatus] = useState('CONNECTING'); // 'CONNECTED' | 'ERROR' | 'CONNECTING'
   const [currentTime, setCurrentTime] = useState(() => Date.now());
+
+  // In-flight request controller reference
+  const abortControllerRef = useRef(null);
 
   // Selected threat for details drawer
   const [selectedThreat, setSelectedThreat] = useState(null);
@@ -52,83 +56,95 @@ export default function ThreatIntelligenceDashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  /**
-   * Load feed data from abuse.ch URLhaus
-   */
-  const loadFeed = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) {
-      setIsRefreshing(true);
-    } else {
-      setIsLoading(true);
-    }
-    setFetchError(null);
+  // Fetch once on mount with cleanup
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-    try {
-      const result = await fetchThreatIntelligenceFeed({ byteLimit: 65536 });
-
+    fetchThreatIntelligenceFeed({ 
+      byteLimit: 65536,
+      signal: controller.signal
+    }).then(result => {
+      if (!isMounted) return;
       if (result.success && result.data && result.data.length > 0) {
         setThreats(result.data);
         setProviderLastUpdated(result.providerLastUpdated);
         setLastFetchedAt(result.fetchedAt);
+        setFeedSource(result.sourceName || 'Threat Telemetry Feed');
         setConnectionStatus('CONNECTED');
         setFetchError(null);
       } else if (result.success && result.isGenuinelyEmpty) {
         setThreats([]);
         setProviderLastUpdated(result.providerLastUpdated);
         setLastFetchedAt(result.fetchedAt);
+        setFeedSource(result.sourceName || 'Threat Telemetry Feed');
         setConnectionStatus('CONNECTED');
         setFetchError(null);
       } else {
         setConnectionStatus('ERROR');
-        setFetchError(result.error || 'Failed to retrieve genuine threat feed from URLhaus.');
+        setFetchError(result.error || 'Failed to retrieve genuine threat feed.');
+      }
+    }).catch(err => {
+      if (!isMounted || err.name === 'AbortError') return;
+      setConnectionStatus('ERROR');
+      setFetchError(err.message || 'Network error: could not connect to threat intelligence feed.');
+    }).finally(() => {
+      if (isMounted) {
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  /**
+   * Manual refresh triggered by user action
+   */
+  const handleRefresh = useCallback(async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setIsRefreshing(true);
+    setFetchError(null);
+
+    try {
+      const result = await fetchThreatIntelligenceFeed({ 
+        byteLimit: 65536,
+        signal: controller.signal
+      });
+
+      if (result.success && result.data && result.data.length > 0) {
+        setThreats(result.data);
+        setProviderLastUpdated(result.providerLastUpdated);
+        setLastFetchedAt(result.fetchedAt);
+        setFeedSource(result.sourceName || 'Threat Telemetry Feed');
+        setConnectionStatus('CONNECTED');
+        setFetchError(null);
+      } else if (result.success && result.isGenuinelyEmpty) {
+        setThreats([]);
+        setProviderLastUpdated(result.providerLastUpdated);
+        setLastFetchedAt(result.fetchedAt);
+        setFeedSource(result.sourceName || 'Threat Telemetry Feed');
+        setConnectionStatus('CONNECTED');
+        setFetchError(null);
+      } else {
+        setConnectionStatus('ERROR');
+        setFetchError(result.error || 'Failed to retrieve genuine threat feed.');
       }
     } catch (err) {
+      if (err.name === 'AbortError') return;
       setConnectionStatus('ERROR');
       setFetchError(err.message || 'Network error: could not connect to threat intelligence feed.');
     } finally {
-      setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
-
-  // Fetch once on mount
-  useEffect(() => {
-    let ignore = false;
-    async function fetchOnMount() {
-      try {
-        const result = await fetchThreatIntelligenceFeed({ byteLimit: 65536 });
-        if (ignore) return;
-        if (result.success && result.data && result.data.length > 0) {
-          setThreats(result.data);
-          setProviderLastUpdated(result.providerLastUpdated);
-          setLastFetchedAt(result.fetchedAt);
-          setConnectionStatus('CONNECTED');
-          setFetchError(null);
-        } else if (result.success && result.isGenuinelyEmpty) {
-          setThreats([]);
-          setProviderLastUpdated(result.providerLastUpdated);
-          setLastFetchedAt(result.fetchedAt);
-          setConnectionStatus('CONNECTED');
-          setFetchError(null);
-        } else {
-          setConnectionStatus('ERROR');
-          setFetchError(result.error || 'Failed to retrieve genuine threat feed from URLhaus.');
-        }
-      } catch (err) {
-        if (!ignore) {
-          setConnectionStatus('ERROR');
-          setFetchError(err.message || 'Network error: could not connect to threat intelligence feed.');
-        }
-      } finally {
-        if (!ignore) {
-          setIsLoading(false);
-        }
-      }
-    }
-    fetchOnMount();
-    return () => {
-      ignore = true;
-    };
   }, []);
 
   const handleSearchChange = (query) => {
@@ -163,8 +179,10 @@ export default function ThreatIntelligenceDashboard() {
     const tagCount = new Map();
     threats.forEach(t => {
       (t.tags || []).forEach(tag => {
-        const count = tagCount.get(tag) || 0;
-        tagCount.set(tag, count + 1);
+        const cleanTag = String(tag).trim();
+        if (!cleanTag) return;
+        const count = tagCount.get(cleanTag) || 0;
+        tagCount.set(cleanTag, count + 1);
       });
     });
     return Array.from(tagCount.entries())
@@ -178,7 +196,7 @@ export default function ThreatIntelligenceDashboard() {
   const filteredThreats = useMemo(() => {
     let result = [...threats];
 
-    // Search query filter (indicator, host, reporter, tags)
+    // Search query filter (indicator, host, reporter, tags, category, type)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(item => {
@@ -187,7 +205,8 @@ export default function ThreatIntelligenceDashboard() {
         const matchReporter = (item.evidence?.reporter || '').toLowerCase().includes(q);
         const matchTags = (item.tags || []).some(t => t.toLowerCase().includes(q));
         const matchCategory = (item.category || '').toLowerCase().includes(q);
-        return matchUrl || matchHost || matchReporter || matchTags || matchCategory;
+        const matchType = (item.indicatorType || '').toLowerCase().includes(q);
+        return matchUrl || matchHost || matchReporter || matchTags || matchCategory || matchType;
       });
     }
 
@@ -313,6 +332,8 @@ export default function ThreatIntelligenceDashboard() {
     });
   };
 
+  const isUrlhaus = feedSource.toLowerCase().includes('urlhaus');
+
   return (
     <div className="space-y-6 animate-fade-in max-w-7xl mx-auto w-full min-w-0 pb-12">
       
@@ -336,7 +357,7 @@ export default function ThreatIntelligenceDashboard() {
           </h1>
 
           <p className="text-sm sm:text-base text-text-secondary mt-2 max-w-3xl leading-relaxed">
-            Live aggregated intelligence feed of reported malicious URLs, malware distribution points, and botnet command nodes from <strong>abuse.ch URLhaus</strong>.
+            Live aggregated intelligence feed of reported malicious URLs, malware distribution points, and botnet command nodes from <strong>{feedSource}</strong>.
           </p>
         </div>
 
@@ -350,9 +371,9 @@ export default function ThreatIntelligenceDashboard() {
                 Fetching Feed...
               </span>
             ) : connectionStatus === 'CONNECTED' ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-success bg-success/10 px-2.5 py-1 rounded-md border border-success/25" title="Connected to abuse.ch URLhaus feed">
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-success bg-success/10 px-2.5 py-1 rounded-md border border-success/25" title={`Connected to ${feedSource}`}>
                 <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                Connected: URLhaus
+                Connected: {isUrlhaus ? 'URLhaus' : 'Community Feed'}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-danger bg-danger/10 px-2.5 py-1 rounded-md border border-danger/25" title="Feed connection offline or failed">
@@ -381,11 +402,11 @@ export default function ThreatIntelligenceDashboard() {
 
           {/* Refresh Action Button */}
           <Button
-            onClick={() => loadFeed(true)}
+            onClick={handleRefresh}
             disabled={isLoading || isRefreshing}
             variant="outline"
             size="sm"
-            className="text-xs font-semibold py-1.5 px-3 border-border hover:border-accent"
+            className="text-xs font-semibold py-1.5 px-3 border-border hover:border-accent cursor-pointer"
             title="Fetch latest reported threat indicators"
           >
             <FiRefreshCw size={14} className={isRefreshing ? 'animate-spin text-accent' : 'text-accent'} />
@@ -399,7 +420,7 @@ export default function ThreatIntelligenceDashboard() {
         <FiInfo className="text-accent shrink-0 mt-0.5" size={17} />
         <div>
           <strong className="text-text-primary font-semibold">Community Threat Telemetry Notice: </strong>
-          This dashboard displays global reported threat intelligence from <strong>abuse.ch URLhaus</strong>. These indicators represent external malicious payloads and botnet infrastructure tracked across the internet, not direct attacks or intrusions detected on your device.
+          This dashboard displays global reported threat intelligence from <strong>{feedSource}</strong>. These indicators represent external malicious payloads and botnet infrastructure tracked across the internet, not direct attacks or intrusions detected on your device.
           {providerLastUpdated && (
             <span className="block mt-1.5 font-mono text-xs text-text-muted">
               Official Provider Feed Snapshot: <strong>{providerLastUpdated}</strong>
@@ -409,20 +430,20 @@ export default function ThreatIntelligenceDashboard() {
       </div>
 
       {/* Connection Error Banner with Retry */}
-      {fetchError && (
+      {fetchError && threats.length > 0 && (
         <div className="bg-danger/10 border border-danger/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-start gap-2.5">
             <FiAlertTriangle className="text-danger shrink-0 mt-0.5" size={16} />
             <div>
-              <strong className="text-danger font-semibold block">Threat Feed Unavailable</strong>
+              <strong className="text-danger font-semibold block">Threat Feed Refresh Failed</strong>
               <span className="text-text-secondary">{fetchError}</span>
             </div>
           </div>
           <Button
-            onClick={() => loadFeed(true)}
+            onClick={handleRefresh}
             variant="danger"
             size="sm"
-            className="text-xs shrink-0"
+            className="text-xs shrink-0 cursor-pointer"
           >
             <FiRefreshCw size={12} className="mr-1.5" /> Retry Retrieval
           </Button>
@@ -436,6 +457,7 @@ export default function ThreatIntelligenceDashboard() {
         highSeverityCount={stats.highSeverityCount}
         onlineCount={stats.onlineCount}
         lastUpdatedTime={providerLastUpdated}
+        sourceName={feedSource}
       />
 
       {/* SEARCH, FILTER & SORT CONTROLS */}
@@ -464,7 +486,28 @@ export default function ThreatIntelligenceDashboard() {
         <div className="bg-surface/90 border border-border/80 rounded-xl p-16 text-center flex flex-col items-center justify-center">
           <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
           <p className="text-sm font-semibold text-text-primary">Loading Genuine Threat Intelligence...</p>
-          <p className="text-xs text-text-muted mt-1">Connecting to abuse.ch URLhaus recent indicators feed</p>
+          <p className="text-xs text-text-muted mt-1">Connecting to live community threat telemetry feeds</p>
+        </div>
+      ) : fetchError && threats.length === 0 ? (
+        <div className="bg-surface/90 border border-border/80 rounded-xl p-12 text-center flex flex-col items-center justify-center">
+          <div className="w-14 h-14 rounded-2xl bg-danger/10 border border-danger/30 flex items-center justify-center text-danger mb-4 shadow-sm">
+            <FiAlertTriangle size={26} />
+          </div>
+          <h4 className="text-base font-semibold text-text-primary mb-1">
+            Unable to Load Threat Intelligence Feed
+          </h4>
+          <p className="text-xs text-text-muted max-w-md mb-4 leading-relaxed">
+            {fetchError}
+          </p>
+          <Button
+            onClick={handleRefresh}
+            variant="danger"
+            size="sm"
+            className="text-xs font-semibold py-2 px-4 cursor-pointer"
+          >
+            <FiRefreshCw size={13} className="mr-1.5" />
+            Retry Connection
+          </Button>
         </div>
       ) : (
         <ThreatFeedTable

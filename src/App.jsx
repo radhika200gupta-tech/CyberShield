@@ -8,6 +8,7 @@ import { ToastProvider } from './context/ToastContext';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import IncidentCommandCenter from './pages/IncidentCommandCenter';
 import InvestigationWorkspace from './pages/InvestigationWorkspace';
@@ -51,6 +52,7 @@ function App() {
               <Route path={ROUTES.HOME} element={<Landing />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
               <Route path={ROUTES.SIGNUP} element={<SignUp />} />
+              <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
 
               {/* Teammate Web Security Routes moved inside DashboardLayout */}
 
@@ -129,6 +131,16 @@ function App() {
                   <Route
                     path="/app/coming-soon/webcam-security"
                     element={<Navigate to={ROUTES.WEBCAM_SECURITY} replace />}
+                  />
+                  {/* REVERSIBLE REMOVAL: Threat Intel & Threat Map routes disabled on deployed site */}
+                  {/* To restore, remove these two redirect routes or set ENABLE_THREAT_INTEL/MAP to true */}
+                  <Route
+                    path="/app/coming-soon/threat-intel"
+                    element={<Navigate to={ROUTES.HOME} replace />}
+                  />
+                  <Route
+                    path="/app/coming-soon/threat-map"
+                    element={<Navigate to={ROUTES.HOME} replace />}
                   />
                   <Route
                     path="/app/coming-soon/*"

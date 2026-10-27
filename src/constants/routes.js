@@ -56,8 +56,10 @@ export const SIDEBAR_SECTIONS = [
   {
     category: 'SECURITY MONITORING & INTELLIGENCE',
     links: [
-      { label: 'Real-Time Threat Intelligence', path: ROUTES.THREAT_INTEL, icon: 'zap' },
-      { label: 'Live Cyber Threat Map', path: ROUTES.THREAT_MAP, icon: 'map' },
+      // REVERSIBLE REMOVAL: To restore Real-Time Threat Intelligence, uncomment below:
+      // { label: 'Real-Time Threat Intelligence', path: ROUTES.THREAT_INTEL, icon: 'zap' },
+      // REVERSIBLE REMOVAL: To restore Live Cyber Threat Map, uncomment below:
+      // { label: 'Live Cyber Threat Map', path: ROUTES.THREAT_MAP, icon: 'map' },
       { label: 'Webcam Security Lab', path: ROUTES.WEBCAM_SECURITY, icon: 'camera' },
     ],
   },
@@ -107,8 +109,9 @@ export const SIDEBAR_LINKS = [
   { label: 'Visual Phishing Detection', path: ROUTES.VISUAL_PHISHING, icon: 'eye' },
   { label: 'Email Forensics Lab', path: ROUTES.EMAIL_FORENSICS, icon: 'mail' },
   { label: 'Phishing Simulator', path: ROUTES.PHISHING_SIMULATOR, icon: 'crosshair' },
-  { label: 'Real-Time Threat Intelligence', path: ROUTES.THREAT_INTEL, icon: 'zap' },
-  { label: 'Live Cyber Threat Map', path: ROUTES.THREAT_MAP, icon: 'map' },
+  // REVERSIBLE REMOVAL: To restore, uncomment below:
+  // { label: 'Real-Time Threat Intelligence', path: ROUTES.THREAT_INTEL, icon: 'zap' },
+  // { label: 'Live Cyber Threat Map', path: ROUTES.THREAT_MAP, icon: 'map' },
   { label: 'Webcam Security Lab', path: ROUTES.WEBCAM_SECURITY, icon: 'camera' },
   { label: 'Security Copilot', path: ROUTES.AI_COPILOT, icon: 'cpu' },
   { label: 'Incident Command Center', path: ROUTES.INCIDENTS, icon: 'compass' },
@@ -122,8 +125,9 @@ export const SIDEBAR_LINKS = [
 
 export const INTELLIGENCE_LINKS = [
   { label: 'Security Copilot', icon: 'cpu', path: ROUTES.AI_COPILOT },
-  { label: 'Real-Time Threat Intelligence', icon: 'zap', path: ROUTES.THREAT_INTEL },
-  { label: 'Live Cyber Threat Map', icon: 'map', path: ROUTES.THREAT_MAP },
+  // REVERSIBLE REMOVAL: To restore, uncomment below:
+  // { label: 'Real-Time Threat Intelligence', icon: 'zap', path: ROUTES.THREAT_INTEL },
+  // { label: 'Live Cyber Threat Map', icon: 'map', path: ROUTES.THREAT_MAP },
 ];
 
 export const COMING_SOON_LINKS = INTELLIGENCE_LINKS;

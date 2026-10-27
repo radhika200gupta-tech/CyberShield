@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiX, FiCopy, FiCheck, FiExternalLink, FiShield, 
-  FiAlertTriangle, FiAlertOctagon, FiServer, FiTag, 
-  FiClock, FiUser, FiInfo, FiFileText, FiLock,
+  FiAlertTriangle, FiAlertOctagon, FiServer, FiLock,
   FiCpu, FiMap, FiArrowRight
 } from 'react-icons/fi';
 import Button from '../../common/Button';
@@ -13,7 +12,6 @@ import { setTransferredThreat } from '../../../services/imageHandoffService';
 export default function ThreatDetailsDrawer({ threat, onClose }) {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const [showMapNotice, setShowMapNotice] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -98,7 +96,7 @@ export default function ThreatDetailsDrawer({ threat, onClose }) {
                   </span>
                 </div>
                 <p className="text-xs text-text-secondary truncate mt-0.5">
-                  abuse.ch URLhaus Community Report
+                  {threat.source || 'Threat Intelligence Report'}
                 </p>
               </div>
             </div>
@@ -201,7 +199,11 @@ export default function ThreatDetailsDrawer({ threat, onClose }) {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-accent hover:underline rounded-lg border border-accent/30 hover:bg-accent/10 transition-colors ml-auto"
                   >
-                    View on Abuse.ch <FiExternalLink size={12} />
+                    {threat.reportUrl.includes('x.com') || threat.reportUrl.includes('twitter.com')
+                      ? 'View Researcher Report'
+                      : threat.reportUrl.includes('urlhaus')
+                      ? 'View on Abuse.ch'
+                      : 'View Source Advisory'} <FiExternalLink size={12} />
                   </a>
                 )}
               </div>
@@ -355,7 +357,7 @@ export default function ThreatDetailsDrawer({ threat, onClose }) {
           {/* Footer */}
           <div className="p-4 border-t border-border bg-surface/60 flex items-center justify-between gap-2 shrink-0">
             <span className="text-xs text-text-muted font-mono truncate">
-              Feed: abuse.ch URLhaus
+              Feed: {threat.source || 'Threat Intelligence Telemetry'}
             </span>
             <div className="flex items-center gap-2">
               <Button

@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState } from 'react';
 import { mockUser } from '../data/mockUser';
 
 const AuthContext = createContext(null);
@@ -8,14 +9,15 @@ const AuthContext = createContext(null);
 // calls to a Spring Boot /api/auth/* JWT endpoint — the shape of `user`
 // and the exposed methods (login/signup/logout) stay the same.
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('cybershield-user');
-    if (stored) setUser(JSON.parse(stored));
-    setIsLoading(false);
-  }, []);
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('cybershield-user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isLoading] = useState(false);
 
   const login = async ({ email }) => {
     const sessionUser = { ...mockUser, email };
@@ -56,8 +58,15 @@ export function AuthProvider({ children }) {
     setUser(updatedUser);
   };
 
+  const resetPassword = async ({ email }) => {
+    // Demonstration boundary for password reset simulation
+    // In production, this would invoke services/authService.js to trigger a secure reset email
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    return { success: true, email };
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, signup, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, signup, logout, updateUser, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

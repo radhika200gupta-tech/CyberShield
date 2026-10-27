@@ -1,13 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext(null);
 
-// Temporarily enforce dark mode as the only active theme
-const ENFORCE_DARK_MODE_ONLY = true;
-
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    if (ENFORCE_DARK_MODE_ONLY) return 'dark';
     return localStorage.getItem('cybershield-theme') || 'dark';
   });
 
@@ -15,19 +12,17 @@ export function ThemeProvider({ children }) {
     const root = document.documentElement;
     root.classList.remove('dark', 'light');
     
-    const activeTheme = ENFORCE_DARK_MODE_ONLY ? 'dark' : (
-      theme === 'system'
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-        : theme
-    );
+    const activeTheme = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme;
     
     root.classList.add(activeTheme);
-    localStorage.setItem('cybershield-theme', activeTheme);
+    localStorage.setItem('cybershield-theme', theme);
   }, [theme]);
 
-  // Optional: Listen for system preference changes if in 'system' mode
+  // Listen for system preference changes if in 'system' mode
   useEffect(() => {
-    if (ENFORCE_DARK_MODE_ONLY || theme !== 'system') return;
+    if (theme !== 'system') return;
     
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {
@@ -41,7 +36,6 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   const toggleTheme = () => setTheme((prev) => {
-    if (ENFORCE_DARK_MODE_ONLY) return 'dark';
     if (prev === 'system') {
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return isDark ? 'light' : 'dark';

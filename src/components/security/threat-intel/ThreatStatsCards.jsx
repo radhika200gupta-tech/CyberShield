@@ -1,5 +1,4 @@
-import React from 'react';
-import { FiDatabase, FiLink, FiAlertTriangle, FiActivity, FiClock, FiShield } from 'react-icons/fi';
+import { FiDatabase, FiLink, FiAlertTriangle, FiActivity } from 'react-icons/fi';
 
 /**
  * Summary statistics cards for Threat Intelligence Dashboard.
@@ -10,13 +9,16 @@ export default function ThreatStatsCards({
   uniqueIndicators = 0,
   highSeverityCount = 0,
   onlineCount = 0,
-  lastUpdatedTime = null
+  sourceName = 'Threat Intelligence Feed'
 }) {
+  const isUrlhaus = (sourceName || '').toLowerCase().includes('urlhaus');
+  const providerLabel = isUrlhaus ? 'URLhaus' : 'telemetry';
+
   const cards = [
     {
       label: 'Total Reports Loaded',
       value: totalReports.toLocaleString(),
-      subtext: 'Genuine URLhaus records',
+      subtext: `Genuine ${providerLabel} records`,
       icon: FiDatabase,
       color: 'text-accent',
       borderColor: 'border-accent/20'
@@ -24,7 +26,7 @@ export default function ThreatStatsCards({
     {
       label: 'Unique Indicators',
       value: uniqueIndicators.toLocaleString(),
-      subtext: 'Deduplicated malicious URLs',
+      subtext: 'Deduplicated malicious indicators',
       icon: FiLink,
       color: 'text-primary',
       borderColor: 'border-primary/20'

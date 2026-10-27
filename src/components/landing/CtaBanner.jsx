@@ -43,7 +43,7 @@ export default function CtaBanner() {
           </p>
           
           <div className="mt-10 mb-14">
-            <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.LOGIN)}>
+            <Button variant="primary" size="lg" icon={FiArrowRight} iconPosition="right" onClick={() => navigate(ROUTES.SIGNUP)}>
               Get Started
             </Button>
           </div>

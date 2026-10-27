@@ -7,6 +7,8 @@ import ChartCard from '../components/charts/ChartCard';
 import WeeklyThreatsChart from '../components/charts/WeeklyThreatsChart';
 import MonthlyScansChart from '../components/charts/MonthlyScansChart';
 import RiskDistributionChart from '../components/charts/RiskDistributionChart';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../constants/routes';
 import { LiveThreatMapPreview } from './features/ComingSoonFeature';
 import {
   dashboardCards, weeklyThreats, monthlyScans, riskDistribution, recentActivity,
@@ -72,8 +74,29 @@ export default function Dashboard() {
             <ChartCard title="Risk Distribution" subtitle="Breakdown of all scans by risk level">
               <RiskDistributionChart data={riskDistribution} />
             </ChartCard>
+            {/* REVERSIBLE REMOVAL: To restore Live Cyber Threat Map preview, uncomment below:
             <div className="h-full flex flex-col justify-stretch min-w-0 w-full">
                <LiveThreatMapPreview isCompact={true} />
+            </div> */}
+            <div className="h-full flex flex-col justify-between p-5 rounded-card border border-border bg-surface shadow-xs min-h-[200px]">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[10px] text-accent uppercase font-bold tracking-wider">AI ASSISTANT</span>
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                </div>
+                <h4 className="font-display font-semibold text-text-primary text-base">Security Copilot</h4>
+                <p className="text-xs text-text-secondary leading-relaxed">
+                  Interactive guidance on suspicious emails, URLs, credential breaches, and incident playbooks.
+                </p>
+              </div>
+              <div className="pt-3">
+                <Link
+                  to={ROUTES.AI_COPILOT}
+                  className="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-semibold rounded-lg bg-accent/15 text-accent border border-accent/30 hover:bg-accent/25 transition-colors gap-2"
+                >
+                  <FiCpu size={14} /> Launch Security Copilot
+                </Link>
+              </div>
             </div>
           </div>
 
