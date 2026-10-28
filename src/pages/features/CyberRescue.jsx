@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import {
   FiLifeBuoy,
   FiPhoneCall,
@@ -30,8 +30,15 @@ import {
   OTP_GUIDES,
   PAYMENT_FRAUD_ACTIONS,
 } from '../../data/cyberRescueData';
+import {
+  CyberRescueProvider,
+  CyberRescueContext,
+  useCyberRescue,
+} from '../../context/CyberRescueContext';
 
-const STORAGE_KEY = 'cybershield_simple_rescue_progress';
+// Re-export context utilities for convenience
+// eslint-disable-next-line react-refresh/only-export-components
+export { CyberRescueProvider, CyberRescueContext, useCyberRescue };
 
 const ICONS = {
   link: FiLink,
@@ -40,30 +47,220 @@ const ICONS = {
   alert: FiCreditCard,
 };
 
-export default function CyberRescue() {
+/**
+ * IncidentSelector Sub-Component
+ * Uses useContext(CyberRescueContext) to read completedSteps and display progress per scenario
+ */
+function IncidentSelector({ selectedId, onSelectScenario }) {
+  const { completedSteps } = useContext(CyberRescueContext);
+
+  return (
+    <div className="space-y-3">
+      <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider font-mono">
+        What happened? Select an incident:
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {RESCUE_SCENARIOS.map((scenario) => {
+          const isSelected = scenario.id === selectedId;
+          const Icon = ICONS[scenario.icon] || FiAlertCircle;
+          const completedForScenario = (completedSteps[scenario.id] || []).filter(
+            (idx) => idx < scenario.steps.length
+          ).length;
+
+          return (
+            <button
+              key={scenario.id}
+              type="button"
+              onClick={() => onSelectScenario(scenario.id)}
+              className={`text-left p-4 rounded-xl border transition-all flex flex-col justify-between ${isSelected
+                  ? 'border-primary bg-primary/10 ring-1 ring-primary/40 shadow-sm'
+                  : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover'
+                }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected
+                        ? 'bg-primary text-black'
+                        : 'bg-surface-hover text-text-primary'
+                      }`}
+                  >
+                    <Icon size={16} />
+                  </div>
+                  {completedForScenario > 0 && (
+                    <span className="text-[10px] font-mono text-success">
+                      {completedForScenario}/{scenario.steps.length} done
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-sm font-semibold text-text-primary">
+                  {scenario.title}
+                </h3>
+                <p className="text-xs text-text-muted mt-1 leading-relaxed line-clamp-2">
+                  {scenario.description}
+                </p>
+              </div>
+
+              <div className="mt-3 pt-2 border-t border-border/40 text-[11px] text-text-muted">
+                {isSelected ? (
+                  <span className="text-primary font-medium">● Selected</span>
+                ) : (
+                  'Click to view steps'
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * RecoveryChecklist Sub-Component
+ * Uses useContext(CyberRescueContext) to read and toggle checklist steps and reset progress
+ */
+function RecoveryChecklist({ currentScenario }) {
+  const { completedSteps, toggleStep, resetProgress } = useContext(CyberRescueContext);
+
+  const currentCompleted = completedSteps[currentScenario.id] || [];
+  const totalSteps = currentScenario.steps.length;
+  const validCompleted = currentCompleted.filter((idx) => idx < totalSteps);
+  const completedCount = validCompleted.length;
+  const percent = totalSteps > 0 ? Math.round((completedCount / totalSteps) * 100) : 0;
+  const isAllCompleted = totalSteps > 0 && completedCount === totalSteps;
+
+  return (
+    <Card className="p-5 sm:p-6 space-y-5">
+      {/* Checklist Header & Progress */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
+        <div>
+          <h3 className="text-base sm:text-lg font-bold text-text-primary font-display">
+            Recovery Steps: {currentScenario.title}
+          </h3>
+          <p className="text-xs text-text-muted mt-0.5">
+            Follow these simple steps in order to secure your account and recover.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-text-secondary font-medium">
+            {completedCount} of {totalSteps} done ({percent}%)
+          </span>
+          {completedCount > 0 && (
+            <button
+              type="button"
+              onClick={() => resetProgress(currentScenario.id)}
+              className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-danger transition"
+              title="Reset checklist"
+            >
+              <FiRotateCcw size={12} />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Simple Progress Bar */}
+      <div className="h-2 w-full bg-bg rounded-full border border-border overflow-hidden">
+        <div
+          className="h-full bg-primary transition-all duration-300"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+
+      {/* Recovery Steps Checklist Items */}
+      <div className="space-y-3 pt-1">
+        {currentScenario.steps.map((stepText, idx) => {
+          const isChecked = currentCompleted.includes(idx);
+
+          return (
+            <div
+              key={idx}
+              onClick={() => toggleStep(currentScenario.id, idx)}
+              className={`flex items-start gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer ${isChecked
+                  ? 'border-success/30 bg-success/5 text-text-muted'
+                  : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover text-text-primary'
+                }`}
+            >
+              {/* Checkbox Box */}
+              <div
+                className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${isChecked
+                    ? 'bg-success border-success text-black'
+                    : 'border-border-hover bg-bg'
+                  }`}
+              >
+                {isChecked && <FiCheck size={13} className="stroke-[3]" />}
+              </div>
+
+              {/* Step Text */}
+              <div className="flex-1 text-xs sm:text-sm leading-relaxed">
+                <span
+                  className={`font-mono text-xs mr-2 font-semibold ${isChecked ? 'text-text-muted' : 'text-primary'
+                    }`}
+                >
+                  Step {idx + 1}:
+                </span>
+                <span className={isChecked ? 'line-through text-text-muted' : 'text-text-primary'}>
+                  {stepText}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Recovery Checklist Completion Message */}
+      {isAllCompleted && (
+        <div className="rounded-xl border border-primary/40 bg-primary/10 p-4 sm:p-5 text-primary space-y-2.5 shadow-sm animate-fade-in">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0 text-primary">
+              <TbShieldCheck size={24} className="stroke-[2.2]" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-1.5">
+                <h4 className="text-sm sm:text-base font-bold text-text-primary flex items-center gap-2">
+                  <span>Recovery Checklist Completed!</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30 font-semibold">
+                    100% Done
+                  </span>
+                </h4>
+              </div>
+              <p className="text-xs sm:text-sm text-text-secondary mt-1 leading-relaxed">
+                Great job! You've completed all the recommended recovery steps for this incident.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-primary/20 text-[11px] text-text-muted flex flex-wrap items-center gap-1.5">
+            <span className="font-semibold text-text-secondary">Disclaimer:</span>
+            <span>Completing these steps does not guarantee that your account or device is fully secure.</span>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/**
+ * Main CyberRescue Content
+ * Renders the incident options, emergency contacts, incident-specific tools, and recovery checklist
+ */
+function CyberRescueContent() {
   const [selectedId, setSelectedId] = useState('phishing-link');
 
-  // Simple checklist progress saved in localStorage
-  const [completedSteps, setCompletedSteps] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  // Tool A: Suspicious Link Analyzer State
+  // Tool A: Suspicious Link Analyzer State (Component-specific state kept local)
   const [urlInput, setUrlInput] = useState('');
   const [urlResult, setUrlResult] = useState(null);
 
-  // Tool B: Account Security Assistant State
+  // Tool B: Account Security Assistant State (Component-specific state kept local)
   const [accountType, setAccountType] = useState('email');
 
-  // Tool C: OTP Response Guide State
+  // Tool C: OTP Response Guide State (Component-specific state kept local)
   const [otpType, setOtpType] = useState('banking');
 
-  // Tool D: Fraud Response Assistant State
+  // Tool D: Fraud Response Assistant State (Component-specific state kept local)
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [fraudDetails, setFraudDetails] = useState({
     amount: '',
@@ -73,47 +270,9 @@ export default function CyberRescue() {
   });
   const [copiedSummary, setCopiedSummary] = useState(false);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(completedSteps));
-    } catch {
-      // Ignore storage errors
-    }
-  }, [completedSteps]);
-
   // Current active scenario
   const currentScenario =
     RESCUE_SCENARIOS.find((s) => s.id === selectedId) || RESCUE_SCENARIOS[0];
-
-  const currentCompleted = completedSteps[selectedId] || [];
-  const totalSteps = currentScenario.steps.length;
-  const validCompleted = currentCompleted.filter((idx) => idx < totalSteps);
-  const completedCount = validCompleted.length;
-  const percent = totalSteps > 0 ? Math.round((completedCount / totalSteps) * 100) : 0;
-  const isAllCompleted = totalSteps > 0 && completedCount === totalSteps;
-
-  // Toggle step completion
-  const toggleStep = (stepIndex) => {
-    setCompletedSteps((prev) => {
-      const list = prev[selectedId] ? [...prev[selectedId]] : [];
-      const idx = list.indexOf(stepIndex);
-      if (idx > -1) {
-        list.splice(idx, 1);
-      } else {
-        list.push(stepIndex);
-      }
-      return { ...prev, [selectedId]: list };
-    });
-  };
-
-  // Reset current scenario progress
-  const resetProgress = () => {
-    setCompletedSteps((prev) => {
-      const updated = { ...prev };
-      delete updated[selectedId];
-      return updated;
-    });
-  };
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto w-full min-w-0 pb-12 animate-fade-in">
@@ -176,62 +335,11 @@ export default function CyberRescue() {
         </span>
       </div>
 
-      {/* Incident Options (4 Scenarios) */}
-      <div className="space-y-3">
-        <h2 className="text-xs font-semibold text-text-muted uppercase tracking-wider font-mono">
-          What happened? Select an incident:
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {RESCUE_SCENARIOS.map((scenario) => {
-            const isSelected = scenario.id === selectedId;
-            const Icon = ICONS[scenario.icon] || FiAlertCircle;
-            const completedForScenario = (completedSteps[scenario.id] || []).filter(
-              (idx) => idx < scenario.steps.length
-            ).length;
-
-            return (
-              <button
-                key={scenario.id}
-                type="button"
-                onClick={() => setSelectedId(scenario.id)}
-                className={`text-left p-4 rounded-xl border transition-all flex flex-col justify-between ${
-                  isSelected
-                    ? 'border-primary bg-primary/10 ring-1 ring-primary/40 shadow-sm'
-                    : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-primary text-black' : 'bg-surface-hover text-text-primary'}`}>
-                      <Icon size={16} />
-                    </div>
-                    {completedForScenario > 0 && (
-                      <span className="text-[10px] font-mono text-success">
-                        {completedForScenario}/{scenario.steps.length} done
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-sm font-semibold text-text-primary">
-                    {scenario.title}
-                  </h3>
-                  <p className="text-xs text-text-muted mt-1 leading-relaxed line-clamp-2">
-                    {scenario.description}
-                  </p>
-                </div>
-
-                <div className="mt-3 pt-2 border-t border-border/40 text-[11px] text-text-muted">
-                  {isSelected ? (
-                    <span className="text-primary font-medium">● Selected</span>
-                  ) : (
-                    'Click to view steps'
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* Incident Options (4 Scenarios) rendered via IncidentSelector which consumes CyberRescueContext */}
+      <IncidentSelector
+        selectedId={selectedId}
+        onSelectScenario={(id) => setSelectedId(id)}
+      />
 
       {/* Urgent First Action Alert */}
       {currentScenario.urgentAction && (
@@ -311,131 +419,95 @@ export default function CyberRescue() {
         )}
       </Card>
 
-      {/* Selected Scenario Checklist */}
-      <Card className="p-5 sm:p-6 space-y-5">
-        {/* Checklist Header & Progress */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-text-primary font-display">
-              Recovery Steps: {currentScenario.title}
-            </h3>
-            <p className="text-xs text-text-muted mt-0.5">
-              Follow these simple steps in order to secure your account and recover.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-text-secondary font-medium">
-              {completedCount} of {totalSteps} done ({percent}%)
-            </span>
-            {completedCount > 0 && (
-              <button
-                type="button"
-                onClick={resetProgress}
-                className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-danger transition"
-                title="Reset checklist"
-              >
-                <FiRotateCcw size={12} />
-                <span>Reset</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Simple Progress Bar */}
-        <div className="h-2 w-full bg-bg rounded-full border border-border overflow-hidden">
-          <div
-            className="h-full bg-primary transition-all duration-300"
-            style={{ width: `${percent}%` }}
-          />
-        </div>
-
-        {/* Recovery Steps Checklist Items */}
-        <div className="space-y-3 pt-1">
-          {currentScenario.steps.map((stepText, idx) => {
-            const isChecked = currentCompleted.includes(idx);
-
-            return (
-              <div
-                key={idx}
-                onClick={() => toggleStep(idx)}
-                className={`flex items-start gap-3.5 p-3.5 rounded-xl border transition-all cursor-pointer ${
-                  isChecked
-                    ? 'border-success/30 bg-success/5 text-text-muted'
-                    : 'border-border bg-surface hover:border-border-hover hover:bg-surface-hover text-text-primary'
-                }`}
-              >
-                {/* Checkbox Box */}
-                <div
-                  className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                    isChecked
-                      ? 'bg-success border-success text-black'
-                      : 'border-border-hover bg-bg'
-                  }`}
-                >
-                  {isChecked && <FiCheck size={13} className="stroke-[3]" />}
-                </div>
-
-                {/* Step Text */}
-                <div className="flex-1 text-xs sm:text-sm leading-relaxed">
-                  <span className={`font-mono text-xs mr-2 font-semibold ${isChecked ? 'text-text-muted' : 'text-primary'}`}>
-                    Step {idx + 1}:
-                  </span>
-                  <span className={isChecked ? 'line-through text-text-muted' : 'text-text-primary'}>
-                    {stepText}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Recovery Checklist Completion Message */}
-        {isAllCompleted && (
-          <div className="rounded-xl border border-primary/40 bg-primary/10 p-4 sm:p-5 text-primary space-y-2.5 shadow-sm animate-fade-in">
-            <div className="flex items-start sm:items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0 text-primary">
-                <TbShieldCheck size={24} className="stroke-[2.2]" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center justify-between gap-1.5">
-                  <h4 className="text-sm sm:text-base font-bold text-text-primary flex items-center gap-2">
-                    <span>Recovery Checklist Completed!</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30 font-semibold">
-                      100% Done
-                    </span>
-                  </h4>
-                </div>
-                <p className="text-xs sm:text-sm text-text-secondary mt-1 leading-relaxed">
-                  Great job! You've completed all the recommended recovery steps for this incident.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-primary/20 text-[11px] text-text-muted flex flex-wrap items-center gap-1.5">
-              <span className="font-semibold text-text-secondary">Disclaimer:</span>
-              <span>Completing these steps does not guarantee that your account or device is fully secure.</span>
-            </div>
-          </div>
-        )}
-      </Card>
+      {/* Selected Scenario Checklist (Consumes CyberRescueContext) */}
+      <RecoveryChecklist currentScenario={currentScenario} />
     </div>
   );
 }
 
 /**
+ * CyberRescue Root Component
+ * Wraps CyberRescueContent in CyberRescueProvider to share recovery checklist state
+ */
+export default function CyberRescue() {
+  return (
+    <CyberRescueProvider>
+      <CyberRescueContent />
+    </CyberRescueProvider>
+  );
+}
+
+/**
  * Tool A: Suspicious Link Analyzer Sub-Component
+ * Form validation: prevents empty inputs, checks format, shows inline errors, and clears error on input change
  */
 function SuspiciousLinkAnalyzer({ urlInput, setUrlInput, urlResult, setUrlResult }) {
+  const [urlError, setUrlError] = useState('');
+
+  /**
+   * Validates user-submitted URL format before calling analyzeSuspiciousLink
+   */
+  const validateUrl = (input) => {
+    // 1. Prevent submission when empty or only whitespace
+    if (!input || !input.trim()) {
+      return 'Please enter or paste a web address (URL) to analyze.';
+    }
+
+    const trimmed = input.trim();
+
+    // 2. Prevent submission if it contains spaces
+    if (/\s/.test(trimmed)) {
+      return 'URL contains spaces. Please enter a continuous web address.';
+    }
+
+    // 3. Validate URL format and domain structure
+    const hasProtocol = /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(trimmed);
+    const toParse = hasProtocol ? trimmed : `https://${trimmed}`;
+
+    try {
+      const parsed = new URL(toParse);
+
+      // Only allow http or https protocols
+      if (hasProtocol && parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return 'Invalid protocol. Please enter an HTTP or HTTPS web address.';
+      }
+
+      const host = parsed.hostname;
+      // Hostname must be present and contain at least one dot (or localhost)
+      if (!host || (!host.includes('.') && host !== 'localhost')) {
+        return 'Invalid URL format. Please provide a valid domain (e.g., example.com or https://site.com).';
+      }
+
+      if (host.startsWith('.') || host.endsWith('.')) {
+        return 'Invalid domain format. Hostname cannot start or end with a dot.';
+      }
+    } catch {
+      return 'Unable to parse web address. Please verify the URL format and try again.';
+    }
+
+    return ''; // Valid
+  };
+
   const handleAnalyze = (e) => {
     e?.preventDefault();
-    const result = analyzeSuspiciousLink(urlInput);
+
+    const errorMsg = validateUrl(urlInput);
+    if (errorMsg) {
+      setUrlError(errorMsg);
+      setUrlResult(null); // Clear previous results on failed validation
+      return;
+    }
+
+    // Clear error and proceed with analyzer
+    setUrlError('');
+    const result = analyzeSuspiciousLink(urlInput.trim());
     setUrlResult(result);
   };
 
   const handleClear = () => {
     setUrlInput('');
     setUrlResult(null);
+    setUrlError('');
   };
 
   return (
@@ -450,15 +522,21 @@ function SuspiciousLinkAnalyzer({ urlInput, setUrlInput, urlResult, setUrlResult
         </p>
       </div>
 
-      <form onSubmit={handleAnalyze} className="space-y-3">
+      <form onSubmit={handleAnalyze} className="space-y-2">
         <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="relative flex-1">
             <input
               type="text"
               value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
+              onChange={(e) => {
+                setUrlInput(e.target.value);
+                if (urlError) setUrlError(''); // Clear error on user edit
+              }}
               placeholder="Paste suspicious URL here (e.g., http://login-verify-sbi.xyz/update)..."
-              className="w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-xs sm:text-sm text-text-primary outline-none transition focus:border-primary/60 font-mono"
+              className={`w-full rounded-xl border ${urlError
+                  ? 'border-danger focus:border-danger ring-1 ring-danger/30'
+                  : 'border-border focus:border-primary/60'
+                } bg-bg px-4 py-2.5 text-xs sm:text-sm text-text-primary outline-none transition font-mono`}
             />
           </div>
           <div className="flex gap-2">
@@ -469,7 +547,7 @@ function SuspiciousLinkAnalyzer({ urlInput, setUrlInput, urlResult, setUrlResult
               <FiSearch size={14} />
               Analyze Link
             </button>
-            {(urlInput || urlResult) && (
+            {(urlInput || urlResult || urlError) && (
               <button
                 type="button"
                 onClick={handleClear}
@@ -480,9 +558,17 @@ function SuspiciousLinkAnalyzer({ urlInput, setUrlInput, urlResult, setUrlResult
             )}
           </div>
         </div>
+
+        {/* Inline Error Message for URL Input */}
+        {urlError && (
+          <p className="text-xs text-danger mt-1.5 flex items-center gap-1.5 font-medium animate-fade-in" role="alert">
+            <FiAlertCircle size={14} className="shrink-0" />
+            <span>{urlError}</span>
+          </p>
+        )}
       </form>
 
-      {/* Error State */}
+      {/* Backend / Parser Error State (if returned from analyzer) */}
       {urlResult && urlResult.error && (
         <div className="p-3.5 rounded-xl border border-warning/40 bg-warning/10 text-warning text-xs flex items-center gap-2 animate-fade-in">
           <FiAlertTriangle size={15} className="shrink-0" />
@@ -525,11 +611,10 @@ function SuspiciousLinkAnalyzer({ urlInput, setUrlInput, urlResult, setUrlResult
                 {urlResult.flags.map((flag, idx) => (
                   <div
                     key={idx}
-                    className={`p-3 rounded-lg border text-xs space-y-0.5 ${
-                      flag.level === 'danger'
+                    className={`p-3 rounded-lg border text-xs space-y-0.5 ${flag.level === 'danger'
                         ? 'border-danger/30 bg-danger/5 text-danger'
                         : 'border-warning/30 bg-warning/5 text-warning'
-                    }`}
+                      }`}
                   >
                     <p className="font-bold flex items-center gap-1.5">
                       <span>{flag.level === 'danger' ? '⚠️' : '⚡'}</span>
@@ -601,11 +686,10 @@ function AccountSecurityAssistant({ accountType, setAccountType }) {
               key={type.id}
               type="button"
               onClick={() => setAccountType(type.id)}
-              className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${
-                isSelected
+              className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${isSelected
                   ? 'border-primary bg-primary/10 text-primary ring-1 ring-primary/40 font-semibold'
                   : 'border-border bg-bg/50 hover:border-border-hover text-text-secondary hover:text-text-primary'
-              }`}
+                }`}
             >
               <Icon size={16} className={isSelected ? 'text-primary' : 'text-text-muted'} />
               <span className="text-xs truncate">{type.label}</span>
@@ -700,11 +784,10 @@ function OtpResponseGuide({ otpType, setOtpType }) {
               key={type.id}
               type="button"
               onClick={() => setOtpType(type.id)}
-              className={`p-3 rounded-xl border text-center transition ${
-                isSelected
+              className={`p-3 rounded-xl border text-center transition ${isSelected
                   ? 'border-primary bg-primary/10 text-primary ring-1 ring-primary/40 font-semibold text-xs'
                   : 'border-border bg-bg/50 hover:border-border-hover text-text-secondary hover:text-text-primary text-xs'
-              }`}
+                }`}
             >
               {type.label}
             </button>
@@ -762,6 +845,7 @@ function OtpResponseGuide({ otpType, setOtpType }) {
 
 /**
  * Tool D: Fraud Response Assistant Sub-Component
+ * Form validation: amount is optional, but if entered must be finite positive number; validates before copying summary
  */
 function FraudResponseAssistant({
   paymentMethod,
@@ -771,6 +855,8 @@ function FraudResponseAssistant({
   copiedSummary,
   setCopiedSummary,
 }) {
+  const [amountError, setAmountError] = useState('');
+
   const currentMethod = PAYMENT_FRAUD_ACTIONS[paymentMethod] || PAYMENT_FRAUD_ACTIONS.upi;
 
   const methods = [
@@ -779,14 +865,63 @@ function FraudResponseAssistant({
     { id: 'netbanking', label: 'Net Banking' },
   ];
 
+  /**
+   * Validates Amount field:
+   * - Optional (empty / whitespace is allowed)
+   * - If entered, must be a finite, positive number (> 0)
+   * - Rejects zero, negative numbers, alphabetic input, symbols, Infinity/NaN
+   */
+  const validateAmount = (value) => {
+    // 1. Optional field: empty or spaces is valid
+    if (value === undefined || value === null || value.trim() === '') {
+      return '';
+    }
+
+    const trimmed = value.trim();
+
+    // 2. Reject non-numeric input (letters, symbols, negative sign, exponents)
+    if (!/^\d+(\.\d+)?$/.test(trimmed)) {
+      return 'Amount must be a valid number (e.g. 5000 or 1500.50). Letters, symbols, and negative numbers are not allowed.';
+    }
+
+    const num = Number(trimmed);
+
+    // 3. Reject non-finite values
+    if (!Number.isFinite(num)) {
+      return 'Please enter a valid finite number.';
+    }
+
+    // 4. Reject zero and negative values
+    if (num <= 0) {
+      return 'Amount must be a positive number greater than ₹0.';
+    }
+
+    return ''; // Valid
+  };
+
   const handleCopySummary = async () => {
+    // Validate amount before copying summary
+    const errorMsg = validateAmount(fraudDetails.amount);
+    if (errorMsg) {
+      setAmountError(errorMsg);
+      return; // Stop copying the summary if amount is invalid
+    }
+
+    // Clear any previous error
+    setAmountError('');
+
+    const formattedAmount =
+      fraudDetails.amount && fraudDetails.amount.trim()
+        ? `₹${fraudDetails.amount.trim()}`
+        : 'Not specified';
+
     const summaryText = `=========================================
 CYBERSHIELD FRAUD INCIDENT SUMMARY
 =========================================
 Incident Type: Fraudulent / Unauthorized Payment
 Payment Method: ${currentMethod.label}
 Payment App / Bank: ${fraudDetails.bankOrApp || 'Not specified'}
-Transaction Amount: ${fraudDetails.amount ? `₹${fraudDetails.amount}` : 'Not specified'}
+Transaction Amount: ${formattedAmount}
 Date & Time: ${fraudDetails.dateTime || 'Not specified'}
 Transaction / UTR Reference ID: ${fraudDetails.refId || 'Not specified'}
 -----------------------------------------
@@ -834,11 +969,10 @@ Emergency Directives:
               key={m.id}
               type="button"
               onClick={() => setPaymentMethod(m.id)}
-              className={`p-3 rounded-xl border text-center transition ${
-                isSelected
+              className={`p-3 rounded-xl border text-center transition ${isSelected
                   ? 'border-primary bg-primary/10 text-primary ring-1 ring-primary/40 font-semibold text-xs'
                   : 'border-border bg-bg/50 hover:border-border-hover text-text-secondary hover:text-text-primary text-xs'
-              }`}
+                }`}
             >
               {m.label}
             </button>
@@ -895,15 +1029,27 @@ Emergency Directives:
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-[11px] font-mono text-text-muted mb-1">
-              Amount Debited (₹)
+              Amount Debited (₹) <span className="text-[10px] text-text-muted/70">(Optional)</span>
             </label>
             <input
               type="text"
               value={fraudDetails.amount}
-              onChange={(e) => setFraudDetails((prev) => ({ ...prev, amount: e.target.value }))}
+              onChange={(e) => {
+                setFraudDetails((prev) => ({ ...prev, amount: e.target.value }));
+                if (amountError) setAmountError(''); // Clear error on user edit
+              }}
               placeholder="e.g. 5000"
-              className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-xs text-text-primary outline-none focus:border-primary/60 font-mono"
+              className={`w-full rounded-lg border ${amountError
+                  ? 'border-danger focus:border-danger ring-1 ring-danger/30'
+                  : 'border-border focus:border-primary/60'
+                } bg-bg px-3 py-2 text-xs text-text-primary outline-none font-mono transition`}
             />
+            {amountError && (
+              <p className="text-[11px] text-danger mt-1.5 flex items-center gap-1 font-medium animate-fade-in" role="alert">
+                <FiAlertCircle size={12} className="shrink-0" />
+                <span>{amountError}</span>
+              </p>
+            )}
           </div>
 
           <div>
